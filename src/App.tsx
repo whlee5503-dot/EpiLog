@@ -2,98 +2,13 @@ import {
   BrowserRouter,
   Routes,
   Route,
-  Outlet,
-  useLocation,
-  useNavigate,
-  useMatch,
   useParams,
+  useNavigate,
   Link,
 } from 'react-router-dom';
-import { ChevronLeft, Activity, ClipboardList, Home } from 'lucide-react';
+import { ClipboardList, Home } from 'lucide-react';
 import RecordList from './pages/RecordList';
 import NewRecord from './pages/NewRecord';
-
-// ─── Route metadata ───────────────────────────────────────────────────────────
-
-interface RouteMeta {
-  title: string;
-  showBack: boolean;
-}
-
-function useRouteMeta(): RouteMeta {
-  const { pathname } = useLocation();
-  const isDetail = useMatch('/records/:id');
-
-  if (isDetail) return { title: '기록 상세', showBack: true };
-
-  const map: Record<string, RouteMeta> = {
-    '/':     { title: '조사 기록 목록', showBack: false },
-    '/new':  { title: '새 현장 기록',   showBack: true  },
-  };
-
-  return map[pathname] ?? { title: '페이지를 찾을 수 없습니다', showBack: true };
-}
-
-// ─── Global app header ────────────────────────────────────────────────────────
-
-function AppHeader() {
-  const navigate = useNavigate();
-  const { title, showBack } = useRouteMeta();
-
-  return (
-    <header className="sticky top-0 z-30 bg-white border-b border-gray-100 shadow-sm">
-      <div className="flex items-center h-14 px-4 gap-3">
-        {/* Left: back button or app icon */}
-        {showBack ? (
-          <button
-            type="button"
-            onClick={() => navigate(-1)}
-            aria-label="뒤로가기"
-            className="p-1.5 -ml-1.5 rounded-lg text-gray-500 active:bg-gray-100 touch-manipulation"
-          >
-            <ChevronLeft size={22} />
-          </button>
-        ) : (
-          <div className="flex items-center gap-1.5 text-teal-600">
-            <Activity size={20} strokeWidth={2.5} />
-          </div>
-        )}
-
-        {/* Center: page title + EpiLog brand */}
-        <div className="flex-1 min-w-0">
-          <p className="text-xs text-teal-600 font-semibold leading-none tracking-wide uppercase">
-            EpiLog
-          </p>
-          <h1 className="text-sm font-bold text-gray-800 leading-snug truncate">{title}</h1>
-        </div>
-
-        {/* Right: home shortcut (non-root pages) */}
-        {showBack && (
-          <Link
-            to="/"
-            aria-label="홈으로"
-            className="p-1.5 -mr-1.5 rounded-lg text-gray-400 active:bg-gray-100 touch-manipulation"
-          >
-            <Home size={20} />
-          </Link>
-        )}
-      </div>
-    </header>
-  );
-}
-
-// ─── Shared layout (wraps all routes) ─────────────────────────────────────────
-
-function AppShell() {
-  return (
-    <div className="flex flex-col min-h-screen bg-gray-50">
-      <AppHeader />
-      <Outlet />
-    </div>
-  );
-}
-
-// ─── RecordDetail placeholder ─────────────────────────────────────────────────
 
 function RecordDetail() {
   const { id } = useParams<{ id: string }>();
@@ -116,7 +31,7 @@ function RecordDetail() {
         <button
           type="button"
           onClick={() => navigate(-1)}
-          className="w-full py-3.5 bg-teal-600 text-white rounded-xl font-semibold text-sm active:bg-teal-700 touch-manipulation"
+          className="w-full h-11 bg-teal-600 text-white rounded-xl font-semibold text-sm active:bg-teal-700 touch-manipulation"
         >
           목록으로 돌아가기
         </button>
@@ -124,8 +39,6 @@ function RecordDetail() {
     </div>
   );
 }
-
-// ─── 404 Not Found ────────────────────────────────────────────────────────────
 
 function NotFound() {
   return (
@@ -143,7 +56,7 @@ function NotFound() {
 
       <Link
         to="/"
-        className="flex items-center gap-2 px-6 py-3 bg-teal-600 text-white rounded-xl font-semibold text-sm active:bg-teal-700 touch-manipulation"
+        className="flex items-center gap-2 px-6 h-11 bg-teal-600 text-white rounded-xl font-semibold text-sm active:bg-teal-700 touch-manipulation"
       >
         <Home size={16} />
         홈으로 이동
@@ -152,18 +65,14 @@ function NotFound() {
   );
 }
 
-// ─── App root ─────────────────────────────────────────────────────────────────
-
 export default function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route element={<AppShell />}>
-          <Route index element={<RecordList />} />
-          <Route path="/new" element={<NewRecord />} />
-          <Route path="/records/:id" element={<RecordDetail />} />
-          <Route path="*" element={<NotFound />} />
-        </Route>
+        <Route index element={<RecordList />} />
+        <Route path="/new" element={<NewRecord />} />
+        <Route path="/records/:id" element={<RecordDetail />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
   );

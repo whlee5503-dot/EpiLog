@@ -582,72 +582,26 @@ export default function NewRecord() {
           >
             <ChevronLeft size={24} />
           </button>
-          <h1 className="text-lg font-bold">새 현장 기록</h1>
+          <h1 className="text-xl font-bold">새 현장 기록</h1>
         </div>
       </header>
 
       {/* Progress bar */}
-      <div className="bg-white border-b border-gray-100 px-4 py-4">
-        <div className="flex items-start">
-          {STEP_LABELS.map((label, i) => {
-            const s = i + 1;
-            const isActive = s === step;
-            const isDone = s < step;
-            return (
-              <div key={s} className="flex flex-col items-center flex-1">
-                <div className="relative flex items-center w-full">
-                  {/* Left connector */}
-                  {i > 0 && (
-                    <div
-                      className={`absolute left-0 right-1/2 h-0.5 top-1/2 -translate-y-1/2 ${
-                        isDone ? 'bg-teal-600' : 'bg-gray-200'
-                      }`}
-                    />
-                  )}
-                  {/* Circle */}
-                  <div
-                    className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold mx-auto relative z-10 transition-colors ${
-                      isActive
-                        ? 'bg-teal-600 text-white ring-4 ring-teal-100'
-                        : isDone
-                        ? 'bg-teal-600 text-white'
-                        : 'bg-gray-200 text-gray-400'
-                    }`}
-                  >
-                    {s}
-                  </div>
-                  {/* Right connector */}
-                  {i < STEP_LABELS.length - 1 && (
-                    <div
-                      className={`absolute left-1/2 right-0 h-0.5 top-1/2 -translate-y-1/2 ${
-                        s < step ? 'bg-teal-600' : 'bg-gray-200'
-                      }`}
-                    />
-                  )}
-                </div>
-                <span
-                  className={`mt-1.5 text-xs text-center leading-tight ${
-                    isActive ? 'text-teal-700 font-semibold' : 'text-gray-400'
-                  }`}
-                >
-                  {label}
-                </span>
-              </div>
-            );
-          })}
+      <div className="bg-white border-b border-gray-100 px-4 py-3">
+        <div className="flex justify-between items-center mb-2">
+          <span className="text-sm font-semibold text-teal-700">{STEP_LABELS[step - 1]}</span>
+          <span className="text-xs text-gray-400">{step} / {TOTAL_STEPS}</span>
+        </div>
+        <div className="h-1.5 bg-gray-200 rounded-full overflow-hidden">
+          <div
+            className="h-full bg-teal-600 rounded-full transition-all duration-300"
+            style={{ width: `${(step / TOTAL_STEPS) * 100}%` }}
+          />
         </div>
       </div>
 
       {/* Step content */}
-      <main className="flex-1 px-4 py-6 pb-32">
-        <div className="mb-6">
-          <h2 className="text-xl font-bold text-gray-800">
-            {['기본 정보', '지표환자 정보', '접촉자 & 발생현황', '역학 특성'][step - 1]}
-          </h2>
-          <p className="text-sm text-gray-400 mt-0.5">
-            Step {step} / {TOTAL_STEPS}
-          </p>
-        </div>
+      <main className="flex-1 px-4 py-4 pb-28">
         {renderStep()}
       </main>
 
@@ -658,7 +612,7 @@ export default function NewRecord() {
             type="button"
             onClick={() => setStep((s) => s - 1)}
             disabled={saving}
-            className="flex items-center justify-center gap-1 px-6 py-3.5 rounded-xl border border-gray-200 text-gray-600 font-semibold text-sm active:bg-gray-50 touch-manipulation disabled:opacity-40"
+            className="flex items-center justify-center gap-1 px-6 h-11 rounded-xl border border-gray-200 text-gray-600 font-semibold text-sm active:bg-gray-50 touch-manipulation disabled:opacity-40"
           >
             <ChevronLeft size={18} />
             이전
@@ -669,7 +623,7 @@ export default function NewRecord() {
             type="button"
             onClick={() => setStep((s) => s + 1)}
             disabled={!canProceed}
-            className="flex-1 flex items-center justify-center gap-1 py-3.5 rounded-xl bg-teal-600 text-white font-semibold text-sm active:bg-teal-700 disabled:opacity-40 touch-manipulation"
+            className="flex-1 flex items-center justify-center gap-1 h-11 rounded-xl bg-teal-600 text-white font-semibold text-sm active:bg-teal-700 disabled:opacity-40 touch-manipulation"
           >
             다음
             <ChevronRight size={18} />

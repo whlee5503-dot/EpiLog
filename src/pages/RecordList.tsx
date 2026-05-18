@@ -62,8 +62,8 @@ function StatCard({
   const text = { teal: 'text-teal-600', orange: 'text-orange-500', red: 'text-red-500' }[accent];
 
   return (
-    <div className={`flex-1 rounded-2xl p-4 ${bg}`}>
-      <div className={`mb-1 ${text}`}>{icon}</div>
+    <div className={`rounded-2xl p-4 ${bg}`}>
+      <div className={`mb-1.5 ${text}`}>{icon}</div>
       <p className="text-2xl font-bold text-gray-800 leading-tight">{value}</p>
       <p className="text-xs text-gray-500 mt-0.5">{label}</p>
     </div>
@@ -98,7 +98,7 @@ function RecordCard({
             </span>
           </div>
           {/* Timestamp */}
-          <div className="flex items-center gap-1 mt-1">
+          <div className="flex items-center gap-1.5 mt-1">
             <MapPin size={12} className="text-gray-400 shrink-0" />
             <span className="text-xs text-gray-400">{formatTimestamp(record.timestamp)}</span>
           </div>
@@ -107,7 +107,7 @@ function RecordCard({
       </div>
 
       {/* Metrics row */}
-      <div className="flex items-center gap-0 mt-3 pt-3 border-t border-gray-100 divide-x divide-gray-100">
+      <div className="flex items-center mt-3 pt-3 border-t border-gray-100 divide-x divide-gray-100">
         <div className="flex-1 flex flex-col items-center gap-0.5 px-2 first:pl-0 last:pr-0">
           <span className="text-lg font-bold text-teal-600 leading-none">
             {record.dailyCases.newCases}
@@ -181,7 +181,7 @@ export default function RecordList() {
       {/* Summary stats */}
       {!loading && !error && records.length > 0 && (
         <div className="px-4 -mt-2 mb-2">
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 flex gap-3">
+          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 grid grid-cols-3 gap-3">
             <StatCard
               label="총 기록"
               value={records.length}
@@ -239,7 +239,7 @@ export default function RecordList() {
       <button
         type="button"
         onClick={() => navigate('/new')}
-        className="fixed bottom-6 right-5 w-14 h-14 bg-teal-600 text-white rounded-full shadow-lg flex items-center justify-center active:bg-teal-700 touch-manipulation z-20"
+        className="fixed bottom-6 right-5 w-14 h-14 bg-teal-600 text-white rounded-full shadow-xl flex items-center justify-center active:bg-teal-700 touch-manipulation z-20"
         aria-label="새 기록 추가"
       >
         <Plus size={26} />
