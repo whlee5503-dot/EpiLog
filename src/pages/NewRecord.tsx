@@ -77,7 +77,7 @@ function initForm(): FormData {
   };
 }
 
-// ─── Shared sub-components (defined outside to avoid remount on re-render) ────
+// ─── Shared sub-components ────────────────────────────────────────────────────
 
 function Counter({
   label,
@@ -89,25 +89,31 @@ function Counter({
   onChange: (v: number) => void;
 }) {
   return (
-    <div className="flex items-center justify-between py-3 border-b border-gray-100 last:border-0">
-      <span className="text-sm font-medium text-gray-700">{label}</span>
-      <div className="flex items-center gap-3">
+    <div className="flex items-center justify-between py-2 border-b border-gray-100 last:border-0">
+      <span className="text-sm text-gray-700">{label}</span>
+      <div className="flex items-center gap-1.5">
         <button
           type="button"
           onClick={() => onChange(Math.max(0, value - 1))}
-          className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center active:bg-gray-200 touch-manipulation"
+          className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center active:bg-gray-200 touch-manipulation"
         >
-          <Minus size={16} className="text-gray-600" />
+          <Minus size={14} className="text-gray-600" />
         </button>
-        <span className="w-10 text-center text-lg font-semibold text-gray-800 tabular-nums">
-          {value}
-        </span>
+        <input
+          type="number"
+          inputMode="numeric"
+          min={0}
+          value={value === 0 ? '' : value}
+          placeholder="0"
+          onChange={(e) => onChange(Math.max(0, parseInt(e.target.value) || 0))}
+          className="w-16 h-8 text-center text-sm font-semibold text-gray-800 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 tabular-nums"
+        />
         <button
           type="button"
           onClick={() => onChange(value + 1)}
-          className="w-10 h-10 rounded-full bg-teal-600 flex items-center justify-center active:bg-teal-700 touch-manipulation"
+          className="w-8 h-8 rounded-full bg-teal-600 flex items-center justify-center active:bg-teal-700 touch-manipulation"
         >
-          <Plus size={16} className="text-white" />
+          <Plus size={14} className="text-white" />
         </button>
       </div>
     </div>
@@ -131,13 +137,13 @@ function SegmentedButtons<T extends string>({
     4: 'grid-cols-4',
   };
   return (
-    <div className={`grid ${colClass[cols] ?? 'grid-cols-3'} gap-2`}>
+    <div className={`grid ${colClass[cols] ?? 'grid-cols-3'} gap-1.5`}>
       {options.map((opt) => (
         <button
           key={opt.value}
           type="button"
           onClick={() => onChange(opt.value)}
-          className={`py-2.5 rounded-xl text-sm font-medium border touch-manipulation transition-colors ${
+          className={`py-2 rounded-xl text-sm font-medium border touch-manipulation transition-colors ${
             value === opt.value
               ? 'bg-teal-600 text-white border-teal-600'
               : 'bg-white text-gray-700 border-gray-300 active:bg-gray-50'
@@ -206,15 +212,11 @@ export default function NewRecord() {
     });
   };
 
-  const handleSave = async (toEpicalc = false) => {
+  const handleSave = async () => {
     setSaving(true);
     try {
-      const id = await db.addRecord(form);
-      if (toEpicalc) {
-        navigate('/epicalc', { state: { recordId: id } });
-      } else {
-        navigate('/records');
-      }
+      await db.addRecord(form);
+      navigate('/');
     } catch (e) {
       console.error('저장 실패:', e);
       setSaving(false);
@@ -229,18 +231,21 @@ export default function NewRecord() {
     switch (step) {
       case 1:
         return (
-          <div className="space-y-5">
+          <div className="space-y-3">
             {/* Timestamp */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">조사 일시</label>
-              <div className="px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-500">
-                {new Date(form.timestamp).toLocaleString('ko-KR')}
+            <div className="flex items-center gap-3">
+              <span className="text-sm font-medium text-gray-700 whitespace-nowrap">조사 일시</span>
+              <div className="flex-1 px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-500">
+                {(() => {
+                  const d = new Date(form.timestamp);
+                  return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`;
+                })()}
               </div>
             </div>
 
             {/* Location */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+            <div className="flex items-center gap-3">
+              <label className="text-sm font-medium text-gray-700 whitespace-nowrap">
                 발생 장소 <span className="text-red-500">*</span>
               </label>
               <input
@@ -248,24 +253,26 @@ export default function NewRecord() {
                 placeholder="예: ○○초등학교, △△요양원"
                 value={form.location}
                 onChange={(e) => setForm((p) => ({ ...p, location: e.target.value }))}
-                className="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal-500"
+                className="flex-1 px-3 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal-500"
               />
             </div>
 
             {/* Facility type */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">시설 유형</label>
-              <SegmentedButtons
-                options={FACILITY_TYPES}
-                value={form.facilityType}
-                onChange={(v) => setForm((p) => ({ ...p, facilityType: v }))}
-                cols={3}
-              />
+            <div className="flex items-start gap-3">
+              <span className="text-sm font-medium text-gray-700 whitespace-nowrap pt-1.5">시설 유형</span>
+              <div className="flex-1">
+                <SegmentedButtons
+                  options={FACILITY_TYPES}
+                  value={form.facilityType}
+                  onChange={(v) => setForm((p) => ({ ...p, facilityType: v }))}
+                  cols={3}
+                />
+              </div>
             </div>
 
             {/* Total population */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+            <div className="flex items-center gap-3">
+              <label className="text-sm font-medium text-gray-700 whitespace-nowrap">
                 위험 노출 인구 (명)
               </label>
               <input
@@ -277,59 +284,61 @@ export default function NewRecord() {
                 onChange={(e) =>
                   setForm((p) => ({ ...p, totalPopulation: parseInt(e.target.value) || 0 }))
                 }
-                className="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal-500"
+                className="flex-1 px-3 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal-500"
               />
             </div>
 
             {/* GPS */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">GPS 좌표</label>
-              {form.gps ? (
-                <div className="flex items-center gap-2 px-4 py-3 bg-teal-50 border border-teal-200 rounded-xl">
-                  <MapPin size={16} className="text-teal-600 shrink-0" />
-                  <span className="text-sm text-teal-700">
-                    {form.gps.lat.toFixed(5)}, {form.gps.lng.toFixed(5)}
-                    {form.gps.accuracy != null && ` (±${Math.round(form.gps.accuracy)}m)`}
-                  </span>
+            <div className="flex items-center gap-3">
+              <span className="text-sm font-medium text-gray-700 whitespace-nowrap">GPS 좌표</span>
+              <div className="flex-1">
+                {form.gps ? (
+                  <div className="flex items-center gap-2 px-3 py-2 bg-teal-50 border border-teal-200 rounded-xl">
+                    <MapPin size={14} className="text-teal-600 shrink-0" />
+                    <span className="text-sm text-teal-700 truncate">
+                      {form.gps.lat.toFixed(4)}, {form.gps.lng.toFixed(4)}
+                      {form.gps.accuracy != null && ` (±${Math.round(form.gps.accuracy)}m)`}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => setForm((p) => ({ ...p, gps: undefined }))}
+                      className="ml-auto text-xs text-gray-400 underline touch-manipulation shrink-0"
+                    >
+                      재수집
+                    </button>
+                  </div>
+                ) : (
                   <button
                     type="button"
-                    onClick={() => setForm((p) => ({ ...p, gps: undefined }))}
-                    className="ml-auto text-xs text-gray-400 underline touch-manipulation"
+                    onClick={collectGps}
+                    disabled={gpsLoading}
+                    className="w-full flex items-center justify-center gap-2 py-2.5 border-2 border-dashed border-teal-300 rounded-xl text-teal-600 font-medium text-sm active:bg-teal-50 disabled:opacity-50 touch-manipulation"
                   >
-                    재수집
+                    {gpsLoading ? (
+                      <>
+                        <Loader2 size={14} className="animate-spin" />
+                        위치 수집 중…
+                      </>
+                    ) : (
+                      <>
+                        <Navigation size={14} />
+                        GPS 수집
+                      </>
+                    )}
                   </button>
-                </div>
-              ) : (
-                <button
-                  type="button"
-                  onClick={collectGps}
-                  disabled={gpsLoading}
-                  className="w-full flex items-center justify-center gap-2 py-3.5 border-2 border-dashed border-teal-300 rounded-xl text-teal-600 font-medium text-sm active:bg-teal-50 disabled:opacity-50 touch-manipulation"
-                >
-                  {gpsLoading ? (
-                    <>
-                      <Loader2 size={16} className="animate-spin" />
-                      위치 수집 중…
-                    </>
-                  ) : (
-                    <>
-                      <Navigation size={16} />
-                      GPS 수집
-                    </>
-                  )}
-                </button>
-              )}
-              {gpsError && <p className="mt-1.5 text-xs text-red-500">{gpsError}</p>}
+                )}
+                {gpsError && <p className="mt-1 text-xs text-red-500">{gpsError}</p>}
+              </div>
             </div>
           </div>
         );
 
       case 2:
         return (
-          <div className="space-y-5">
+          <div className="space-y-3">
             {/* Name */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+            <div className="flex items-center gap-3">
+              <label className="text-sm font-medium text-gray-700 whitespace-nowrap">
                 환자명{' '}
                 <span className="text-xs text-gray-400 font-normal">(선택)</span>
               </label>
@@ -340,27 +349,31 @@ export default function NewRecord() {
                 onChange={(e) =>
                   setForm((p) => ({ ...p, indexCase: { ...p.indexCase, name: e.target.value } }))
                 }
-                className="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal-500"
+                className="flex-1 px-3 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal-500"
               />
             </div>
 
             {/* Gender */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">성별</label>
-              <SegmentedButtons
-                options={GENDER_OPTIONS}
-                value={form.indexCase.gender}
-                onChange={(v) =>
-                  setForm((p) => ({ ...p, indexCase: { ...p.indexCase, gender: v } }))
-                }
-                cols={4}
-              />
+            <div className="flex items-center gap-3">
+              <span className="text-sm font-medium text-gray-700 whitespace-nowrap">성별</span>
+              <div className="flex-1">
+                <SegmentedButtons
+                  options={GENDER_OPTIONS}
+                  value={form.indexCase.gender}
+                  onChange={(v) =>
+                    setForm((p) => ({ ...p, indexCase: { ...p.indexCase, gender: v } }))
+                  }
+                  cols={4}
+                />
+              </div>
             </div>
 
             {/* Age + onset date */}
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">나이 (만)</label>
+            <div className="grid grid-cols-2 gap-3">
+              <div className="flex items-center gap-2">
+                <label className="text-sm font-medium text-gray-700 whitespace-nowrap shrink-0">
+                  나이 (만)
+                </label>
                 <input
                   type="number"
                   inputMode="numeric"
@@ -374,11 +387,13 @@ export default function NewRecord() {
                       indexCase: { ...p.indexCase, age: parseInt(e.target.value) || 0 },
                     }))
                   }
-                  className="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal-500"
+                  className="flex-1 min-w-0 px-3 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal-500"
                 />
               </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">증상 발생일</label>
+              <div className="flex items-center gap-2">
+                <label className="text-sm font-medium text-gray-700 whitespace-nowrap shrink-0">
+                  발생일
+                </label>
                 <input
                   type="date"
                   value={form.indexCase.onsetDate}
@@ -388,20 +403,15 @@ export default function NewRecord() {
                       indexCase: { ...p.indexCase, onsetDate: e.target.value },
                     }))
                   }
-                  className="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal-500"
+                  className="flex-1 min-w-0 px-3 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal-500"
                 />
               </div>
             </div>
 
             {/* Symptoms */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                주요 증상{' '}
-                <span className="text-xs text-gray-400 font-normal">
-                  {form.indexCase.symptoms.length > 0
-                    ? `${form.indexCase.symptoms.length}개 선택됨`
-                    : '복수 선택 가능'}
-                </span>
+              <label className="block text-sm font-medium text-gray-700 text-left mb-2">
+                주요 증상
               </label>
               <div className="grid grid-cols-4 gap-2">
                 {SYMPTOMS.map((symptom) => {
@@ -411,7 +421,7 @@ export default function NewRecord() {
                       key={symptom}
                       type="button"
                       onClick={() => toggleSymptom(symptom)}
-                      className={`py-2.5 rounded-xl text-sm font-medium border touch-manipulation transition-colors ${
+                      className={`py-2 rounded-xl text-sm font-medium border touch-manipulation transition-colors ${
                         selected
                           ? 'bg-teal-600 text-white border-teal-600'
                           : 'bg-white text-gray-700 border-gray-300 active:bg-gray-50'
@@ -428,10 +438,10 @@ export default function NewRecord() {
 
       case 3:
         return (
-          <div className="space-y-6">
+          <div className="space-y-3">
             {/* Contacts */}
             <div>
-              <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">
+              <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">
                 접촉자 분류
               </h3>
               <div className="bg-white border border-gray-200 rounded-xl px-4">
@@ -443,7 +453,7 @@ export default function NewRecord() {
                   }
                 />
                 <Counter
-                  label="직장/학교 동료 (Colleague)"
+                  label="직장/학교 (Colleague)"
                   value={form.contacts.colleague}
                   onChange={(v) =>
                     setForm((p) => ({ ...p, contacts: { ...p.contacts, colleague: v } }))
@@ -457,7 +467,7 @@ export default function NewRecord() {
                   }
                 />
               </div>
-              <p className="mt-1.5 text-xs text-gray-400 text-right">
+              <p className="mt-1 text-xs text-gray-400 text-right">
                 총{' '}
                 {form.contacts.household + form.contacts.colleague + form.contacts.community}명
               </p>
@@ -465,7 +475,7 @@ export default function NewRecord() {
 
             {/* Daily cases */}
             <div>
-              <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">
+              <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">
                 당일 발생 현황
               </h3>
               <div className="bg-white border border-gray-200 rounded-xl px-4">
@@ -497,36 +507,40 @@ export default function NewRecord() {
 
       case 4:
         return (
-          <div className="space-y-5">
+          <div className="space-y-3">
             {/* Transmission */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+            <div className="flex items-start gap-3">
+              <span className="text-sm font-medium text-gray-700 whitespace-nowrap pt-1.5">
                 추정 전파 경로
-              </label>
-              <SegmentedButtons
-                options={TRANSMISSION_OPTIONS}
-                value={form.transmission}
-                onChange={(v) => setForm((p) => ({ ...p, transmission: v }))}
-                cols={2}
-              />
+              </span>
+              <div className="flex-1">
+                <SegmentedButtons
+                  options={TRANSMISSION_OPTIONS}
+                  value={form.transmission}
+                  onChange={(v) => setForm((p) => ({ ...p, transmission: v }))}
+                  cols={2}
+                />
+              </div>
             </div>
 
             {/* Vaccination */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+            <div className="flex items-start gap-3">
+              <span className="text-sm font-medium text-gray-700 whitespace-nowrap pt-1.5">
                 예방접종 여부
-              </label>
-              <SegmentedButtons
-                options={VACCINATION_OPTIONS}
-                value={form.vaccinated}
-                onChange={(v) => setForm((p) => ({ ...p, vaccinated: v }))}
-                cols={2}
-              />
+              </span>
+              <div className="flex-1">
+                <SegmentedButtons
+                  options={VACCINATION_OPTIONS}
+                  value={form.vaccinated}
+                  onChange={(v) => setForm((p) => ({ ...p, vaccinated: v }))}
+                  cols={2}
+                />
+              </div>
             </div>
 
             {/* Notes */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 text-left mb-1">
                 메모 및 특이사항
               </label>
               <textarea
@@ -534,7 +548,7 @@ export default function NewRecord() {
                 placeholder="조사관 메모, 특이사항을 자유롭게 입력하세요"
                 value={form.notes ?? ''}
                 onChange={(e) => setForm((p) => ({ ...p, notes: e.target.value }))}
-                className="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 resize-none"
+                className="w-full px-3 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 resize-none"
               />
             </div>
 
@@ -542,7 +556,7 @@ export default function NewRecord() {
             <div className="space-y-3 pt-2">
               <button
                 type="button"
-                onClick={() => handleSave(false)}
+                onClick={handleSave}
                 disabled={saving}
                 className="w-full flex items-center justify-center gap-2 py-4 bg-teal-600 text-white rounded-2xl font-semibold text-base active:bg-teal-700 disabled:opacity-50 touch-manipulation"
               >
@@ -551,7 +565,7 @@ export default function NewRecord() {
               </button>
               <button
                 type="button"
-                onClick={() => handleSave(true)}
+                onClick={handleSave}
                 disabled={saving}
                 className="w-full flex items-center justify-center gap-2 py-4 bg-white border-2 border-teal-600 text-teal-700 rounded-2xl font-semibold text-base active:bg-teal-50 disabled:opacity-50 touch-manipulation"
               >
@@ -572,7 +586,7 @@ export default function NewRecord() {
   return (
     <div className="min-h-screen bg-white text-gray-900 flex flex-col">
       {/* Header */}
-      <header className="bg-teal-600 text-white px-4 py-4 sticky top-0 z-10 shadow-sm">
+      <header className="bg-teal-600 text-white px-4 py-3 sticky top-0 z-10 shadow-sm">
         <div className="flex items-center gap-3">
           <button
             type="button"
@@ -580,15 +594,15 @@ export default function NewRecord() {
             className="p-1 -ml-1 active:opacity-70 touch-manipulation"
             aria-label="뒤로가기"
           >
-            <ChevronLeft size={24} />
+            <ChevronLeft size={22} />
           </button>
-          <h1 className="text-xl font-bold">새 현장 기록</h1>
+          <h1 className="text-xl font-semibold">새 현장 기록</h1>
         </div>
       </header>
 
       {/* Progress bar */}
-      <div className="bg-white border-b border-gray-100 px-4 py-3">
-        <div className="flex justify-between items-center mb-2">
+      <div className="bg-white border-b border-gray-100 px-4 py-2">
+        <div className="flex justify-between items-center mb-1.5">
           <span className="text-sm font-semibold text-teal-700">{STEP_LABELS[step - 1]}</span>
           <span className="text-xs text-gray-400">{step} / {TOTAL_STEPS}</span>
         </div>
@@ -601,12 +615,12 @@ export default function NewRecord() {
       </div>
 
       {/* Step content */}
-      <main className="flex-1 px-4 py-4 pb-24">
+      <main className="flex-1 px-4 py-3 pb-24">
         {renderStep()}
       </main>
 
       {/* Bottom navigation */}
-      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 flex gap-3">
+      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-3 flex gap-3">
         {step > 1 && (
           <button
             type="button"
