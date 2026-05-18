@@ -171,9 +171,9 @@ export default function RecordList() {
   const totalDeaths = records.reduce((sum, r) => sum + r.dailyCases.deaths, 0);
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
+    <div className="min-h-screen bg-gray-50 text-gray-900 flex flex-col">
       {/* Header */}
-      <header className="bg-teal-600 text-white px-4 pt-4 pb-6 sticky top-0 z-10 shadow-sm">
+      <header className="bg-teal-600 text-white p-4 sticky top-0 z-10 shadow-sm">
         <h1 className="text-xl font-bold">조사 기록 목록</h1>
         <p className="text-sm text-teal-200 mt-0.5">현장 역학조사 전체 기록</p>
       </header>
@@ -181,7 +181,7 @@ export default function RecordList() {
       {/* Summary stats */}
       {!loading && !error && records.length > 0 && (
         <div className="px-4 -mt-2 mb-2">
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 grid grid-cols-3 gap-3">
+          <div className="bg-white shadow-sm rounded-xl p-4 grid grid-cols-3 gap-3">
             <StatCard
               label="총 기록"
               value={records.length}

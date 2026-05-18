@@ -140,7 +140,7 @@ function SegmentedButtons<T extends string>({
           className={`py-2.5 rounded-xl text-sm font-medium border touch-manipulation transition-colors ${
             value === opt.value
               ? 'bg-teal-600 text-white border-teal-600'
-              : 'bg-white text-gray-600 border-gray-200 active:bg-gray-50'
+              : 'bg-white text-gray-700 border-gray-300 active:bg-gray-50'
           }`}
         >
           {opt.label}
@@ -414,7 +414,7 @@ export default function NewRecord() {
                       className={`py-2.5 rounded-xl text-sm font-medium border touch-manipulation transition-colors ${
                         selected
                           ? 'bg-teal-600 text-white border-teal-600'
-                          : 'bg-white text-gray-600 border-gray-200 active:bg-gray-50'
+                          : 'bg-white text-gray-700 border-gray-300 active:bg-gray-50'
                       }`}
                     >
                       {symptom}
@@ -570,7 +570,7 @@ export default function NewRecord() {
   // ─── Render ────────────────────────────────────────────────────────────────
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
+    <div className="min-h-screen bg-white text-gray-900 flex flex-col">
       {/* Header */}
       <header className="bg-teal-600 text-white px-4 py-4 sticky top-0 z-10 shadow-sm">
         <div className="flex items-center gap-3">
@@ -601,12 +601,12 @@ export default function NewRecord() {
       </div>
 
       {/* Step content */}
-      <main className="flex-1 px-4 py-4 pb-28">
+      <main className="flex-1 px-4 py-4 pb-24">
         {renderStep()}
       </main>
 
       {/* Bottom navigation */}
-      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 px-4 py-4 flex gap-3">
+      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 flex gap-3">
         {step > 1 && (
           <button
             type="button"
