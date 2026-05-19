@@ -387,7 +387,7 @@ export default function Dashboard() {
           </SectionCard>
 
           {/* 6. Export / Share */}
-          <SectionCard title="데이터 내보내기 / Export Data" isDark={isDark}>
+          <SectionCard title={lang === 'ko' ? '데이터 내보내기' : 'Export Data'} isDark={isDark}>
             <div className="grid grid-cols-2 gap-3">
               <button
                 type="button"
