@@ -5,8 +5,6 @@ import {
   ChevronRight,
   Save,
   BarChart2,
-  Plus,
-  Minus,
   Loader2,
   Navigation,
   MapPin,
@@ -89,15 +87,15 @@ function Counter({
   onChange: (v: number) => void;
 }) {
   return (
-    <div className="flex items-center justify-between py-2 border-b border-gray-100 last:border-0">
+    <div className="flex items-center justify-between py-3 border-b border-gray-100">
       <span className="text-sm text-gray-700">{label}</span>
-      <div className="flex items-center gap-1.5">
+      <div className="flex items-center gap-2">
         <button
           type="button"
           onClick={() => onChange(Math.max(0, value - 1))}
-          className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center active:bg-gray-200 touch-manipulation"
+          className="w-9 h-9 rounded-full border border-gray-300 text-gray-600 flex items-center justify-center active:bg-gray-50 touch-manipulation"
         >
-          <Minus size={14} className="text-gray-600" />
+          −
         </button>
         <input
           type="number"
@@ -106,14 +104,14 @@ function Counter({
           value={value === 0 ? '' : value}
           placeholder="0"
           onChange={(e) => onChange(Math.max(0, parseInt(e.target.value) || 0))}
-          className="w-16 h-8 text-center text-sm font-semibold text-gray-800 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 tabular-nums"
+          className="w-16 text-center border border-gray-300 rounded-lg text-sm py-1.5 focus:outline-none focus:ring-2 focus:ring-teal-500 tabular-nums"
         />
         <button
           type="button"
           onClick={() => onChange(value + 1)}
-          className="w-8 h-8 rounded-full bg-teal-600 flex items-center justify-center active:bg-teal-700 touch-manipulation"
+          className="w-9 h-9 rounded-full border border-gray-300 text-gray-600 flex items-center justify-center active:bg-gray-50 touch-manipulation"
         >
-          <Plus size={14} className="text-white" />
+          +
         </button>
       </div>
     </div>
@@ -231,7 +229,7 @@ export default function NewRecord() {
     switch (step) {
       case 1:
         return (
-          <div className="space-y-3">
+          <div className="space-y-6">
             {/* Timestamp */}
             <div className="flex items-center gap-3">
               <span className="text-sm font-medium text-gray-700 whitespace-nowrap">조사 일시</span>
@@ -258,15 +256,23 @@ export default function NewRecord() {
             </div>
 
             {/* Facility type */}
-            <div className="flex items-start gap-3">
-              <span className="text-sm font-medium text-gray-700 whitespace-nowrap pt-1.5">시설 유형</span>
-              <div className="flex-1">
-                <SegmentedButtons
-                  options={FACILITY_TYPES}
-                  value={form.facilityType}
-                  onChange={(v) => setForm((p) => ({ ...p, facilityType: v }))}
-                  cols={3}
-                />
+            <div>
+              <span className="block text-sm font-medium text-gray-700 text-left mb-2">시설 유형</span>
+              <div className="flex flex-wrap justify-start gap-2">
+                {FACILITY_TYPES.map((opt) => (
+                  <button
+                    key={opt.value}
+                    type="button"
+                    onClick={() => setForm((p) => ({ ...p, facilityType: opt.value }))}
+                    className={`px-4 py-2 rounded-xl text-sm font-medium border touch-manipulation transition-colors ${
+                      form.facilityType === opt.value
+                        ? 'bg-teal-600 text-white border-teal-600'
+                        : 'bg-white text-gray-700 border-gray-300 active:bg-gray-50'
+                    }`}
+                  >
+                    {opt.label}
+                  </button>
+                ))}
               </div>
             </div>
 
@@ -335,7 +341,7 @@ export default function NewRecord() {
 
       case 2:
         return (
-          <div className="space-y-3">
+          <div className="space-y-6">
             {/* Name */}
             <div className="flex items-center gap-3">
               <label className="text-sm font-medium text-gray-700 whitespace-nowrap">
@@ -438,13 +444,13 @@ export default function NewRecord() {
 
       case 3:
         return (
-          <div className="space-y-3">
+          <div className="space-y-6">
             {/* Contacts */}
             <div>
               <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">
                 접촉자 분류
               </h3>
-              <div className="bg-white border border-gray-200 rounded-xl px-4">
+              <div className="bg-white border border-gray-200 rounded-xl px-6">
                 <Counter
                   label="동거 가족 (Household)"
                   value={form.contacts.household}
@@ -478,7 +484,7 @@ export default function NewRecord() {
               <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">
                 당일 발생 현황
               </h3>
-              <div className="bg-white border border-gray-200 rounded-xl px-4">
+              <div className="bg-white border border-gray-200 rounded-xl px-6">
                 <Counter
                   label="신규 확진"
                   value={form.dailyCases.newCases}
@@ -507,7 +513,7 @@ export default function NewRecord() {
 
       case 4:
         return (
-          <div className="space-y-3">
+          <div className="space-y-6">
             {/* Transmission */}
             <div className="flex items-start gap-3">
               <span className="text-sm font-medium text-gray-700 whitespace-nowrap pt-1.5">
@@ -615,7 +621,7 @@ export default function NewRecord() {
       </div>
 
       {/* Step content */}
-      <main className="flex-1 px-4 py-3 pb-24">
+      <main className="flex-1 px-5 py-6 pb-32">
         {renderStep()}
       </main>
 
