@@ -54,9 +54,9 @@ function StatCard({
   accent: 'teal' | 'orange' | 'red';
 }) {
   const bg = {
-    teal: 'bg-teal-50 dark:bg-teal-800',
-    orange: 'bg-orange-50 dark:bg-orange-800',
-    red: 'bg-red-50 dark:bg-red-800',
+    teal: 'bg-teal-50 dark:bg-teal-700',
+    orange: 'bg-orange-50 dark:bg-orange-700',
+    red: 'bg-red-50 dark:bg-red-700',
   }[accent];
   const text = {
     teal: 'text-teal-600 dark:text-white',
@@ -67,8 +67,8 @@ function StatCard({
   return (
     <div className={`rounded-2xl p-4 ${bg}`}>
       <div className={`mb-1.5 ${text}`}>{icon}</div>
-      <p className="text-2xl font-bold text-gray-800 dark:text-white leading-tight">{value}</p>
-      <p className="text-xs text-gray-500 dark:text-gray-200 mt-0.5">{label}</p>
+      <p className="text-2xl font-bold text-white leading-tight">{value}</p>
+      <p className="text-sm text-white opacity-80 mt-0.5">{label}</p>
     </div>
   );
 }
