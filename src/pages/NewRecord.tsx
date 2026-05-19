@@ -196,7 +196,7 @@ export default function NewRecord() {
           <div>
             {/* Timestamp */}
             <div className="mb-5">
-              <span className="block text-sm text-gray-600 text-left mb-1">조사 일시</span>
+              <span className="block text-sm text-gray-600 mb-1">조사 일시</span>
               <div className="px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-500">
                 {(() => {
                   const d = new Date(form.timestamp);
@@ -207,7 +207,7 @@ export default function NewRecord() {
 
             {/* Location */}
             <div className="mb-5">
-              <label className="block text-sm text-gray-600 text-left mb-1">
+              <label className="block text-sm text-gray-600 mb-1">
                 발생 장소 <span className="text-red-500">*</span>
               </label>
               <input
@@ -221,7 +221,7 @@ export default function NewRecord() {
 
             {/* Facility type */}
             <div className="mb-5">
-              <span className="block text-sm text-gray-600 text-left mb-1">시설 유형</span>
+              <span className="block text-sm text-gray-600 mb-1">시설 유형</span>
               <div className="flex flex-wrap gap-2">
                 {FACILITY_TYPES.map((opt) => (
                   <button
@@ -242,7 +242,7 @@ export default function NewRecord() {
 
             {/* Total population */}
             <div className="mb-5">
-              <label className="block text-sm text-gray-600 text-left mb-1">
+              <label className="block text-sm text-gray-600 mb-1">
                 위험 노출 인구 (명)
               </label>
               <input
@@ -260,7 +260,7 @@ export default function NewRecord() {
 
             {/* GPS */}
             <div className="mb-5">
-              <span className="block text-sm text-gray-600 text-left mb-1">GPS 좌표</span>
+              <span className="block text-sm text-gray-600 mb-1">GPS 좌표</span>
               {form.gps ? (
                 <div className="flex items-center gap-2 px-3 py-2 bg-teal-50 border border-teal-200 rounded-xl">
                   <MapPin size={14} className="text-teal-600 shrink-0" />
@@ -306,7 +306,7 @@ export default function NewRecord() {
           <div>
             {/* Name */}
             <div className="mb-5">
-              <label className="block text-sm text-gray-600 text-left mb-1">
+              <label className="block text-sm text-gray-600 mb-1">
                 환자명 <span className="text-xs text-gray-400">(선택)</span>
               </label>
               <input
@@ -322,7 +322,7 @@ export default function NewRecord() {
 
             {/* Gender */}
             <div className="mb-5">
-              <span className="block text-sm text-gray-600 text-left mb-1">성별</span>
+              <span className="block text-sm text-gray-600 mb-1">성별</span>
               <div className="flex gap-2">
                 {GENDER_OPTIONS.map((opt) => (
                   <button
@@ -345,7 +345,7 @@ export default function NewRecord() {
 
             {/* Age */}
             <div className="mb-5">
-              <label className="block text-sm text-gray-600 text-left mb-1">나이 (만)</label>
+              <label className="block text-sm text-gray-600 mb-1">나이 (만)</label>
               <input
                 type="number"
                 inputMode="numeric"
@@ -365,7 +365,7 @@ export default function NewRecord() {
 
             {/* Onset date */}
             <div className="mb-5">
-              <label className="block text-sm text-gray-600 text-left mb-1">발생일</label>
+              <label className="block text-sm text-gray-600 mb-1">발생일</label>
               <input
                 type="date"
                 value={form.indexCase.onsetDate}
@@ -381,7 +381,7 @@ export default function NewRecord() {
 
             {/* Symptoms */}
             <div className="mb-5">
-              <label className="block text-sm text-gray-600 text-left mb-1">주요 증상</label>
+              <label className="block text-sm text-gray-600 mb-1">주요 증상</label>
               <div className="flex flex-wrap gap-2">
                 {SYMPTOMS.map((symptom) => {
                   const selected = form.indexCase.symptoms.includes(symptom);
@@ -479,7 +479,7 @@ export default function NewRecord() {
           <div>
             {/* Transmission */}
             <div className="mb-5">
-              <span className="block text-sm text-gray-600 text-left mb-1">추정 전파 경로</span>
+              <span className="block text-sm text-gray-600 mb-1">추정 전파 경로</span>
               <div className="flex flex-wrap gap-2">
                 {TRANSMISSION_OPTIONS.map((opt) => (
                   <button
@@ -500,7 +500,7 @@ export default function NewRecord() {
 
             {/* Vaccination */}
             <div className="mb-5">
-              <span className="block text-sm text-gray-600 text-left mb-1">예방접종 여부</span>
+              <span className="block text-sm text-gray-600 mb-1">예방접종 여부</span>
               <div className="flex flex-wrap gap-2">
                 {VACCINATION_OPTIONS.map((opt) => (
                   <button
@@ -521,7 +521,7 @@ export default function NewRecord() {
 
             {/* Notes */}
             <div className="mb-5">
-              <label className="block text-sm text-gray-600 text-left mb-1">
+              <label className="block text-sm text-gray-600 mb-1">
                 메모 및 특이사항
               </label>
               <textarea
@@ -576,7 +576,7 @@ export default function NewRecord() {
           >
             <ChevronLeft size={22} />
           </button>
-          <h1 className="text-xl font-semibold">새 현장 기록</h1>
+          <h1 className="text-lg font-semibold">새 현장 기록</h1>
         </div>
       </header>
 
@@ -595,7 +595,7 @@ export default function NewRecord() {
       </div>
 
       {/* Step content */}
-      <main className="flex-1 px-5 py-6 pb-32">
+      <main className="flex-1 px-5 py-6 pb-32 text-left">
         {renderStep()}
       </main>
 
