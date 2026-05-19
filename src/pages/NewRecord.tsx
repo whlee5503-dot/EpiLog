@@ -11,43 +11,11 @@ import {
 } from 'lucide-react';
 import { db } from '../db/database';
 import type { FieldRecord, TransmissionRoute, VaccinationStatus } from '../types/index';
+import { useLanguage } from '../contexts/LanguageContext';
+import { LangToggle } from '../components/LangToggle';
 
-// ─── Constants ────────────────────────────────────────────────────────────────
-
-const SYMPTOMS = ['발열', '기침', '설사', '구토', '복통', '발진', '호흡곤란', '두통', '근육통'];
-
-const FACILITY_TYPES: { value: string; label: string }[] = [
-  { value: 'school', label: '학교' },
-  { value: 'hospital', label: '병원/의료기관' },
-  { value: 'workplace', label: '직장' },
-  { value: 'restaurant', label: '식당/음식점' },
-  { value: 'household', label: '가정' },
-  { value: 'community', label: '지역사회' },
-];
-
-const TRANSMISSION_OPTIONS: { value: TransmissionRoute; label: string }[] = [
-  { value: 'droplet', label: '비말 전파' },
-  { value: 'contact', label: '접촉 전파' },
-  { value: 'waterborne', label: '수인성' },
-  { value: 'foodborne', label: '식품 매개' },
-  { value: 'vector', label: '매개체(벡터)' },
-];
-
-const VACCINATION_OPTIONS: { value: VaccinationStatus; label: string }[] = [
-  { value: 'vaccinated', label: '완전 접종' },
-  { value: 'partial', label: '부분 접종' },
-  { value: 'unvaccinated', label: '미접종' },
-  { value: 'unknown', label: '확인 불가' },
-];
-
-const GENDER_OPTIONS = [
-  { value: 'male', label: '남' },
-  { value: 'female', label: '여' },
-  { value: 'other', label: '기타' },
-  { value: 'unknown', label: '미상' },
-] as const;
-
-const STEP_LABELS = ['기본정보', '지표환자', '접촉자', '역학특성'];
+// Internal keys for symptoms (stored in DB as Korean)
+const SYMPTOMS_KEYS = ['발열', '기침', '설사', '구토', '복통', '발진', '호흡곤란', '두통', '근육통'] as const;
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -87,13 +55,13 @@ function Counter({
   onChange: (v: number) => void;
 }) {
   return (
-    <div className="flex items-center justify-between py-3 border-b border-gray-100">
-      <span className="text-sm text-gray-700">{label}</span>
+    <div className="flex items-center justify-between py-3 border-b border-gray-100 dark:border-gray-700">
+      <span className="text-sm text-gray-700 dark:text-gray-200">{label}</span>
       <div className="flex items-center gap-2">
         <button
           type="button"
           onClick={() => onChange(Math.max(0, value - 1))}
-          className="w-9 h-9 rounded-full border border-gray-300 text-gray-600 flex items-center justify-center active:bg-gray-50 touch-manipulation"
+          className="w-9 h-9 rounded-full border border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-300 flex items-center justify-center active:bg-gray-50 dark:active:bg-gray-700 touch-manipulation"
         >
           −
         </button>
@@ -104,12 +72,12 @@ function Counter({
           value={value === 0 ? '' : value}
           placeholder="0"
           onChange={(e) => onChange(Math.max(0, parseInt(e.target.value) || 0))}
-          className="w-16 text-center border border-gray-300 rounded-lg text-sm py-1.5 focus:outline-none focus:ring-2 focus:ring-teal-500 tabular-nums"
+          className="w-16 text-center border border-gray-300 dark:border-gray-600 rounded-lg text-sm py-1.5 focus:outline-none focus:ring-2 focus:ring-teal-500 tabular-nums bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
         />
         <button
           type="button"
           onClick={() => onChange(value + 1)}
-          className="w-9 h-9 rounded-full border border-gray-300 text-gray-600 flex items-center justify-center active:bg-gray-50 touch-manipulation"
+          className="w-9 h-9 rounded-full border border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-300 flex items-center justify-center active:bg-gray-50 dark:active:bg-gray-700 touch-manipulation"
         >
           +
         </button>
@@ -122,6 +90,7 @@ function Counter({
 
 export default function NewRecord() {
   const navigate = useNavigate();
+  const { t, lang } = useLanguage();
   const [step, setStep] = useState(1);
   const [form, setForm] = useState<FormData>(initForm);
   const [gpsLoading, setGpsLoading] = useState(false);
@@ -129,6 +98,44 @@ export default function NewRecord() {
   const [saving, setSaving] = useState(false);
 
   const TOTAL_STEPS = 4;
+  const STEP_LABELS = [t.nr_step1, t.nr_step2, t.nr_step3, t.nr_step4];
+
+  const FACILITY_TYPES = [
+    { value: 'school', label: t.ft_school },
+    { value: 'hospital', label: t.ft_hospital },
+    { value: 'workplace', label: t.ft_workplace },
+    { value: 'restaurant', label: t.ft_restaurant },
+    { value: 'household', label: t.ft_household },
+    { value: 'community', label: t.ft_community },
+  ];
+
+  const TRANSMISSION_OPTIONS: { value: TransmissionRoute; label: string }[] = [
+    { value: 'droplet', label: t.tr_droplet },
+    { value: 'contact', label: t.tr_contact },
+    { value: 'waterborne', label: t.tr_waterborne },
+    { value: 'foodborne', label: t.tr_foodborne },
+    { value: 'vector', label: t.tr_vector },
+  ];
+
+  const VACCINATION_OPTIONS: { value: VaccinationStatus; label: string }[] = [
+    { value: 'vaccinated', label: t.va_vaccinated },
+    { value: 'partial', label: t.va_partial },
+    { value: 'unvaccinated', label: t.va_unvaccinated },
+    { value: 'unknown', label: t.va_unknown },
+  ];
+
+  const GENDER_OPTIONS = [
+    { value: 'male' as const, label: t.ge_male },
+    { value: 'female' as const, label: t.ge_female },
+    { value: 'other' as const, label: t.ge_other },
+    { value: 'unknown' as const, label: t.ge_unknown },
+  ];
+
+  const SYMPTOM_LABELS: Record<string, string> = {
+    '발열': t.sy_fever, '기침': t.sy_cough, '설사': t.sy_diarrhea,
+    '구토': t.sy_vomiting, '복통': t.sy_abdominal, '발진': t.sy_rash,
+    '호흡곤란': t.sy_dyspnea, '두통': t.sy_headache, '근육통': t.sy_myalgia,
+  };
 
   // ─── Handlers ──────────────────────────────────────────────────────────────
 
@@ -187,6 +194,9 @@ export default function NewRecord() {
 
   const canProceed = step === 1 ? form.location.trim() !== '' : true;
 
+  const totalContacts = form.contacts.household + form.contacts.colleague + form.contacts.community;
+  const totalContactsLabel = lang === 'ko' ? `총 ${totalContacts}명` : `Total ${totalContacts}`;
+
   // ─── Step renders ──────────────────────────────────────────────────────────
 
   const renderStep = () => {
@@ -194,10 +204,9 @@ export default function NewRecord() {
       case 1:
         return (
           <div>
-            {/* Timestamp */}
             <div className="mb-5">
-              <span className="block text-sm text-gray-600 mb-1">조사 일시</span>
-              <div className="px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-500">
+              <span className="block text-sm text-gray-600 dark:text-gray-300 mb-1">{t.nr_survey_datetime}</span>
+              <div className="px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-sm text-gray-500 dark:text-gray-400">
                 {(() => {
                   const d = new Date(form.timestamp);
                   return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`;
@@ -205,23 +214,21 @@ export default function NewRecord() {
               </div>
             </div>
 
-            {/* Location */}
             <div className="mb-5">
-              <label className="block text-sm text-gray-600 mb-1">
-                발생 장소 <span className="text-red-500">*</span>
+              <label className="block text-sm text-gray-600 dark:text-gray-300 mb-1">
+                {t.nr_location} <span className="text-red-500">*</span>
               </label>
               <input
                 type="text"
-                placeholder="예: ○○초등학교, △△요양원"
+                placeholder={t.nr_placeholder_location}
                 value={form.location}
                 onChange={(e) => setForm((p) => ({ ...p, location: e.target.value }))}
-                className="w-full px-3 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal-500"
+                className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
               />
             </div>
 
-            {/* Facility type */}
             <div className="mb-5">
-              <span className="block text-sm text-gray-600 mb-1">시설 유형</span>
+              <span className="block text-sm text-gray-600 dark:text-gray-300 mb-1">{t.nr_facility_type}</span>
               <div className="flex flex-wrap gap-2">
                 {FACILITY_TYPES.map((opt) => (
                   <button
@@ -231,7 +238,7 @@ export default function NewRecord() {
                     className={`px-4 py-2 rounded-xl text-sm font-medium border touch-manipulation transition-colors ${
                       form.facilityType === opt.value
                         ? 'bg-teal-600 text-white border-teal-600'
-                        : 'bg-white text-gray-700 border-gray-300 active:bg-gray-50'
+                        : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 border-gray-300 dark:border-gray-600 active:bg-gray-50 dark:active:bg-gray-600'
                     }`}
                   >
                     {opt.label}
@@ -240,10 +247,9 @@ export default function NewRecord() {
               </div>
             </div>
 
-            {/* Total population */}
             <div className="mb-5">
-              <label className="block text-sm text-gray-600 mb-1">
-                위험 노출 인구 (명)
+              <label className="block text-sm text-gray-600 dark:text-gray-300 mb-1">
+                {t.nr_population}
               </label>
               <input
                 type="number"
@@ -254,17 +260,16 @@ export default function NewRecord() {
                 onChange={(e) =>
                   setForm((p) => ({ ...p, totalPopulation: parseInt(e.target.value) || 0 }))
                 }
-                className="w-full px-3 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal-500"
+                className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
               />
             </div>
 
-            {/* GPS */}
             <div className="mb-5">
-              <span className="block text-sm text-gray-600 mb-1">GPS 좌표</span>
+              <span className="block text-sm text-gray-600 dark:text-gray-300 mb-1">{t.nr_gps}</span>
               {form.gps ? (
-                <div className="flex items-center gap-2 px-3 py-2 bg-teal-50 border border-teal-200 rounded-xl">
-                  <MapPin size={14} className="text-teal-600 shrink-0" />
-                  <span className="text-sm text-teal-700 truncate">
+                <div className="flex items-center gap-2 px-3 py-2 bg-teal-50 dark:bg-teal-900/30 border border-teal-200 dark:border-teal-700 rounded-xl">
+                  <MapPin size={14} className="text-teal-600 dark:text-teal-400 shrink-0" />
+                  <span className="text-sm text-teal-700 dark:text-teal-300 truncate">
                     {form.gps.lat.toFixed(4)}, {form.gps.lng.toFixed(4)}
                     {form.gps.accuracy != null && ` (±${Math.round(form.gps.accuracy)}m)`}
                   </span>
@@ -273,7 +278,7 @@ export default function NewRecord() {
                     onClick={() => setForm((p) => ({ ...p, gps: undefined }))}
                     className="ml-auto text-xs text-gray-400 underline touch-manipulation shrink-0"
                   >
-                    재수집
+                    {t.nr_gps_recollect}
                   </button>
                 </div>
               ) : (
@@ -281,18 +286,12 @@ export default function NewRecord() {
                   type="button"
                   onClick={collectGps}
                   disabled={gpsLoading}
-                  className="w-full flex items-center justify-center gap-2 py-2.5 border-2 border-dashed border-teal-300 rounded-xl text-teal-600 font-medium text-sm active:bg-teal-50 disabled:opacity-50 touch-manipulation"
+                  className="w-full flex items-center justify-center gap-2 py-2.5 border-2 border-dashed border-teal-300 dark:border-teal-600 rounded-xl text-teal-600 dark:text-teal-400 font-medium text-sm active:bg-teal-50 dark:active:bg-teal-900/20 disabled:opacity-50 touch-manipulation"
                 >
                   {gpsLoading ? (
-                    <>
-                      <Loader2 size={14} className="animate-spin" />
-                      위치 수집 중…
-                    </>
+                    <><Loader2 size={14} className="animate-spin" />{t.nr_gps_collecting}</>
                   ) : (
-                    <>
-                      <Navigation size={14} />
-                      GPS 수집
-                    </>
+                    <><Navigation size={14} />{t.nr_gps_collect}</>
                   )}
                 </button>
               )}
@@ -304,25 +303,24 @@ export default function NewRecord() {
       case 2:
         return (
           <div>
-            {/* Name */}
             <div className="mb-5">
-              <label className="block text-sm text-gray-600 mb-1">
-                환자명 <span className="text-xs text-gray-400">(선택)</span>
+              <label className="block text-sm text-gray-600 dark:text-gray-300 mb-1">
+                {t.nr_patient_name}{' '}
+                <span className="text-xs text-gray-400 dark:text-gray-500">{t.nr_optional}</span>
               </label>
               <input
                 type="text"
-                placeholder="이름 또는 익명 코드 (예: P-001)"
+                placeholder={t.nr_placeholder_name}
                 value={form.indexCase.name}
                 onChange={(e) =>
                   setForm((p) => ({ ...p, indexCase: { ...p.indexCase, name: e.target.value } }))
                 }
-                className="w-full px-3 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal-500"
+                className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
               />
             </div>
 
-            {/* Gender */}
             <div className="mb-5">
-              <span className="block text-sm text-gray-600 mb-1">성별</span>
+              <span className="block text-sm text-gray-600 dark:text-gray-300 mb-1">{t.nr_gender}</span>
               <div className="flex gap-2">
                 {GENDER_OPTIONS.map((opt) => (
                   <button
@@ -334,7 +332,7 @@ export default function NewRecord() {
                     className={`flex-1 py-2 rounded-xl text-sm font-medium border touch-manipulation transition-colors ${
                       form.indexCase.gender === opt.value
                         ? 'bg-teal-600 text-white border-teal-600'
-                        : 'bg-white text-gray-700 border-gray-300 active:bg-gray-50'
+                        : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 border-gray-300 dark:border-gray-600 active:bg-gray-50 dark:active:bg-gray-600'
                     }`}
                   >
                     {opt.label}
@@ -343,9 +341,8 @@ export default function NewRecord() {
               </div>
             </div>
 
-            {/* Age */}
             <div className="mb-5">
-              <label className="block text-sm text-gray-600 mb-1">나이 (만)</label>
+              <label className="block text-sm text-gray-600 dark:text-gray-300 mb-1">{t.nr_age}</label>
               <input
                 type="number"
                 inputMode="numeric"
@@ -359,13 +356,12 @@ export default function NewRecord() {
                     indexCase: { ...p.indexCase, age: parseInt(e.target.value) || 0 },
                   }))
                 }
-                className="w-full px-3 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal-500"
+                className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
               />
             </div>
 
-            {/* Onset date */}
             <div className="mb-5">
-              <label className="block text-sm text-gray-600 mb-1">발생일</label>
+              <label className="block text-sm text-gray-600 dark:text-gray-300 mb-1">{t.nr_onset}</label>
               <input
                 type="date"
                 value={form.indexCase.onsetDate}
@@ -375,15 +371,14 @@ export default function NewRecord() {
                     indexCase: { ...p.indexCase, onsetDate: e.target.value },
                   }))
                 }
-                className="w-full px-3 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal-500"
+                className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
               />
             </div>
 
-            {/* Symptoms */}
             <div className="mb-5">
-              <label className="block text-sm text-gray-600 mb-1">주요 증상</label>
+              <label className="block text-sm text-gray-600 dark:text-gray-300 mb-1">{t.nr_symptoms}</label>
               <div className="flex flex-wrap gap-2">
-                {SYMPTOMS.map((symptom) => {
+                {SYMPTOMS_KEYS.map((symptom) => {
                   const selected = form.indexCase.symptoms.includes(symptom);
                   return (
                     <button
@@ -393,10 +388,10 @@ export default function NewRecord() {
                       className={`px-4 py-2 rounded-xl text-sm font-medium border touch-manipulation transition-colors ${
                         selected
                           ? 'bg-teal-600 text-white border-teal-600'
-                          : 'bg-white text-gray-700 border-gray-300 active:bg-gray-50'
+                          : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 border-gray-300 dark:border-gray-600 active:bg-gray-50 dark:active:bg-gray-600'
                       }`}
                     >
-                      {symptom}
+                      {SYMPTOM_LABELS[symptom] ?? symptom}
                     </button>
                   );
                 })}
@@ -408,62 +403,57 @@ export default function NewRecord() {
       case 3:
         return (
           <div className="space-y-6">
-            {/* Contacts */}
             <div>
-              <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">
-                접촉자 분류
+              <h3 className="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-2">
+                {t.nr_contacts_section}
               </h3>
-              <div className="bg-white border border-gray-200 rounded-xl px-6">
+              <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl px-6">
                 <Counter
-                  label="동거 가족 (Household)"
+                  label={t.nr_household}
                   value={form.contacts.household}
                   onChange={(v) =>
                     setForm((p) => ({ ...p, contacts: { ...p.contacts, household: v } }))
                   }
                 />
                 <Counter
-                  label="직장/학교 (Colleague)"
+                  label={t.nr_colleague}
                   value={form.contacts.colleague}
                   onChange={(v) =>
                     setForm((p) => ({ ...p, contacts: { ...p.contacts, colleague: v } }))
                   }
                 />
                 <Counter
-                  label="지역사회 (Community)"
+                  label={t.nr_community}
                   value={form.contacts.community}
                   onChange={(v) =>
                     setForm((p) => ({ ...p, contacts: { ...p.contacts, community: v } }))
                   }
                 />
               </div>
-              <p className="mt-1 text-xs text-gray-400 text-right">
-                총{' '}
-                {form.contacts.household + form.contacts.colleague + form.contacts.community}명
-              </p>
+              <p className="mt-1 text-xs text-gray-400 text-right">{totalContactsLabel}</p>
             </div>
 
-            {/* Daily cases */}
             <div>
-              <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">
-                당일 발생 현황
+              <h3 className="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-2">
+                {t.nr_cases_section}
               </h3>
-              <div className="bg-white border border-gray-200 rounded-xl px-6">
+              <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl px-6">
                 <Counter
-                  label="신규 확진"
+                  label={t.nr_new_cases}
                   value={form.dailyCases.newCases}
                   onChange={(v) =>
                     setForm((p) => ({ ...p, dailyCases: { ...p.dailyCases, newCases: v } }))
                   }
                 />
                 <Counter
-                  label="사망"
+                  label={t.nr_deaths}
                   value={form.dailyCases.deaths}
                   onChange={(v) =>
                     setForm((p) => ({ ...p, dailyCases: { ...p.dailyCases, deaths: v } }))
                   }
                 />
                 <Counter
-                  label="신규 입원"
+                  label={t.nr_hospitalized}
                   value={form.dailyCases.hospitalized}
                   onChange={(v) =>
                     setForm((p) => ({ ...p, dailyCases: { ...p.dailyCases, hospitalized: v } }))
@@ -477,9 +467,8 @@ export default function NewRecord() {
       case 4:
         return (
           <div>
-            {/* Transmission */}
             <div className="mb-5">
-              <span className="block text-sm text-gray-600 mb-1">추정 전파 경로</span>
+              <span className="block text-sm text-gray-600 dark:text-gray-300 mb-1">{t.nr_transmission}</span>
               <div className="flex flex-wrap gap-2">
                 {TRANSMISSION_OPTIONS.map((opt) => (
                   <button
@@ -489,7 +478,7 @@ export default function NewRecord() {
                     className={`px-4 py-2 rounded-xl text-sm font-medium border touch-manipulation transition-colors ${
                       form.transmission === opt.value
                         ? 'bg-teal-600 text-white border-teal-600'
-                        : 'bg-white text-gray-700 border-gray-300 active:bg-gray-50'
+                        : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 border-gray-300 dark:border-gray-600 active:bg-gray-50 dark:active:bg-gray-600'
                     }`}
                   >
                     {opt.label}
@@ -498,9 +487,8 @@ export default function NewRecord() {
               </div>
             </div>
 
-            {/* Vaccination */}
             <div className="mb-5">
-              <span className="block text-sm text-gray-600 mb-1">예방접종 여부</span>
+              <span className="block text-sm text-gray-600 dark:text-gray-300 mb-1">{t.nr_vaccination}</span>
               <div className="flex flex-wrap gap-2">
                 {VACCINATION_OPTIONS.map((opt) => (
                   <button
@@ -510,7 +498,7 @@ export default function NewRecord() {
                     className={`px-4 py-2 rounded-xl text-sm font-medium border touch-manipulation transition-colors ${
                       form.vaccinated === opt.value
                         ? 'bg-teal-600 text-white border-teal-600'
-                        : 'bg-white text-gray-700 border-gray-300 active:bg-gray-50'
+                        : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 border-gray-300 dark:border-gray-600 active:bg-gray-50 dark:active:bg-gray-600'
                     }`}
                   >
                     {opt.label}
@@ -519,20 +507,16 @@ export default function NewRecord() {
               </div>
             </div>
 
-            {/* Notes */}
             <div className="mb-5">
-              <label className="block text-sm text-gray-600 mb-1">
-                메모 및 특이사항
-              </label>
+              <label className="block text-sm text-gray-600 dark:text-gray-300 mb-1">{t.nr_notes}</label>
               <textarea
-                placeholder="조사관 메모, 특이사항을 자유롭게 입력하세요"
+                placeholder={t.nr_placeholder_notes}
                 value={form.notes ?? ''}
                 onChange={(e) => setForm((p) => ({ ...p, notes: e.target.value }))}
-                className="w-full h-28 px-3 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 resize-none"
+                className="w-full h-28 px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 resize-none bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
               />
             </div>
 
-            {/* Action buttons */}
             <div className="flex gap-3 pt-2">
               <button
                 type="button"
@@ -541,16 +525,16 @@ export default function NewRecord() {
                 className="flex-1 flex items-center justify-center gap-2 py-4 bg-teal-600 text-white rounded-2xl font-semibold text-base active:bg-teal-700 disabled:opacity-50 touch-manipulation"
               >
                 {saving ? <Loader2 size={20} className="animate-spin" /> : <Save size={20} />}
-                저장하기
+                {t.nr_save}
               </button>
               <button
                 type="button"
                 onClick={handleSave}
                 disabled={saving}
-                className="flex-1 flex items-center justify-center gap-2 py-4 bg-white border-2 border-teal-600 text-teal-700 rounded-2xl font-semibold text-base active:bg-teal-50 disabled:opacity-50 touch-manipulation"
+                className="flex-1 flex items-center justify-center gap-2 py-4 bg-white dark:bg-gray-800 border-2 border-teal-600 text-teal-700 dark:text-teal-400 rounded-2xl font-semibold text-base active:bg-teal-50 dark:active:bg-teal-900/20 disabled:opacity-50 touch-manipulation"
               >
                 <BarChart2 size={20} />
-                EpiCalc 분석
+                {t.nr_analyze}
               </button>
             </div>
           </div>
@@ -564,7 +548,7 @@ export default function NewRecord() {
   // ─── Render ────────────────────────────────────────────────────────────────
 
   return (
-    <div className="min-h-screen bg-white text-gray-900 flex flex-col">
+    <div className="min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-white flex flex-col">
       {/* Header */}
       <header className="bg-teal-600 text-white px-4 py-3 sticky top-0 z-10 shadow-sm">
         <div className="flex items-center gap-3">
@@ -576,17 +560,18 @@ export default function NewRecord() {
           >
             <ChevronLeft size={22} />
           </button>
-          <h1 className="text-lg font-semibold">새 현장 기록</h1>
+          <h1 className="text-lg font-semibold flex-1">{t.nr_title}</h1>
+          <LangToggle />
         </div>
       </header>
 
       {/* Progress bar */}
-      <div className="bg-white border-b border-gray-100 px-4 py-2">
+      <div className="bg-white dark:bg-gray-900 border-b border-gray-100 dark:border-gray-800 px-4 py-2">
         <div className="flex justify-between items-center mb-1.5">
-          <span className="text-sm font-semibold text-teal-700">{STEP_LABELS[step - 1]}</span>
+          <span className="text-sm font-semibold text-teal-700 dark:text-teal-400">{STEP_LABELS[step - 1]}</span>
           <span className="text-xs text-gray-400">{step} / {TOTAL_STEPS}</span>
         </div>
-        <div className="h-1.5 bg-gray-200 rounded-full overflow-hidden">
+        <div className="h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
           <div
             className="h-full bg-teal-600 rounded-full transition-all duration-300"
             style={{ width: `${(step / TOTAL_STEPS) * 100}%` }}
@@ -600,16 +585,16 @@ export default function NewRecord() {
       </main>
 
       {/* Bottom navigation */}
-      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-3 flex gap-3">
+      <div className="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 p-3 flex gap-3">
         {step > 1 && (
           <button
             type="button"
             onClick={() => setStep((s) => s - 1)}
             disabled={saving}
-            className="flex items-center justify-center gap-1 px-6 h-11 rounded-xl border border-gray-200 text-gray-600 font-semibold text-sm active:bg-gray-50 touch-manipulation disabled:opacity-40"
+            className="flex items-center justify-center gap-1 px-6 h-11 rounded-xl border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 font-semibold text-sm active:bg-gray-50 dark:active:bg-gray-800 touch-manipulation disabled:opacity-40"
           >
             <ChevronLeft size={18} />
-            이전
+            {t.nr_prev}
           </button>
         )}
         {step < TOTAL_STEPS && (
@@ -619,13 +604,13 @@ export default function NewRecord() {
             disabled={!canProceed}
             className="flex-1 flex items-center justify-center gap-1 h-11 rounded-xl bg-teal-600 text-white font-semibold text-sm active:bg-teal-700 disabled:opacity-40 touch-manipulation"
           >
-            다음
+            {t.nr_next}
             <ChevronRight size={18} />
           </button>
         )}
         {step === TOTAL_STEPS && (
           <div className="flex-1 text-center text-xs text-gray-400 flex items-center justify-center">
-            위의 버튼으로 저장 또는 분석을 진행하세요
+            {t.nr_step_hint}
           </div>
         )}
       </div>

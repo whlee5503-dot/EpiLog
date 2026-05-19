@@ -11,20 +11,14 @@ import {
   Users,
   Heart,
   LayoutDashboard,
+  Sun,
+  Moon,
 } from 'lucide-react';
 import { db } from '../db/database';
 import type { FieldRecord } from '../types/index';
-
-// ─── Constants ────────────────────────────────────────────────────────────────
-
-const FACILITY_LABELS: Record<string, string> = {
-  school: '학교',
-  hospital: '병원/의료기관',
-  workplace: '직장',
-  restaurant: '식당/음식점',
-  household: '가정',
-  community: '지역사회',
-};
+import { useTheme } from '../hooks/useTheme';
+import { useLanguage } from '../contexts/LanguageContext';
+import { LangToggle } from '../components/LangToggle';
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -59,14 +53,22 @@ function StatCard({
   icon: React.ReactNode;
   accent: 'teal' | 'orange' | 'red';
 }) {
-  const bg = { teal: 'bg-teal-50', orange: 'bg-orange-50', red: 'bg-red-50' }[accent];
-  const text = { teal: 'text-teal-600', orange: 'text-orange-500', red: 'text-red-500' }[accent];
+  const bg = {
+    teal: 'bg-teal-50 dark:bg-teal-900/30',
+    orange: 'bg-orange-50 dark:bg-orange-900/30',
+    red: 'bg-red-50 dark:bg-red-900/30',
+  }[accent];
+  const text = {
+    teal: 'text-teal-600 dark:text-teal-400',
+    orange: 'text-orange-500 dark:text-orange-400',
+    red: 'text-red-500 dark:text-red-400',
+  }[accent];
 
   return (
     <div className={`rounded-2xl p-4 ${bg}`}>
       <div className={`mb-1.5 ${text}`}>{icon}</div>
-      <p className="text-2xl font-bold text-gray-800 leading-tight">{value}</p>
-      <p className="text-xs text-gray-500 mt-0.5">{label}</p>
+      <p className="text-2xl font-bold text-gray-800 dark:text-white leading-tight">{value}</p>
+      <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">{label}</p>
     </div>
   );
 }
@@ -78,52 +80,60 @@ function RecordCard({
   record: FieldRecord;
   onClick: () => void;
 }) {
-  const facilityLabel = FACILITY_LABELS[record.facilityType] ?? record.facilityType;
+  const { t } = useLanguage();
+
+  const facilityLabels: Record<string, string> = {
+    school: t.ft_school,
+    hospital: t.ft_hospital,
+    workplace: t.ft_workplace,
+    restaurant: t.ft_restaurant,
+    household: t.ft_household,
+    community: t.ft_community,
+  };
+
+  const facilityLabel = facilityLabels[record.facilityType] ?? record.facilityType;
   const ar = attackRate(record);
 
   return (
     <button
       type="button"
       onClick={onClick}
-      className="w-full bg-white rounded-2xl border border-gray-100 shadow-sm p-4 text-left active:bg-gray-50 touch-manipulation transition-colors"
+      className="w-full bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm p-4 text-left active:bg-gray-50 dark:active:bg-gray-700 touch-manipulation transition-colors"
     >
-      {/* Top row: location + facility badge + arrow */}
       <div className="flex items-start gap-2">
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 flex-wrap">
-            <span className="text-base font-semibold text-gray-800 truncate">
-              {record.location || '(장소 미입력)'}
+            <span className="text-base font-semibold text-gray-800 dark:text-white truncate">
+              {record.location || t.rl_no_location}
             </span>
-            <span className="shrink-0 px-2 py-0.5 bg-teal-100 text-teal-700 rounded-full text-xs font-medium">
+            <span className="shrink-0 px-2 py-0.5 bg-teal-100 dark:bg-teal-900/40 text-teal-700 dark:text-teal-300 rounded-full text-xs font-medium">
               {facilityLabel}
             </span>
           </div>
-          {/* Timestamp */}
           <div className="flex items-center gap-1.5 mt-1">
             <MapPin size={12} className="text-gray-400 shrink-0" />
             <span className="text-xs text-gray-400">{formatTimestamp(record.timestamp)}</span>
           </div>
         </div>
-        <ChevronRight size={20} className="text-gray-300 shrink-0 mt-0.5" />
+        <ChevronRight size={20} className="text-gray-300 dark:text-gray-600 shrink-0 mt-0.5" />
       </div>
 
-      {/* Metrics row */}
-      <div className="flex items-center mt-3 pt-3 border-t border-gray-100 divide-x divide-gray-100">
+      <div className="flex items-center mt-3 pt-3 border-t border-gray-100 dark:border-gray-700 divide-x divide-gray-100 dark:divide-gray-700">
         <div className="flex-1 flex flex-col items-center gap-0.5 px-2 first:pl-0 last:pr-0">
-          <span className="text-lg font-bold text-teal-600 leading-none">
+          <span className="text-lg font-bold text-teal-600 dark:text-teal-400 leading-none">
             {record.dailyCases.newCases}
           </span>
-          <span className="text-xs text-gray-400">신규 확진</span>
+          <span className="text-xs text-gray-400">{t.rl_metric_new_cases}</span>
         </div>
         <div className="flex-1 flex flex-col items-center gap-0.5 px-2">
-          <span className="text-lg font-bold text-orange-500 leading-none">{ar}</span>
-          <span className="text-xs text-gray-400">발병률(AR)</span>
+          <span className="text-lg font-bold text-orange-500 dark:text-orange-400 leading-none">{ar}</span>
+          <span className="text-xs text-gray-400">{t.rl_metric_ar}</span>
         </div>
         <div className="flex-1 flex flex-col items-center gap-0.5 px-2 first:pl-0 last:pr-0">
-          <span className="text-lg font-bold text-red-500 leading-none">
+          <span className="text-lg font-bold text-red-500 dark:text-red-400 leading-none">
             {record.dailyCases.deaths}
           </span>
-          <span className="text-xs text-gray-400">사망</span>
+          <span className="text-xs text-gray-400">{t.rl_metric_deaths}</span>
         </div>
       </div>
     </button>
@@ -131,14 +141,15 @@ function RecordCard({
 }
 
 function EmptyState({ onAdd }: { onAdd: () => void }) {
+  const { t } = useLanguage();
   return (
     <div className="flex flex-col items-center justify-center py-20 px-6 text-center">
-      <div className="w-20 h-20 rounded-full bg-teal-50 flex items-center justify-center mb-4">
+      <div className="w-20 h-20 rounded-full bg-teal-50 dark:bg-teal-900/30 flex items-center justify-center mb-4">
         <FileText size={36} className="text-teal-300" />
       </div>
-      <h3 className="text-lg font-semibold text-gray-700 mb-1">기록이 없습니다</h3>
+      <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-200 mb-1">{t.rl_empty_title}</h3>
       <p className="text-sm text-gray-400 mb-6 leading-relaxed">
-        현장 역학조사 결과를 기록하면<br />이곳에 목록으로 표시됩니다.
+        {t.rl_empty_desc1}<br />{t.rl_empty_desc2}
       </p>
       <button
         type="button"
@@ -146,7 +157,7 @@ function EmptyState({ onAdd }: { onAdd: () => void }) {
         className="flex items-center gap-2 px-6 py-3 bg-teal-600 text-white rounded-xl font-semibold text-sm active:bg-teal-700 touch-manipulation"
       >
         <Plus size={18} />
-        첫 기록 추가하기
+        {t.rl_empty_btn}
       </button>
     </div>
   );
@@ -156,6 +167,8 @@ function EmptyState({ onAdd }: { onAdd: () => void }) {
 
 export default function RecordList() {
   const navigate = useNavigate();
+  const { theme, toggle: toggleTheme } = useTheme();
+  const { t } = useLanguage();
   const [records, setRecords] = useState<FieldRecord[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -167,48 +180,58 @@ export default function RecordList() {
       .finally(() => setLoading(false));
   }, []);
 
-  // Summary stats
   const totalCases = records.reduce((sum, r) => sum + r.dailyCases.newCases, 0);
   const totalDeaths = records.reduce((sum, r) => sum + r.dailyCases.deaths, 0);
 
   return (
-    <div className="min-h-screen bg-gray-50 text-gray-900 flex flex-col">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white flex flex-col">
       {/* Header */}
       <header className="bg-teal-600 text-white px-4 py-4 sticky top-0 z-10 shadow-sm">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-xl font-bold">조사 기록 목록</h1>
-            <p className="text-sm text-teal-200 mt-0.5">현장 역학조사 전체 기록</p>
+            <h1 className="text-xl font-bold">{t.rl_title}</h1>
+            <p className="text-sm text-teal-200 mt-0.5">{t.rl_subtitle}</p>
           </div>
-          <button
-            type="button"
-            onClick={() => navigate('/dashboard')}
-            className="p-2 rounded-xl bg-white/20 active:bg-white/30 touch-manipulation"
-            aria-label="대시보드"
-          >
-            <LayoutDashboard size={22} />
-          </button>
+          <div className="flex items-center gap-2">
+            <LangToggle />
+            <button
+              type="button"
+              onClick={toggleTheme}
+              className="p-2 rounded-xl bg-white/20 active:bg-white/30 touch-manipulation"
+              aria-label={theme === 'dark' ? '라이트 모드로 전환' : '다크 모드로 전환'}
+            >
+              {theme === 'dark' ? <Sun size={22} /> : <Moon size={22} />}
+            </button>
+            <button
+              type="button"
+              onClick={() => navigate('/dashboard')}
+              className="p-2 rounded-xl bg-white/20 active:bg-white/30 touch-manipulation"
+              aria-label="Dashboard"
+            >
+              <LayoutDashboard size={22} />
+            </button>
+          </div>
         </div>
       </header>
 
       {/* Summary stats */}
       {!loading && !error && records.length > 0 && (
         <div className="px-4 -mt-2 mb-2">
-          <div className="bg-white shadow-sm rounded-xl p-4 grid grid-cols-3 gap-3">
+          <div className="bg-white dark:bg-gray-800 shadow-sm rounded-xl p-4 grid grid-cols-3 gap-3">
             <StatCard
-              label="총 기록"
+              label={t.rl_stat_records}
               value={records.length}
               icon={<Activity size={18} />}
               accent="teal"
             />
             <StatCard
-              label="누적 환자"
+              label={t.rl_stat_cases}
               value={totalCases.toLocaleString()}
               icon={<Users size={18} />}
               accent="orange"
             />
             <StatCard
-              label="누적 사망"
+              label={t.rl_stat_deaths}
               value={totalDeaths.toLocaleString()}
               icon={<Heart size={18} />}
               accent="red"
@@ -228,7 +251,7 @@ export default function RecordList() {
         {!loading && error && (
           <div className="flex flex-col items-center gap-3 py-16 text-center">
             <AlertCircle size={40} className="text-red-400" />
-            <p className="text-sm text-gray-500">데이터를 불러오지 못했습니다.</p>
+            <p className="text-sm text-gray-500 dark:text-gray-400">{t.rl_load_error}</p>
             <p className="text-xs text-red-400">{error}</p>
           </div>
         )}
