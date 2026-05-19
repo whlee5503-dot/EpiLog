@@ -11,6 +11,7 @@ import {
 } from 'lucide-react';
 import { db } from '../db/database';
 import type { FieldRecord, TransmissionRoute, VaccinationStatus } from '../types/index';
+import { buildEpiCalcURL } from '../utils/exportData';
 import { useLanguage } from '../contexts/LanguageContext';
 import { LangToggle } from '../components/LangToggle';
 
@@ -185,6 +186,19 @@ export default function NewRecord() {
     setSaving(true);
     try {
       await db.addRecord(form);
+      navigate('/');
+    } catch (e) {
+      console.error('저장 실패:', e);
+      setSaving(false);
+    }
+  };
+
+  const handleSaveAndAnalyze = async () => {
+    setSaving(true);
+    try {
+      const id = await db.addRecord(form);
+      const url = buildEpiCalcURL({ ...form, id });
+      window.open(url, '_blank', 'noopener,noreferrer');
       navigate('/');
     } catch (e) {
       console.error('저장 실패:', e);
@@ -529,12 +543,12 @@ export default function NewRecord() {
               </button>
               <button
                 type="button"
-                onClick={handleSave}
+                onClick={handleSaveAndAnalyze}
                 disabled={saving}
                 className="flex-1 flex items-center justify-center gap-2 py-4 bg-white dark:bg-gray-800 border-2 border-teal-600 text-teal-700 dark:text-teal-400 rounded-2xl font-semibold text-base active:bg-teal-50 dark:active:bg-teal-900/20 disabled:opacity-50 touch-manipulation"
               >
                 <BarChart2 size={20} />
-                {t.nr_analyze}
+                {lang === 'ko' ? 'EpiCalc 분석' : 'Analyze with EpiCalc'}
               </button>
             </div>
           </div>

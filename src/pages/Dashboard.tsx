@@ -18,15 +18,26 @@ import {
   Activity,
   AlertCircle,
   ArrowLeft,
+  FileDown,
+  FileJson,
   FileText,
   Heart,
   Loader2,
+  Mail,
+  MessageCircle,
   TrendingUp,
   Users,
 } from 'lucide-react';
 import { db } from '../db/database';
 import type { FieldRecord } from '../types/index';
 import { secondaryAttackRate, formatRate, summarizeRecords } from '../utils/epiCalc';
+import {
+  exportToCSV,
+  exportToJSON,
+  shareViaWhatsApp,
+  shareViaEmail,
+  generateSummaryText,
+} from '../utils/exportData';
 import { useTheme } from '../hooks/useTheme';
 import { useLanguage } from '../contexts/LanguageContext';
 import { LangToggle } from '../components/LangToggle';
@@ -137,7 +148,7 @@ function EmptyChartState() {
 
 export default function Dashboard() {
   const { isDark } = useTheme();
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   const [records, setRecords] = useState<FieldRecord[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -373,6 +384,47 @@ export default function Dashboard() {
                 </div>
               </div>
             )}
+          </SectionCard>
+
+          {/* 6. Export / Share */}
+          <SectionCard title="데이터 내보내기 / Export Data" isDark={isDark}>
+            <div className="grid grid-cols-2 gap-3">
+              <button
+                type="button"
+                onClick={() => exportToCSV(records)}
+                className="flex items-center justify-center gap-2 py-3 rounded-xl bg-teal-600 text-white text-sm font-semibold active:bg-teal-700 touch-manipulation"
+              >
+                <FileDown size={18} />
+                CSV
+              </button>
+              <button
+                type="button"
+                onClick={() => exportToJSON(records)}
+                className="flex items-center justify-center gap-2 py-3 rounded-xl bg-blue-600 text-white text-sm font-semibold active:bg-blue-700 touch-manipulation"
+              >
+                <FileJson size={18} />
+                JSON
+              </button>
+              <button
+                type="button"
+                onClick={() => shareViaWhatsApp(generateSummaryText(records, lang))}
+                className="flex items-center justify-center gap-2 py-3 rounded-xl bg-green-600 text-white text-sm font-semibold active:bg-green-700 touch-manipulation"
+              >
+                <MessageCircle size={18} />
+                WhatsApp
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  const subject = lang === 'ko' ? 'EpiLog 현장조사 요약' : 'EpiLog Field Investigation Summary';
+                  shareViaEmail(subject, generateSummaryText(records, lang));
+                }}
+                className="flex items-center justify-center gap-2 py-3 rounded-xl bg-orange-600 text-white text-sm font-semibold active:bg-orange-700 touch-manipulation"
+              >
+                <Mail size={18} />
+                {lang === 'ko' ? '이메일' : 'Email'}
+              </button>
+            </div>
           </SectionCard>
         </main>
       )}
