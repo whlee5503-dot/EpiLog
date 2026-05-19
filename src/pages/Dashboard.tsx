@@ -60,17 +60,17 @@ function SummaryCard({
   accent: 'teal' | 'orange' | 'red' | 'blue';
 }) {
   const styles = {
-    teal: { bg: 'bg-teal-50 dark:bg-teal-900/30', iconColor: 'text-teal-600 dark:text-teal-400' },
-    orange: { bg: 'bg-orange-50 dark:bg-orange-900/30', iconColor: 'text-orange-500 dark:text-orange-400' },
-    red: { bg: 'bg-red-50 dark:bg-red-900/30', iconColor: 'text-red-500 dark:text-red-400' },
-    blue: { bg: 'bg-blue-50 dark:bg-blue-900/30', iconColor: 'text-blue-600 dark:text-blue-400' },
+    teal: { bg: 'bg-teal-50 dark:bg-teal-800', iconColor: 'text-teal-600 dark:text-white' },
+    orange: { bg: 'bg-orange-50 dark:bg-orange-800', iconColor: 'text-orange-500 dark:text-white' },
+    red: { bg: 'bg-red-50 dark:bg-red-800', iconColor: 'text-red-500 dark:text-white' },
+    blue: { bg: 'bg-blue-50 dark:bg-blue-800', iconColor: 'text-blue-600 dark:text-white' },
   }[accent];
 
   return (
     <div className={`rounded-2xl p-4 ${styles.bg} flex flex-col gap-2`}>
       <div className={styles.iconColor}>{icon}</div>
       <p className="text-2xl font-bold text-gray-800 dark:text-white leading-tight">{value}</p>
-      <p className="text-xs text-gray-500 dark:text-gray-400">{label}</p>
+      <p className="text-xs text-gray-500 dark:text-gray-200">{label}</p>
     </div>
   );
 }
