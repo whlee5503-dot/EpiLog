@@ -75,10 +75,15 @@ function SummaryCard({
   );
 }
 
-function SectionCard({ title, children }: { title: string; children: React.ReactNode }) {
+function SectionCard({ title, children, isDark }: { title: string; children: React.ReactNode; isDark: boolean }) {
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 p-4">
-      <h2 className="text-sm font-semibold text-gray-900 dark:text-white mb-3">{title}</h2>
+    <div className="bg-white dark:bg-[#2d3748] rounded-2xl shadow-sm border border-gray-200 dark:border-gray-600 p-4">
+      <h2
+        className="text-sm font-semibold text-gray-900 dark:text-white mb-3"
+        style={{ color: isDark ? '#ffffff' : '#111827' }}
+      >
+        {title}
+      </h2>
       {children}
     </div>
   );
@@ -89,17 +94,29 @@ function EpiMetricRow({
   value,
   interpretation,
   interpretColor,
+  isDark,
 }: {
   label: string;
   value: string;
   interpretation: string;
   interpretColor: string;
+  isDark: boolean;
 }) {
   return (
     <div className="flex items-center justify-between py-3 border-b border-gray-100 dark:border-gray-700 last:border-b-0">
-      <span className="text-sm text-gray-600 dark:text-gray-300 flex-1 mr-3">{label}</span>
+      <span
+        className="text-sm flex-1 mr-3"
+        style={{ color: isDark ? '#d1d5db' : '#374151' }}
+      >
+        {label}
+      </span>
       <div className="flex items-center gap-2 shrink-0">
-        <span className="text-sm font-bold text-gray-800 dark:text-white">{value}</span>
+        <span
+          className="text-sm font-bold"
+          style={{ color: isDark ? '#ffffff' : '#111827' }}
+        >
+          {value}
+        </span>
         <span className={`text-xs font-medium ${interpretColor}`}>{interpretation}</span>
       </div>
     </div>
@@ -119,7 +136,7 @@ function EmptyChartState() {
 // ─── Main Component ───────────────────────────────────────────────────────────
 
 export default function Dashboard() {
-  const { theme } = useTheme();
+  const { isDark } = useTheme();
   const { t } = useLanguage();
   const [records, setRecords] = useState<FieldRecord[]>([]);
   const [loading, setLoading] = useState(true);
@@ -202,7 +219,6 @@ export default function Dashboard() {
   const cfrInterp = interpretRate(summary.overallCFR, 1, 5);
   const sarInterp = interpretRate(sarValue, 10, 25);
 
-  const isDark = theme === 'dark';
   const tooltipStyle = {
     fontSize: 12,
     borderRadius: 8,
@@ -283,7 +299,7 @@ export default function Dashboard() {
           </div>
 
           {/* 2. Epidemic curve */}
-          <SectionCard title={t.db_epicurve}>
+          <SectionCard title={t.db_epicurve} isDark={isDark}>
             {epicurveData.length === 0 ? (
               <EmptyChartState />
             ) : (
@@ -300,7 +316,7 @@ export default function Dashboard() {
           </SectionCard>
 
           {/* 3. Cumulative trend */}
-          <SectionCard title={t.db_cumulative}>
+          <SectionCard title={t.db_cumulative} isDark={isDark}>
             {cumulativeData.length === 0 ? (
               <EmptyChartState />
             ) : (
@@ -325,14 +341,14 @@ export default function Dashboard() {
           </SectionCard>
 
           {/* 4. Epi metrics */}
-          <SectionCard title={t.db_metrics_title}>
-            <EpiMetricRow label={t.db_ar_label} value={formatRate(summary.overallAR)} interpretation={arInterp.label} interpretColor={arInterp.color} />
-            <EpiMetricRow label={t.db_cfr_label} value={formatRate(summary.overallCFR)} interpretation={cfrInterp.label} interpretColor={cfrInterp.color} />
-            <EpiMetricRow label={t.db_sar_label} value={formatRate(sarValue)} interpretation={sarInterp.label} interpretColor={sarInterp.color} />
+          <SectionCard title={t.db_metrics_title} isDark={isDark}>
+            <EpiMetricRow label={t.db_ar_label} value={formatRate(summary.overallAR)} interpretation={arInterp.label} interpretColor={arInterp.color} isDark={isDark} />
+            <EpiMetricRow label={t.db_cfr_label} value={formatRate(summary.overallCFR)} interpretation={cfrInterp.label} interpretColor={cfrInterp.color} isDark={isDark} />
+            <EpiMetricRow label={t.db_sar_label} value={formatRate(sarValue)} interpretation={sarInterp.label} interpretColor={sarInterp.color} isDark={isDark} />
           </SectionCard>
 
           {/* 5. Transmission routes */}
-          <SectionCard title={t.db_transmission}>
+          <SectionCard title={t.db_transmission} isDark={isDark}>
             {transmissionData.length === 0 ? (
               <EmptyChartState />
             ) : (

@@ -68,7 +68,7 @@ function StatCard({
     <div className={`rounded-2xl p-4 ${bg}`}>
       <div className={`mb-1.5 ${text}`}>{icon}</div>
       <p className="text-2xl font-bold text-gray-800 dark:text-white leading-tight">{value}</p>
-      <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">{label}</p>
+      <p className="text-xs text-gray-500 dark:text-gray-300 mt-0.5">{label}</p>
     </div>
   );
 }
