@@ -215,7 +215,7 @@ export default function RecordList() {
       </header>
 
       {/* Summary stats */}
-      {!loading && !error && records.length > 0 && (
+      {!loading && !error && (
         <div className="px-4 -mt-2 mb-2">
           <div className="bg-white dark:bg-gray-800 shadow-sm rounded-xl p-4 grid grid-cols-3 gap-3">
             <StatCard

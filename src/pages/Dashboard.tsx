@@ -78,7 +78,7 @@ function SummaryCard({
 function SectionCard({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 p-4">
-      <h2 className="text-sm font-semibold text-gray-700 dark:text-gray-200 mb-3">{title}</h2>
+      <h2 className="text-sm font-semibold text-gray-900 dark:text-white mb-3">{title}</h2>
       {children}
     </div>
   );
@@ -192,10 +192,10 @@ export default function Dashboard() {
   }));
 
   function interpretRate(rate: number | null, low: number, mid: number): { label: string; color: string } {
-    if (rate === null) return { label: t.db_interp_none, color: 'text-gray-400' };
-    if (rate < low) return { label: t.db_interp_low, color: 'text-green-600' };
-    if (rate < mid) return { label: t.db_interp_mid, color: 'text-yellow-600' };
-    return { label: t.db_interp_high, color: 'text-red-600' };
+    if (rate === null) return { label: t.db_interp_none, color: 'text-gray-400 dark:text-gray-500' };
+    if (rate < low) return { label: t.db_interp_low, color: 'text-green-600 dark:text-green-400' };
+    if (rate < mid) return { label: t.db_interp_mid, color: 'text-yellow-600 dark:text-yellow-400' };
+    return { label: t.db_interp_high, color: 'text-red-600 dark:text-red-400' };
   }
 
   const arInterp = interpretRate(summary.overallAR, 5, 20);
@@ -211,7 +211,8 @@ export default function Dashboard() {
     backgroundColor: isDark ? '#1f2937' : '#ffffff',
     color: isDark ? '#f9fafb' : '#111827',
   };
-  const axisTickStyle = { fontSize: 11, fill: isDark ? '#6b7280' : '#9ca3af' };
+  const tickColor = isDark ? '#e5e7eb' : '#6b7280';
+  const axisTickStyle = { fontSize: 11, fill: tickColor };
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col">
