@@ -10,6 +10,7 @@ import {
   Activity,
   Users,
   Heart,
+  LayoutDashboard,
 } from 'lucide-react';
 import { db } from '../db/database';
 import type { FieldRecord } from '../types/index';
@@ -173,9 +174,21 @@ export default function RecordList() {
   return (
     <div className="min-h-screen bg-gray-50 text-gray-900 flex flex-col">
       {/* Header */}
-      <header className="bg-teal-600 text-white p-4 sticky top-0 z-10 shadow-sm">
-        <h1 className="text-xl font-bold">조사 기록 목록</h1>
-        <p className="text-sm text-teal-200 mt-0.5">현장 역학조사 전체 기록</p>
+      <header className="bg-teal-600 text-white px-4 py-4 sticky top-0 z-10 shadow-sm">
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-xl font-bold">조사 기록 목록</h1>
+            <p className="text-sm text-teal-200 mt-0.5">현장 역학조사 전체 기록</p>
+          </div>
+          <button
+            type="button"
+            onClick={() => navigate('/dashboard')}
+            className="p-2 rounded-xl bg-white/20 active:bg-white/30 touch-manipulation"
+            aria-label="대시보드"
+          >
+            <LayoutDashboard size={22} />
+          </button>
+        </div>
       </header>
 
       {/* Summary stats */}

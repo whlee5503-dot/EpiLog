@@ -9,6 +9,7 @@ import {
 import { ClipboardList, Home } from 'lucide-react';
 import RecordList from './pages/RecordList';
 import NewRecord from './pages/NewRecord';
+import Dashboard from './pages/Dashboard';
 
 function RecordDetail() {
   const { id } = useParams<{ id: string }>();
@@ -71,6 +72,7 @@ export default function App() {
       <Routes>
         <Route index element={<RecordList />} />
         <Route path="/new" element={<NewRecord />} />
+        <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/records/:id" element={<RecordDetail />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
