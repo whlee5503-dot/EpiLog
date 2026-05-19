@@ -14,7 +14,7 @@ import type { FieldRecord, TransmissionRoute, VaccinationStatus } from '../types
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
-const SYMPTOMS = ['발열', '기침', '설사', '구토', '발진', '호흡곤란', '두통', '근육통'];
+const SYMPTOMS = ['발열', '기침', '설사', '구토', '복통', '발진', '호흡곤란', '두통', '근육통'];
 
 const FACILITY_TYPES: { value: string; label: string }[] = [
   { value: 'school', label: '학교' },
@@ -118,42 +118,6 @@ function Counter({
   );
 }
 
-function SegmentedButtons<T extends string>({
-  options,
-  value,
-  onChange,
-  cols = 3,
-}: {
-  options: ReadonlyArray<{ value: T; label: string }>;
-  value: T;
-  onChange: (v: T) => void;
-  cols?: number;
-}) {
-  const colClass: Record<number, string> = {
-    2: 'grid-cols-2',
-    3: 'grid-cols-3',
-    4: 'grid-cols-4',
-  };
-  return (
-    <div className={`grid ${colClass[cols] ?? 'grid-cols-3'} gap-1.5`}>
-      {options.map((opt) => (
-        <button
-          key={opt.value}
-          type="button"
-          onClick={() => onChange(opt.value)}
-          className={`py-2 rounded-xl text-sm font-medium border touch-manipulation transition-colors ${
-            value === opt.value
-              ? 'bg-teal-600 text-white border-teal-600'
-              : 'bg-white text-gray-700 border-gray-300 active:bg-gray-50'
-          }`}
-        >
-          {opt.label}
-        </button>
-      ))}
-    </div>
-  );
-}
-
 // ─── Main Component ───────────────────────────────────────────────────────────
 
 export default function NewRecord() {
@@ -229,11 +193,11 @@ export default function NewRecord() {
     switch (step) {
       case 1:
         return (
-          <div className="space-y-6">
+          <div>
             {/* Timestamp */}
-            <div className="flex items-center gap-3">
-              <span className="text-sm font-medium text-gray-700 whitespace-nowrap">조사 일시</span>
-              <div className="flex-1 px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-500">
+            <div className="mb-5">
+              <span className="block text-sm text-gray-600 text-left mb-1">조사 일시</span>
+              <div className="px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-500">
                 {(() => {
                   const d = new Date(form.timestamp);
                   return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`;
@@ -242,8 +206,8 @@ export default function NewRecord() {
             </div>
 
             {/* Location */}
-            <div className="flex items-center gap-3">
-              <label className="text-sm font-medium text-gray-700 whitespace-nowrap">
+            <div className="mb-5">
+              <label className="block text-sm text-gray-600 text-left mb-1">
                 발생 장소 <span className="text-red-500">*</span>
               </label>
               <input
@@ -251,14 +215,14 @@ export default function NewRecord() {
                 placeholder="예: ○○초등학교, △△요양원"
                 value={form.location}
                 onChange={(e) => setForm((p) => ({ ...p, location: e.target.value }))}
-                className="flex-1 px-3 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal-500"
+                className="w-full px-3 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal-500"
               />
             </div>
 
             {/* Facility type */}
-            <div>
-              <span className="block text-sm font-medium text-gray-700 text-left mb-2">시설 유형</span>
-              <div className="flex flex-wrap justify-start gap-2">
+            <div className="mb-5">
+              <span className="block text-sm text-gray-600 text-left mb-1">시설 유형</span>
+              <div className="flex flex-wrap gap-2">
                 {FACILITY_TYPES.map((opt) => (
                   <button
                     key={opt.value}
@@ -277,8 +241,8 @@ export default function NewRecord() {
             </div>
 
             {/* Total population */}
-            <div className="flex items-center gap-3">
-              <label className="text-sm font-medium text-gray-700 whitespace-nowrap">
+            <div className="mb-5">
+              <label className="block text-sm text-gray-600 text-left mb-1">
                 위험 노출 인구 (명)
               </label>
               <input
@@ -290,63 +254,60 @@ export default function NewRecord() {
                 onChange={(e) =>
                   setForm((p) => ({ ...p, totalPopulation: parseInt(e.target.value) || 0 }))
                 }
-                className="flex-1 px-3 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal-500"
+                className="w-full px-3 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal-500"
               />
             </div>
 
             {/* GPS */}
-            <div className="flex items-center gap-3">
-              <span className="text-sm font-medium text-gray-700 whitespace-nowrap">GPS 좌표</span>
-              <div className="flex-1">
-                {form.gps ? (
-                  <div className="flex items-center gap-2 px-3 py-2 bg-teal-50 border border-teal-200 rounded-xl">
-                    <MapPin size={14} className="text-teal-600 shrink-0" />
-                    <span className="text-sm text-teal-700 truncate">
-                      {form.gps.lat.toFixed(4)}, {form.gps.lng.toFixed(4)}
-                      {form.gps.accuracy != null && ` (±${Math.round(form.gps.accuracy)}m)`}
-                    </span>
-                    <button
-                      type="button"
-                      onClick={() => setForm((p) => ({ ...p, gps: undefined }))}
-                      className="ml-auto text-xs text-gray-400 underline touch-manipulation shrink-0"
-                    >
-                      재수집
-                    </button>
-                  </div>
-                ) : (
+            <div className="mb-5">
+              <span className="block text-sm text-gray-600 text-left mb-1">GPS 좌표</span>
+              {form.gps ? (
+                <div className="flex items-center gap-2 px-3 py-2 bg-teal-50 border border-teal-200 rounded-xl">
+                  <MapPin size={14} className="text-teal-600 shrink-0" />
+                  <span className="text-sm text-teal-700 truncate">
+                    {form.gps.lat.toFixed(4)}, {form.gps.lng.toFixed(4)}
+                    {form.gps.accuracy != null && ` (±${Math.round(form.gps.accuracy)}m)`}
+                  </span>
                   <button
                     type="button"
-                    onClick={collectGps}
-                    disabled={gpsLoading}
-                    className="w-full flex items-center justify-center gap-2 py-2.5 border-2 border-dashed border-teal-300 rounded-xl text-teal-600 font-medium text-sm active:bg-teal-50 disabled:opacity-50 touch-manipulation"
+                    onClick={() => setForm((p) => ({ ...p, gps: undefined }))}
+                    className="ml-auto text-xs text-gray-400 underline touch-manipulation shrink-0"
                   >
-                    {gpsLoading ? (
-                      <>
-                        <Loader2 size={14} className="animate-spin" />
-                        위치 수집 중…
-                      </>
-                    ) : (
-                      <>
-                        <Navigation size={14} />
-                        GPS 수집
-                      </>
-                    )}
+                    재수집
                   </button>
-                )}
-                {gpsError && <p className="mt-1 text-xs text-red-500">{gpsError}</p>}
-              </div>
+                </div>
+              ) : (
+                <button
+                  type="button"
+                  onClick={collectGps}
+                  disabled={gpsLoading}
+                  className="w-full flex items-center justify-center gap-2 py-2.5 border-2 border-dashed border-teal-300 rounded-xl text-teal-600 font-medium text-sm active:bg-teal-50 disabled:opacity-50 touch-manipulation"
+                >
+                  {gpsLoading ? (
+                    <>
+                      <Loader2 size={14} className="animate-spin" />
+                      위치 수집 중…
+                    </>
+                  ) : (
+                    <>
+                      <Navigation size={14} />
+                      GPS 수집
+                    </>
+                  )}
+                </button>
+              )}
+              {gpsError && <p className="mt-1 text-xs text-red-500">{gpsError}</p>}
             </div>
           </div>
         );
 
       case 2:
         return (
-          <div className="space-y-6">
+          <div>
             {/* Name */}
-            <div className="flex items-center gap-3">
-              <label className="text-sm font-medium text-gray-700 whitespace-nowrap">
-                환자명{' '}
-                <span className="text-xs text-gray-400 font-normal">(선택)</span>
+            <div className="mb-5">
+              <label className="block text-sm text-gray-600 text-left mb-1">
+                환자명 <span className="text-xs text-gray-400">(선택)</span>
               </label>
               <input
                 type="text"
@@ -355,71 +316,73 @@ export default function NewRecord() {
                 onChange={(e) =>
                   setForm((p) => ({ ...p, indexCase: { ...p.indexCase, name: e.target.value } }))
                 }
-                className="flex-1 px-3 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal-500"
+                className="w-full px-3 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal-500"
               />
             </div>
 
             {/* Gender */}
-            <div className="flex items-center gap-3">
-              <span className="text-sm font-medium text-gray-700 whitespace-nowrap">성별</span>
-              <div className="flex-1">
-                <SegmentedButtons
-                  options={GENDER_OPTIONS}
-                  value={form.indexCase.gender}
-                  onChange={(v) =>
-                    setForm((p) => ({ ...p, indexCase: { ...p.indexCase, gender: v } }))
-                  }
-                  cols={4}
-                />
+            <div className="mb-5">
+              <span className="block text-sm text-gray-600 text-left mb-1">성별</span>
+              <div className="flex gap-2">
+                {GENDER_OPTIONS.map((opt) => (
+                  <button
+                    key={opt.value}
+                    type="button"
+                    onClick={() =>
+                      setForm((p) => ({ ...p, indexCase: { ...p.indexCase, gender: opt.value } }))
+                    }
+                    className={`flex-1 py-2 rounded-xl text-sm font-medium border touch-manipulation transition-colors ${
+                      form.indexCase.gender === opt.value
+                        ? 'bg-teal-600 text-white border-teal-600'
+                        : 'bg-white text-gray-700 border-gray-300 active:bg-gray-50'
+                    }`}
+                  >
+                    {opt.label}
+                  </button>
+                ))}
               </div>
             </div>
 
-            {/* Age + onset date */}
-            <div className="grid grid-cols-2 gap-3">
-              <div className="flex items-center gap-2">
-                <label className="text-sm font-medium text-gray-700 whitespace-nowrap shrink-0">
-                  나이 (만)
-                </label>
-                <input
-                  type="number"
-                  inputMode="numeric"
-                  min={0}
-                  max={130}
-                  placeholder="0"
-                  value={form.indexCase.age || ''}
-                  onChange={(e) =>
-                    setForm((p) => ({
-                      ...p,
-                      indexCase: { ...p.indexCase, age: parseInt(e.target.value) || 0 },
-                    }))
-                  }
-                  className="flex-1 min-w-0 px-3 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal-500"
-                />
-              </div>
-              <div className="flex items-center gap-2">
-                <label className="text-sm font-medium text-gray-700 whitespace-nowrap shrink-0">
-                  발생일
-                </label>
-                <input
-                  type="date"
-                  value={form.indexCase.onsetDate}
-                  onChange={(e) =>
-                    setForm((p) => ({
-                      ...p,
-                      indexCase: { ...p.indexCase, onsetDate: e.target.value },
-                    }))
-                  }
-                  className="flex-1 min-w-0 px-3 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal-500"
-                />
-              </div>
+            {/* Age */}
+            <div className="mb-5">
+              <label className="block text-sm text-gray-600 text-left mb-1">나이 (만)</label>
+              <input
+                type="number"
+                inputMode="numeric"
+                min={0}
+                max={130}
+                placeholder="0"
+                value={form.indexCase.age || ''}
+                onChange={(e) =>
+                  setForm((p) => ({
+                    ...p,
+                    indexCase: { ...p.indexCase, age: parseInt(e.target.value) || 0 },
+                  }))
+                }
+                className="w-full px-3 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal-500"
+              />
+            </div>
+
+            {/* Onset date */}
+            <div className="mb-5">
+              <label className="block text-sm text-gray-600 text-left mb-1">발생일</label>
+              <input
+                type="date"
+                value={form.indexCase.onsetDate}
+                onChange={(e) =>
+                  setForm((p) => ({
+                    ...p,
+                    indexCase: { ...p.indexCase, onsetDate: e.target.value },
+                  }))
+                }
+                className="w-full px-3 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal-500"
+              />
             </div>
 
             {/* Symptoms */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 text-left mb-2">
-                주요 증상
-              </label>
-              <div className="grid grid-cols-4 gap-2">
+            <div className="mb-5">
+              <label className="block text-sm text-gray-600 text-left mb-1">주요 증상</label>
+              <div className="flex flex-wrap gap-2">
                 {SYMPTOMS.map((symptom) => {
                   const selected = form.indexCase.symptoms.includes(symptom);
                   return (
@@ -427,7 +390,7 @@ export default function NewRecord() {
                       key={symptom}
                       type="button"
                       onClick={() => toggleSymptom(symptom)}
-                      className={`py-2 rounded-xl text-sm font-medium border touch-manipulation transition-colors ${
+                      className={`px-4 py-2 rounded-xl text-sm font-medium border touch-manipulation transition-colors ${
                         selected
                           ? 'bg-teal-600 text-white border-teal-600'
                           : 'bg-white text-gray-700 border-gray-300 active:bg-gray-50'
@@ -513,58 +476,69 @@ export default function NewRecord() {
 
       case 4:
         return (
-          <div className="space-y-6">
+          <div>
             {/* Transmission */}
-            <div className="flex items-start gap-3">
-              <span className="text-sm font-medium text-gray-700 whitespace-nowrap pt-1.5">
-                추정 전파 경로
-              </span>
-              <div className="flex-1">
-                <SegmentedButtons
-                  options={TRANSMISSION_OPTIONS}
-                  value={form.transmission}
-                  onChange={(v) => setForm((p) => ({ ...p, transmission: v }))}
-                  cols={2}
-                />
+            <div className="mb-5">
+              <span className="block text-sm text-gray-600 text-left mb-1">추정 전파 경로</span>
+              <div className="flex flex-wrap gap-2">
+                {TRANSMISSION_OPTIONS.map((opt) => (
+                  <button
+                    key={opt.value}
+                    type="button"
+                    onClick={() => setForm((p) => ({ ...p, transmission: opt.value }))}
+                    className={`px-4 py-2 rounded-xl text-sm font-medium border touch-manipulation transition-colors ${
+                      form.transmission === opt.value
+                        ? 'bg-teal-600 text-white border-teal-600'
+                        : 'bg-white text-gray-700 border-gray-300 active:bg-gray-50'
+                    }`}
+                  >
+                    {opt.label}
+                  </button>
+                ))}
               </div>
             </div>
 
             {/* Vaccination */}
-            <div className="flex items-start gap-3">
-              <span className="text-sm font-medium text-gray-700 whitespace-nowrap pt-1.5">
-                예방접종 여부
-              </span>
-              <div className="flex-1">
-                <SegmentedButtons
-                  options={VACCINATION_OPTIONS}
-                  value={form.vaccinated}
-                  onChange={(v) => setForm((p) => ({ ...p, vaccinated: v }))}
-                  cols={2}
-                />
+            <div className="mb-5">
+              <span className="block text-sm text-gray-600 text-left mb-1">예방접종 여부</span>
+              <div className="flex flex-wrap gap-2">
+                {VACCINATION_OPTIONS.map((opt) => (
+                  <button
+                    key={opt.value}
+                    type="button"
+                    onClick={() => setForm((p) => ({ ...p, vaccinated: opt.value }))}
+                    className={`px-4 py-2 rounded-xl text-sm font-medium border touch-manipulation transition-colors ${
+                      form.vaccinated === opt.value
+                        ? 'bg-teal-600 text-white border-teal-600'
+                        : 'bg-white text-gray-700 border-gray-300 active:bg-gray-50'
+                    }`}
+                  >
+                    {opt.label}
+                  </button>
+                ))}
               </div>
             </div>
 
             {/* Notes */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 text-left mb-1">
+            <div className="mb-5">
+              <label className="block text-sm text-gray-600 text-left mb-1">
                 메모 및 특이사항
               </label>
               <textarea
-                rows={4}
                 placeholder="조사관 메모, 특이사항을 자유롭게 입력하세요"
                 value={form.notes ?? ''}
                 onChange={(e) => setForm((p) => ({ ...p, notes: e.target.value }))}
-                className="w-full px-3 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 resize-none"
+                className="w-full h-28 px-3 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 resize-none"
               />
             </div>
 
             {/* Action buttons */}
-            <div className="space-y-3 pt-2">
+            <div className="flex gap-3 pt-2">
               <button
                 type="button"
                 onClick={handleSave}
                 disabled={saving}
-                className="w-full flex items-center justify-center gap-2 py-4 bg-teal-600 text-white rounded-2xl font-semibold text-base active:bg-teal-700 disabled:opacity-50 touch-manipulation"
+                className="flex-1 flex items-center justify-center gap-2 py-4 bg-teal-600 text-white rounded-2xl font-semibold text-base active:bg-teal-700 disabled:opacity-50 touch-manipulation"
               >
                 {saving ? <Loader2 size={20} className="animate-spin" /> : <Save size={20} />}
                 저장하기
@@ -573,7 +547,7 @@ export default function NewRecord() {
                 type="button"
                 onClick={handleSave}
                 disabled={saving}
-                className="w-full flex items-center justify-center gap-2 py-4 bg-white border-2 border-teal-600 text-teal-700 rounded-2xl font-semibold text-base active:bg-teal-50 disabled:opacity-50 touch-manipulation"
+                className="flex-1 flex items-center justify-center gap-2 py-4 bg-white border-2 border-teal-600 text-teal-700 rounded-2xl font-semibold text-base active:bg-teal-50 disabled:opacity-50 touch-manipulation"
               >
                 <BarChart2 size={20} />
                 EpiCalc 분석
