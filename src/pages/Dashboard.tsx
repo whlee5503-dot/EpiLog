@@ -41,6 +41,7 @@ import {
 import { useTheme } from '../hooks/useTheme';
 import { useLanguage } from '../contexts/LanguageContext';
 import { LangToggle } from '../components/LangToggle';
+import { GpsMap } from '../components/GpsMap';
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -193,6 +194,8 @@ export default function Dashboard() {
     const householdContacts = records.reduce((s, r) => s + r.contacts.household, 0);
     return secondaryAttackRate(secondaryCases, householdContacts);
   }, [records, summary]);
+
+  const gpsRecordsCount = useMemo(() => records.filter(r => r.gps != null).length, [records]);
 
   const transmissionCounts = useMemo(() => {
     const map = new Map<string, number>();
@@ -386,7 +389,19 @@ export default function Dashboard() {
             )}
           </SectionCard>
 
-          {/* 6. Export / Share */}
+          {/* 6. Outbreak map */}
+          <SectionCard
+            title={
+              lang === 'ko'
+                ? `발생 지도 (Outbreak Map) — GPS ${gpsRecordsCount}건`
+                : `Outbreak Map — ${gpsRecordsCount} GPS records`
+            }
+            isDark={isDark}
+          >
+            <GpsMap records={records} />
+          </SectionCard>
+
+          {/* 7. Export / Share */}
           <SectionCard title={lang === 'ko' ? '데이터 내보내기' : 'Export Data'} isDark={isDark}>
             <div className="grid grid-cols-2 gap-3">
               <button
