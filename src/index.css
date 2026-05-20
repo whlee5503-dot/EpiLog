@@ -76,6 +76,9 @@ h2 {
     font-size: 20px;
   }
 }
+:where(.dark) h2 {
+  color: #f9fafb;
+}
 p {
   margin: 0;
 }

@@ -68,8 +68,8 @@ function StatCard({
   return (
     <div className={`rounded-2xl p-4 ${bg}`}>
       <div className={`mb-1.5 ${text}`}>{icon}</div>
-      <p className="text-2xl font-bold text-white leading-tight">{value}</p>
-      <p className="text-sm text-white opacity-80 mt-0.5">{label}</p>
+      <p className="text-2xl font-bold text-gray-800 dark:text-white leading-tight">{value}</p>
+      <p className="text-sm text-gray-600 dark:text-white dark:opacity-80 mt-0.5">{label}</p>
     </div>
   );
 }
