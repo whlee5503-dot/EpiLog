@@ -129,6 +129,58 @@ export interface Translations {
   app_not_found: string;
   app_not_found_desc: string;
   app_go_home: string;
+  // ── Encryption Setup Modal ────────────────────────────────────────────────
+  enc_setup_title: string;
+  enc_step_pwd: string;
+  enc_step_recovery: string;
+  enc_step_done: string;
+  enc_pwd_label: string;
+  enc_pwd_ph: string;
+  enc_pwd_confirm: string;
+  enc_pwd_confirm_ph: string;
+  enc_show_pwd: string;
+  enc_pwd_too_short: string;
+  enc_pwd_mismatch: string;
+  enc_next: string;
+  enc_recovery_desc: string;
+  enc_copy: string;
+  enc_copied: string;
+  enc_written_check: string;
+  enc_done_title: string;
+  enc_done_desc: string;
+  enc_done_btn: string;
+  // ── Unlock Modal ──────────────────────────────────────────────────────────
+  ul_title: string;
+  ul_desc: string;
+  ul_pwd_label: string;
+  ul_pwd_ph: string;
+  ul_unlock_btn: string;
+  ul_pwd_error: string;
+  ul_switch_recovery: string;
+  ul_switch_pwd: string;
+  ul_recovery_label: string;
+  ul_recovery_ph: string;
+  ul_recovery_error: string;
+  // ── Settings ──────────────────────────────────────────────────────────────
+  st_title: string;
+  st_section_encryption: string;
+  st_encryption_desc: string;
+  st_status_on: string;
+  st_status_off: string;
+  st_enable_btn: string;
+  st_disable_btn: string;
+  st_change_pwd_btn: string;
+  st_disable_desc: string;
+  st_disable_error: string;
+  st_chpwd_title: string;
+  st_old_pwd_label: string;
+  st_new_pwd_label: string;
+  st_new_pwd_confirm: string;
+  st_chpwd_error: string;
+  st_new_recovery_title: string;
+  st_new_recovery_desc: string;
+  st_cancel: string;
+  st_confirm: string;
 }
 
 export const T: Record<Lang, Translations> = {
@@ -260,6 +312,58 @@ export const T: Record<Lang, Translations> = {
     app_not_found: '페이지를 찾을 수 없습니다',
     app_not_found_desc: '요청하신 주소가 올바른지 확인해 주세요.',
     app_go_home: '홈으로 이동',
+
+    enc_setup_title: '암호화 설정',
+    enc_step_pwd: '비밀번호 설정',
+    enc_step_recovery: '복구 코드 보관',
+    enc_step_done: '완료',
+    enc_pwd_label: '비밀번호',
+    enc_pwd_ph: '최소 8자 이상',
+    enc_pwd_confirm: '비밀번호 확인',
+    enc_pwd_confirm_ph: '비밀번호를 다시 입력하세요',
+    enc_show_pwd: '비밀번호 표시',
+    enc_pwd_too_short: '비밀번호는 최소 8자 이상이어야 합니다.',
+    enc_pwd_mismatch: '비밀번호가 일치하지 않습니다.',
+    enc_next: '다음',
+    enc_recovery_desc: '비밀번호를 잊었을 때 이 코드로 잠금 해제할 수 있습니다. 반드시 안전한 곳에 보관하세요.',
+    enc_copy: '복사',
+    enc_copied: '복사됨',
+    enc_written_check: '복구 코드를 종이에 적거나 안전한 곳에 저장했습니다.',
+    enc_done_title: '암호화가 활성화되었습니다',
+    enc_done_desc: '현장 조사 데이터가 AES-256으로 보호됩니다.',
+    enc_done_btn: '확인',
+
+    ul_title: '잠금 해제',
+    ul_desc: '데이터가 암호화되어 있습니다. 비밀번호를 입력하세요.',
+    ul_pwd_label: '비밀번호',
+    ul_pwd_ph: '비밀번호 입력',
+    ul_unlock_btn: '잠금 해제',
+    ul_pwd_error: '비밀번호가 올바르지 않습니다.',
+    ul_switch_recovery: '복구 코드로 잠금 해제',
+    ul_switch_pwd: '비밀번호로 잠금 해제',
+    ul_recovery_label: '복구 코드 (16자리)',
+    ul_recovery_ph: '복구 코드를 입력하세요',
+    ul_recovery_error: '복구 코드가 올바르지 않습니다.',
+
+    st_title: '설정',
+    st_section_encryption: '데이터 암호화',
+    st_encryption_desc: '현장 조사 데이터를 AES-256-GCM으로 암호화하여 보호합니다.',
+    st_status_on: '활성화됨',
+    st_status_off: '비활성화됨',
+    st_enable_btn: '암호화 활성화',
+    st_disable_btn: '암호화 비활성화',
+    st_change_pwd_btn: '비밀번호 변경',
+    st_disable_desc: '암호화를 비활성화하려면 현재 비밀번호를 입력하세요.',
+    st_disable_error: '비밀번호가 올바르지 않습니다.',
+    st_chpwd_title: '비밀번호 변경',
+    st_old_pwd_label: '현재 비밀번호',
+    st_new_pwd_label: '새 비밀번호',
+    st_new_pwd_confirm: '새 비밀번호 확인',
+    st_chpwd_error: '비밀번호 변경에 실패했습니다.',
+    st_new_recovery_title: '새 복구 코드',
+    st_new_recovery_desc: '비밀번호 변경으로 새 복구 코드가 생성되었습니다. 기존 코드는 더 이상 사용할 수 없습니다.',
+    st_cancel: '취소',
+    st_confirm: '확인',
   },
 
   en: {
@@ -390,5 +494,57 @@ export const T: Record<Lang, Translations> = {
     app_not_found: 'Page Not Found',
     app_not_found_desc: 'Please check if the URL is correct.',
     app_go_home: 'Go Home',
+
+    enc_setup_title: 'Encryption Setup',
+    enc_step_pwd: 'Set Password',
+    enc_step_recovery: 'Save Recovery Code',
+    enc_step_done: 'Done',
+    enc_pwd_label: 'Password',
+    enc_pwd_ph: 'At least 8 characters',
+    enc_pwd_confirm: 'Confirm Password',
+    enc_pwd_confirm_ph: 'Re-enter your password',
+    enc_show_pwd: 'Show password',
+    enc_pwd_too_short: 'Password must be at least 8 characters.',
+    enc_pwd_mismatch: 'Passwords do not match.',
+    enc_next: 'Next',
+    enc_recovery_desc: 'Use this code to unlock the app if you forget your password. Store it somewhere safe.',
+    enc_copy: 'Copy',
+    enc_copied: 'Copied',
+    enc_written_check: 'I have written down or securely stored my recovery code.',
+    enc_done_title: 'Encryption Enabled',
+    enc_done_desc: 'Your field data is now protected with AES-256.',
+    enc_done_btn: 'Done',
+
+    ul_title: 'Unlock',
+    ul_desc: 'Your data is encrypted. Enter your password to continue.',
+    ul_pwd_label: 'Password',
+    ul_pwd_ph: 'Enter password',
+    ul_unlock_btn: 'Unlock',
+    ul_pwd_error: 'Incorrect password.',
+    ul_switch_recovery: 'Unlock with recovery code',
+    ul_switch_pwd: 'Unlock with password',
+    ul_recovery_label: 'Recovery Code (16 characters)',
+    ul_recovery_ph: 'Enter recovery code',
+    ul_recovery_error: 'Invalid recovery code.',
+
+    st_title: 'Settings',
+    st_section_encryption: 'Data Encryption',
+    st_encryption_desc: 'Protect your field investigation data with AES-256-GCM encryption.',
+    st_status_on: 'Enabled',
+    st_status_off: 'Disabled',
+    st_enable_btn: 'Enable Encryption',
+    st_disable_btn: 'Disable Encryption',
+    st_change_pwd_btn: 'Change Password',
+    st_disable_desc: 'Enter your current password to disable encryption.',
+    st_disable_error: 'Incorrect password.',
+    st_chpwd_title: 'Change Password',
+    st_old_pwd_label: 'Current Password',
+    st_new_pwd_label: 'New Password',
+    st_new_pwd_confirm: 'Confirm New Password',
+    st_chpwd_error: 'Failed to change password.',
+    st_new_recovery_title: 'New Recovery Code',
+    st_new_recovery_desc: 'A new recovery code was generated. Your old code is no longer valid.',
+    st_cancel: 'Cancel',
+    st_confirm: 'Confirm',
   },
 };

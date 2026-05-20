@@ -13,6 +13,7 @@ import {
   LayoutDashboard,
   Sun,
   Moon,
+  Settings,
 } from 'lucide-react';
 import { db } from '../db/database';
 import type { FieldRecord } from '../types/index';
@@ -209,6 +210,14 @@ export default function RecordList() {
               aria-label="Dashboard"
             >
               <LayoutDashboard size={22} />
+            </button>
+            <button
+              type="button"
+              onClick={() => navigate('/settings')}
+              className="p-2 rounded-xl bg-white/20 active:bg-white/30 touch-manipulation"
+              aria-label={t.st_title}
+            >
+              <Settings size={22} />
             </button>
           </div>
         </div>

@@ -10,8 +10,11 @@ import { ClipboardList, Home } from 'lucide-react';
 import RecordList from './pages/RecordList';
 import NewRecord from './pages/NewRecord';
 import Dashboard from './pages/Dashboard';
+import Settings from './pages/Settings';
 import { useTheme } from './hooks/useTheme';
 import { LanguageProvider, useLanguage } from './contexts/LanguageContext';
+import { CryptoProvider, useCrypto } from './contexts/CryptoContext';
+import { UnlockModal } from './components/UnlockModal';
 
 function RecordDetail() {
   const { id } = useParams<{ id: string }>();
@@ -70,23 +73,33 @@ function NotFound() {
 
 function AppRoutes() {
   useTheme();
+  const { isEncryptionEnabled, isUnlocked } = useCrypto();
+
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route index element={<RecordList />} />
-        <Route path="/new" element={<NewRecord />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/records/:id" element={<RecordDetail />} />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-    </BrowserRouter>
+    <>
+      <BrowserRouter>
+        <Routes>
+          <Route index element={<RecordList />} />
+          <Route path="/new" element={<NewRecord />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/records/:id" element={<RecordDetail />} />
+          <Route path="/settings" element={<Settings />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </BrowserRouter>
+
+      {/* Lock screen — rendered above the router so it blocks all routes */}
+      {isEncryptionEnabled && !isUnlocked && <UnlockModal />}
+    </>
   );
 }
 
 export default function App() {
   return (
     <LanguageProvider>
-      <AppRoutes />
+      <CryptoProvider>
+        <AppRoutes />
+      </CryptoProvider>
     </LanguageProvider>
   );
 }
