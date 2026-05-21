@@ -126,7 +126,7 @@ export function generateSummaryText(records: FieldRecord[], lang: 'ko' | 'en'): 
 // ─── EpiCalc URL ──────────────────────────────────────────────────────────────
 
 export function buildEpiCalcURL(record: FieldRecord): string {
-  const base = 'https://chem-health-calc.com';
+  const base = 'https://epi.chem-health-calc.com';
   const params = new URLSearchParams({
     population: String(record.totalPopulation),
     cases: String(record.dailyCases.newCases),
