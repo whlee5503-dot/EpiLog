@@ -15,6 +15,7 @@ import { useTheme } from './hooks/useTheme';
 import { LanguageProvider, useLanguage } from './contexts/LanguageContext';
 import { CryptoProvider, useCrypto } from './contexts/CryptoContext';
 import { UnlockModal } from './components/UnlockModal';
+import { PrivacyNoticeModal } from './components/PrivacyNoticeModal';
 
 function RecordDetail() {
   const { id } = useParams<{ id: string }>();
@@ -90,6 +91,9 @@ function AppRoutes() {
 
       {/* Lock screen — rendered above the router so it blocks all routes */}
       {isEncryptionEnabled && !isUnlocked && <UnlockModal />}
+
+      {/* First-launch privacy notice — shown once, above everything else */}
+      <PrivacyNoticeModal />
     </>
   );
 }

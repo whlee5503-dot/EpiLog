@@ -161,6 +161,12 @@ export interface Translations {
   ul_recovery_label: string;
   ul_recovery_ph: string;
   ul_recovery_error: string;
+  // ── Privacy Notice Modal ──────────────────────────────────────────────────
+  pn_title: string;
+  pn_item1: string;
+  pn_item2: string;
+  pn_item3: string;
+  pn_confirm: string;
   // ── Settings ──────────────────────────────────────────────────────────────
   st_title: string;
   st_section_encryption: string;
@@ -364,6 +370,12 @@ export const T: Record<Lang, Translations> = {
     st_new_recovery_desc: '비밀번호 변경으로 새 복구 코드가 생성되었습니다. 기존 코드는 더 이상 사용할 수 없습니다.',
     st_cancel: '취소',
     st_confirm: '확인',
+
+    pn_title: '개인정보 안내',
+    pn_item1: '모든 데이터는 이 기기에만 저장됩니다 — 서버로 전송되지 않습니다.',
+    pn_item2: '환자 이름 입력은 선택사항입니다 — 익명 코드(예: P-001) 사용을 권장합니다.',
+    pn_item3: 'AES-256 암호화를 사용할 수 있습니다 — 설정에서 활성화하세요.',
+    pn_confirm: '확인했습니다',
   },
 
   en: {
@@ -546,5 +558,11 @@ export const T: Record<Lang, Translations> = {
     st_new_recovery_desc: 'A new recovery code was generated. Your old code is no longer valid.',
     st_cancel: 'Cancel',
     st_confirm: 'Confirm',
+
+    pn_title: 'Privacy Notice',
+    pn_item1: 'All data is stored only on this device — nothing is sent to any server.',
+    pn_item2: 'Patient name is optional — using an anonymous code (e.g. P-001) is recommended.',
+    pn_item3: 'AES-256 encryption is available — enable it in Settings.',
+    pn_confirm: 'I Understand',
   },
 };
