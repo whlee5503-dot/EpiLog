@@ -6,6 +6,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 [![PWA](https://img.shields.io/badge/PWA-Offline%20Ready-teal.svg)](https://epilog-d72.pages.dev)
 [![Live Demo](https://img.shields.io/badge/Live-Demo-blue.svg)](https://epilog-d72.pages.dev)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.20318922.svg)](https://doi.org/10.5281/zenodo.20318922)
 
 ---
 
@@ -213,7 +214,7 @@ This software is free to use, modify, and distribute for any purpose, including 
 
 ## 📬 Contact
 
-**Developer:** Won Ho Lee, MD  
+**Developer:** Won Ho Lee, PhD, MPH, MDiv  
 **Project:** EpiCalc Suite  
 **GitHub:** [https://github.com/whlee5503-dot/EpiLog](https://github.com/whlee5503-dot/EpiLog)  
 **EpiCalc:** [https://chem-health-calc.com](https://chem-health-calc.com)
