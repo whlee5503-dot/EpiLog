@@ -30,13 +30,14 @@ import {
 } from 'lucide-react';
 import { db } from '../db/database';
 import type { FieldRecord } from '../types/index';
-import { secondaryAttackRate, formatRate, summarizeRecords } from '../utils/epiCalc';
+import { attackRate, secondaryAttackRate, formatRate, summarizeRecords } from '../utils/epiCalc';
 import {
   exportToCSV,
   exportToJSON,
   shareViaWhatsApp,
   shareViaEmail,
   generateSummaryText,
+  buildEpiCalcURL,
 } from '../utils/exportData';
 import { useTheme } from '../hooks/useTheme';
 import { useLanguage } from '../contexts/LanguageContext';
@@ -81,8 +82,8 @@ function SummaryCard({
   return (
     <div className={`rounded-2xl p-4 ${styles.bg} flex flex-col gap-2`}>
       <div className={styles.iconColor}>{icon}</div>
-      <p className="text-2xl font-bold text-white leading-tight">{value}</p>
-      <p className="text-sm text-white opacity-90">{label}</p>
+      <p className='text-2xl font-bold text-gray-800 dark:text-white leading-tight'>{value}</p>
+      <p className='text-sm text-gray-600 dark:text-white dark:opacity-90 mt-0.5'>{label}</p>
     </div>
   );
 }
@@ -389,7 +390,50 @@ export default function Dashboard() {
             )}
           </SectionCard>
 
-          {/* 6. Outbreak map */}
+          {/* 6. Individual record analysis */}
+          <SectionCard title={t.db_individual_section} isDark={isDark}>
+            <div className="space-y-3">
+              {records.map((record) => {
+                const ar = attackRate(record.dailyCases.newCases, record.totalPopulation);
+                return (
+                  <div
+                    key={record.id}
+                    className="bg-gray-50 dark:bg-[#1f2937] rounded-xl p-3 border border-gray-200 dark:border-gray-700"
+                  >
+                    <p className="text-sm font-semibold text-gray-900 dark:text-white truncate mb-0.5">
+                      {record.location || '-'}
+                    </p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">
+                      {new Date(record.timestamp).toLocaleString(lang === 'ko' ? 'ko-KR' : 'en-US', {
+                        year: 'numeric', month: '2-digit', day: '2-digit',
+                        hour: '2-digit', minute: '2-digit',
+                      })}
+                    </p>
+                    <div className="flex gap-4 mb-3">
+                      <div>
+                        <p className="text-xs text-gray-500 dark:text-gray-400">{t.nr_new_cases}</p>
+                        <p className="text-sm font-bold text-gray-900 dark:text-white">{record.dailyCases.newCases}</p>
+                      </div>
+                      <div>
+                        <p className="text-xs text-gray-500 dark:text-gray-400">{t.db_ar_label}</p>
+                        <p className="text-sm font-bold text-gray-900 dark:text-white">{formatRate(ar)}</p>
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => window.open(buildEpiCalcURL(record), '_blank', 'noopener,noreferrer')}
+                      className="w-full flex items-center justify-center gap-2 py-2 rounded-lg bg-teal-600 text-white text-sm font-semibold active:bg-teal-700 touch-manipulation"
+                    >
+                      <TrendingUp size={15} />
+                      {t.db_analyze_epicalc}
+                    </button>
+                  </div>
+                );
+              })}
+            </div>
+          </SectionCard>
+
+          {/* 7. Outbreak map */}
           <SectionCard
             title={
               lang === 'ko'

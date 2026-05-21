@@ -114,6 +114,8 @@ export interface Translations {
   db_go_records: string;
   db_bar_name: string;
   db_line_name: string;
+  db_individual_section: string;
+  db_analyze_epicalc: string;
   // Route labels
   rt_airborne: string;
   rt_droplet: string;
@@ -303,6 +305,8 @@ export const T: Record<Lang, Translations> = {
     db_go_records: '기록 목록으로 이동',
     db_bar_name: '신규 환자',
     db_line_name: '누적 환자',
+    db_individual_section: '개별 기록 분석',
+    db_analyze_epicalc: 'EpiCalc로 분석',
 
     rt_airborne: '공기 전파',
     rt_droplet: '비말 전파',
@@ -491,6 +495,8 @@ export const T: Record<Lang, Translations> = {
     db_go_records: 'Go to Records',
     db_bar_name: 'New Cases',
     db_line_name: 'Cumulative',
+    db_individual_section: 'Individual Record Analysis',
+    db_analyze_epicalc: 'Analyze with EpiCalc',
 
     rt_airborne: 'Airborne',
     rt_droplet: 'Droplet',
