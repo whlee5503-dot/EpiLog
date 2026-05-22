@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-  <!-- Teal circle background -->
-  <circle cx="256" cy="256" r="256" fill="#0D9488"/>
+  <!-- Forest green rounded-square background (rx/512 ≈ rx/32=7 ratio) -->
+  <rect width="512" height="512" rx="112" fill="#1a6b4a"/>
 
   <!-- White medical cross (horizontal arm) -->
   <rect x="108" y="216" width="296" height="80" rx="16" fill="#ffffff"/>

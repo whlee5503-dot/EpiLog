@@ -1,7 +1,28 @@
 @import "leaflet/dist/leaflet.css";
 @import "tailwindcss";
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&family=DM+Serif+Display:ital@0;1&display=swap");
 
 @custom-variant dark (&:where(.dark, .dark *));
+
+/* ── EpiCalc Suite primary palette override ──────────────────────────────────
+   Tailwind v4 @theme remaps every teal-* utility to the EpiCalc forest-green
+   system so all existing bg-teal-600 / text-teal-600 classes render correctly
+   without touching any component files.
+   Reference: EpiCalc --color-primary:#1a6b4a / --color-primary-light:#2d9068
+   ─────────────────────────────────────────────────────────────────────────── */
+@theme {
+  --color-teal-50:  #f0f7f2;
+  --color-teal-100: #d4ebdc;
+  --color-teal-200: #a9d6b9;
+  --color-teal-300: #6cbf8d;
+  --color-teal-400: #3aab72;
+  --color-teal-500: #2d9068;   /* EpiCalc --color-primary-light */
+  --color-teal-600: #1a6b4a;   /* EpiCalc --color-primary       */
+  --color-teal-700: #0f4a32;   /* EpiCalc --color-primary-dark  */
+  --color-teal-800: #0a3322;
+  --color-teal-900: #061f15;
+  --color-teal-950: #030f0a;
+}
 
 :root {
   --text: #6b6375;
@@ -9,15 +30,15 @@
   --bg: #fff;
   --border: #e5e4e7;
   --code-bg: #f4f3ec;
-  --accent: #aa3bff;
-  --accent-bg: rgba(170, 59, 255, 0.1);
-  --accent-border: rgba(170, 59, 255, 0.5);
+  --accent: #e8a020;
+  --accent-bg: rgba(232, 160, 32, 0.1);
+  --accent-border: rgba(232, 160, 32, 0.5);
   --social-bg: rgba(244, 243, 236, 0.5);
   --shadow:
     rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
 
-  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
+  --sans: 'DM Sans', system-ui, 'Segoe UI', Roboto, sans-serif;
+  --heading: 'DM Serif Display', Georgia, serif;
   --mono: ui-monospace, Consolas, monospace;
 
   font: 18px/145% var(--sans);

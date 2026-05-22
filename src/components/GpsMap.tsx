@@ -18,7 +18,7 @@ L.Icon.Default.mergeOptions({
 
 // Custom MapPin icon using lucide-react rendered to static HTML
 const pinHtml = renderToStaticMarkup(
-  <MapPin size={28} color="#0d9488" fill="#ccfbf1" strokeWidth={1.5} />
+  <MapPin size={28} color="#1a6b4a" fill="#d4ebdc" strokeWidth={1.5} />
 );
 const customIcon = L.divIcon({
   html: pinHtml,
