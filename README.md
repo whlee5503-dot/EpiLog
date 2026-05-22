@@ -151,7 +151,7 @@ EpiLog is **Module 2** of the **EpiCalc Suite**:
 3. Data auto-populates EpiCalc's SIR model inputs
 4. Instant epidemic simulation — all on one smartphone, offline
 
-**EpiCalc:** [https://chem-health-calc.com](https://chem-health-calc.com)
+**EpiCalc:** [https://epi.chem-health-calc.com](https://epi.chem-health-calc.com)
 
 ---
 
@@ -217,7 +217,7 @@ This software is free to use, modify, and distribute for any purpose, including 
 **Developer:** Won Ho Lee, PhD, MPH, MDiv  
 **Project:** EpiCalc Suite  
 **GitHub:** [https://github.com/whlee5503-dot/EpiLog](https://github.com/whlee5503-dot/EpiLog)  
-**EpiCalc:** [https://chem-health-calc.com](https://chem-health-calc.com)
+**EpiCalc:** [https://epi.chem-health-calc.com](https://epi.chem-health-calc.com)
 
 ---
 
