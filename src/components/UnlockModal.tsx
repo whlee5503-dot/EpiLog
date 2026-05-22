@@ -1,5 +1,5 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
-import { Lock, Loader2, AlertCircle, ShieldCheck } from 'lucide-react';
+import { Lock, Loader2, AlertCircle, ShieldCheck, Eye, EyeOff } from 'lucide-react';
 import { useCrypto } from '../contexts/CryptoContext';
 import { useLanguage } from '../contexts/LanguageContext';
 
@@ -15,6 +15,7 @@ export function UnlockModal() {
   const [value, setValue] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
 
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -22,6 +23,7 @@ export function UnlockModal() {
   useEffect(() => {
     setValue('');
     setError('');
+    setShowPassword(false);
     setTimeout(() => inputRef.current?.focus(), 50);
   }, [mode]);
 
@@ -69,23 +71,35 @@ export function UnlockModal() {
             <label className="block text-xs font-medium text-gray-400 mb-1.5 dark:text-gray-300">
               {mode === 'password' ? t.ul_pwd_label : t.ul_recovery_label}
             </label>
-            <input
-              ref={inputRef}
-              type={mode === 'password' ? 'password' : 'text'}
-              value={value}
-              onChange={(e) =>
-                setValue(
-                  mode === 'recovery'
-                    ? e.target.value.replace(/\s/g, '').toUpperCase().replace(/[^A-Z0-9]/g, '')
-                    : e.target.value,
-                )
-              }
-              onKeyDown={handleKey}
-              placeholder={mode === 'password' ? t.ul_pwd_ph : t.ul_recovery_ph}
-              autoComplete={mode === 'password' ? 'current-password' : 'off'}
-              spellCheck={false}
-              className="w-full h-12 px-4 rounded-xl border border-gray-700 bg-gray-800 text-white placeholder-gray-600 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent font-mono dark:bg-gray-800 dark:text-white dark:border-gray-600"
-            />
+            <div className="relative">
+              <input
+                ref={inputRef}
+                type={mode === 'password' ? (showPassword ? 'text' : 'password') : 'text'}
+                value={value}
+                onChange={(e) =>
+                  setValue(
+                    mode === 'recovery'
+                      ? e.target.value.replace(/\s/g, '').toUpperCase().replace(/[^A-Z0-9]/g, '')
+                      : e.target.value,
+                  )
+                }
+                onKeyDown={handleKey}
+                placeholder={mode === 'password' ? t.ul_pwd_ph : t.ul_recovery_ph}
+                autoComplete={mode === 'password' ? 'current-password' : 'off'}
+                spellCheck={false}
+                className="w-full h-12 px-4 pr-12 rounded-xl border border-gray-700 bg-gray-800 text-white placeholder-gray-600 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent font-mono dark:bg-gray-800 dark:text-white dark:border-gray-600"
+              />
+              {mode === 'password' && (
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((v) => !v)}
+                  tabIndex={-1}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-teal-400 hover:text-teal-300 transition-colors"
+                >
+                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
+              )}
+            </div>
           </div>
 
           {/* Error */}
@@ -101,7 +115,7 @@ export function UnlockModal() {
             type="button"
             disabled={!value.trim() || loading}
             onClick={handleSubmit}
-            className="w-full h-12 flex items-center justify-center gap-2 bg-teal-600 disabled:bg-gray-700 text-white disabled:text-gray-500 rounded-xl font-semibold text-sm active:bg-teal-700 touch-manipulation transition-colors"
+            className="w-full h-12 flex items-center justify-center gap-2 bg-teal-600 hover:bg-teal-500 disabled:bg-teal-900 text-white disabled:text-teal-600/60 rounded-xl font-semibold text-sm active:bg-teal-700 touch-manipulation transition-colors"
           >
             {loading ? (
               <Loader2 size={18} className="animate-spin" />
