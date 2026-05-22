@@ -19,6 +19,7 @@ import { db } from '../db/database';
 import type { FieldRecord } from '../types/index';
 import { useTheme } from '../hooks/useTheme';
 import { useLanguage } from '../contexts/LanguageContext';
+import { useCrypto } from '../contexts/CryptoContext';
 import { LangToggle } from '../components/LangToggle';
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -170,16 +171,17 @@ export default function RecordList() {
   const navigate = useNavigate();
   const { theme, toggle: toggleTheme } = useTheme();
   const { t } = useLanguage();
+  const { cryptoKey } = useCrypto();
   const [records, setRecords] = useState<FieldRecord[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    db.getRecords()
+    db.getRecords(cryptoKey ?? undefined)
       .then(setRecords)
       .catch((e) => setError(String(e)))
       .finally(() => setLoading(false));
-  }, []);
+  }, [cryptoKey]);
 
   const totalCases = records.reduce((sum, r) => sum + r.dailyCases.newCases, 0);
   const totalDeaths = records.reduce((sum, r) => sum + r.dailyCases.deaths, 0);

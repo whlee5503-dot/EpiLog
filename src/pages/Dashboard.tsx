@@ -41,6 +41,7 @@ import {
 } from '../utils/exportData';
 import { useTheme } from '../hooks/useTheme';
 import { useLanguage } from '../contexts/LanguageContext';
+import { useCrypto } from '../contexts/CryptoContext';
 import { LangToggle } from '../components/LangToggle';
 import { GpsMap } from '../components/GpsMap';
 
@@ -151,16 +152,17 @@ function EmptyChartState() {
 export default function Dashboard() {
   const { isDark } = useTheme();
   const { t, lang } = useLanguage();
+  const { cryptoKey } = useCrypto();
   const [records, setRecords] = useState<FieldRecord[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    db.getRecords()
+    db.getRecords(cryptoKey ?? undefined)
       .then(setRecords)
       .catch((e: unknown) => setError(String(e)))
       .finally(() => setLoading(false));
-  }, []);
+  }, [cryptoKey]);
 
   const summary = useMemo(() => summarizeRecords(records), [records]);
 

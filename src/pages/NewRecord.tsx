@@ -13,6 +13,7 @@ import { db } from '../db/database';
 import type { FieldRecord, TransmissionRoute, VaccinationStatus } from '../types/index';
 import { buildEpiCalcURL } from '../utils/exportData';
 import { useLanguage } from '../contexts/LanguageContext';
+import { useCrypto } from '../contexts/CryptoContext';
 import { LangToggle } from '../components/LangToggle';
 
 // Internal keys for symptoms (stored in DB as Korean)
@@ -92,6 +93,7 @@ function Counter({
 export default function NewRecord() {
   const navigate = useNavigate();
   const { t, lang } = useLanguage();
+  const { cryptoKey } = useCrypto();
   const [step, setStep] = useState(1);
   const [form, setForm] = useState<FormData>(initForm);
   const [gpsLoading, setGpsLoading] = useState(false);
@@ -185,7 +187,7 @@ export default function NewRecord() {
   const handleSave = async () => {
     setSaving(true);
     try {
-      await db.addRecord(form);
+      await db.addRecord(form, cryptoKey ?? undefined);
       navigate('/');
     } catch (e) {
       console.error('저장 실패:', e);
