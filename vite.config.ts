@@ -43,20 +43,63 @@ export default defineConfig({
       },
 
       workbox: {
-        // 빌드 산출물 전체 사전 캐시
-        globPatterns: ['**/*.{js,css,html,ico,png,svg,woff,woff2}'],
+        // 핵심 파일만 precache — JS 청크(특히 Dashboard 740KB)는 제외하고
+        // lazy chunk들은 runtimeCaching으로 처리
+        globPatterns: [
+          'index.html',
+          'assets/*.css',
+        ],
 
         runtimeCaching: [
-          // ── NetworkFirst: 페이지 네비게이션 ──────────────────────────────
-          // 온라인 시 항상 최신 HTML을 가져오고,
-          // 오프라인이거나 타임아웃(3 s) 초과 시 캐시로 폴백.
+          // ── CacheFirst: JS 청크 — lazy load 시 캐시 ──────────────────────
           {
-            urlPattern: ({ request }) => request.mode === 'navigate',
-            handler: 'NetworkFirst',
+            urlPattern: /\/assets\/.*\.js$/,
+            handler: 'CacheFirst',
             options: {
-              cacheName: 'pages-cache',
-              networkTimeoutSeconds: 3,
-              cacheableResponse: { statuses: [0, 200] },
+              cacheName: 'js-chunks',
+              expiration: {
+                maxEntries: 30,
+                maxAgeSeconds: 60 * 60 * 24 * 30, // 30일
+              },
+            },
+          },
+
+          // ── CacheFirst: CSS ───────────────────────────────────────────────
+          {
+            urlPattern: /\/assets\/.*\.css$/,
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'css-cache',
+              expiration: {
+                maxEntries: 10,
+                maxAgeSeconds: 60 * 60 * 24 * 30,
+              },
+            },
+          },
+
+          // ── CacheFirst: OpenStreetMap 타일 — 지도용 ──────────────────────
+          {
+            urlPattern: /https:\/\/.*\.tile\.openstreetmap\.org\/.*/,
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'osm-tiles',
+              expiration: {
+                maxEntries: 200,
+                maxAgeSeconds: 60 * 60 * 24 * 7, // 7일
+              },
+            },
+          },
+
+          // ── CacheFirst: 폰트 ─────────────────────────────────────────────
+          {
+            urlPattern: /\/assets\/.*\.(woff|woff2)$/,
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'fonts-cache',
+              expiration: {
+                maxEntries: 10,
+                maxAgeSeconds: 60 * 60 * 24 * 365, // 1년
+              },
             },
           },
 
@@ -74,23 +117,6 @@ export default defineConfig({
                 maxEntries: 50,
                 maxAgeSeconds: 60 * 5, // 5 minutes
               },
-            },
-          },
-
-          // ── CacheFirst: 정적 에셋 ────────────────────────────────────────
-          // JS, CSS, 이미지, 폰트는 빌드 해시로 버전 관리되므로
-          // 캐시를 우선 제공해 로딩 속도를 극대화.
-          {
-            urlPattern: ({ request }) =>
-              ['style', 'script', 'image', 'font'].includes(request.destination),
-            handler: 'CacheFirst',
-            options: {
-              cacheName: 'assets-cache',
-              expiration: {
-                maxEntries: 100,
-                maxAgeSeconds: 60 * 60 * 24 * 30, // 30 days
-              },
-              cacheableResponse: { statuses: [0, 200] },
             },
           },
         ],

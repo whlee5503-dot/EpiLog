@@ -96,6 +96,39 @@ No installation required — open in any mobile browser and tap "Add to Home Scr
 
 ---
 
+## 📶 2G/3G Network Optimization
+
+EpiLog is optimized for use in areas with extremely limited 
+connectivity — including 2G (EDGE) networks common in 
+Sub-Saharan Africa and rural Asia.
+
+### Performance at a Glance
+
+| Phase | Network Required | Details |
+|---|---|---|
+| First load | 2G~3G | One-time only (~4 sec on 3G) |
+| After install | **Zero** | Fully offline via PWA |
+| Data entry | **Zero** | All local (IndexedDB) |
+| GPS recording | **Zero** | Device GPS only |
+| EpiCalc sync | **Zero** | URL params (local) |
+| Data export | Optional | CSV/JSON local download |
+
+### Key Optimizations (v1.1+)
+
+- **Code splitting**: Dashboard (Recharts) loads only on first visit
+  — reduces initial bundle by ~67% (300KB → ~98KB gzip)
+- **PWA precache reduced by 96%**: 1,177KB → 51KB on install
+  — JS chunks cached on-demand via runtime caching
+- **Map graceful degradation**: GPS coordinates always saved
+  as numbers even when map tiles unavailable offline
+- **Lazy loading**: All page components load on demand
+
+> **Recommended for field use:**
+> Install EpiLog once on Wi-Fi or 3G before heading to the field.
+> All features work completely offline thereafter.
+
+---
+
 ## 🔧 Installation & Development
 
 ### Prerequisites

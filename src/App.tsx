@@ -1,3 +1,4 @@
+import { lazy, Suspense } from 'react';
 import {
   BrowserRouter,
   Routes,
@@ -7,15 +8,16 @@ import {
   Link,
 } from 'react-router-dom';
 import { ClipboardList, Home } from 'lucide-react';
-import RecordList from './pages/RecordList';
-import NewRecord from './pages/NewRecord';
-import Dashboard from './pages/Dashboard';
-import Settings from './pages/Settings';
 import { useTheme } from './hooks/useTheme';
 import { LanguageProvider, useLanguage } from './contexts/LanguageContext';
 import { CryptoProvider, useCrypto } from './contexts/CryptoContext';
 import { UnlockModal } from './components/UnlockModal';
 import { PrivacyNoticeModal } from './components/PrivacyNoticeModal';
+
+const RecordList = lazy(() => import('./pages/RecordList'));
+const NewRecord  = lazy(() => import('./pages/NewRecord'));
+const Dashboard  = lazy(() => import('./pages/Dashboard'));
+const Settings   = lazy(() => import('./pages/Settings'));
 
 function RecordDetail() {
   const { id } = useParams<{ id: string }>();
@@ -72,6 +74,23 @@ function NotFound() {
   );
 }
 
+function PageLoader() {
+  return (
+    <div className='min-h-screen flex flex-col items-center justify-center bg-white dark:bg-gray-900'>
+      <div
+        className='w-10 h-10 border-4 rounded-full animate-spin mb-4'
+        style={{
+          borderColor: '#1a6b4a',
+          borderTopColor: 'transparent',
+        }}
+      />
+      <p className='text-sm text-gray-500 dark:text-gray-400'>
+        Loading...
+      </p>
+    </div>
+  );
+}
+
 function AppRoutes() {
   useTheme();
   const { isEncryptionEnabled, isUnlocked } = useCrypto();
@@ -79,14 +98,16 @@ function AppRoutes() {
   return (
     <>
       <BrowserRouter>
-        <Routes>
-          <Route index element={<RecordList />} />
-          <Route path="/new" element={<NewRecord />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/records/:id" element={<RecordDetail />} />
-          <Route path="/settings" element={<Settings />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+        <Suspense fallback={<PageLoader />}>
+          <Routes>
+            <Route index element={<RecordList />} />
+            <Route path="/new" element={<NewRecord />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/records/:id" element={<RecordDetail />} />
+            <Route path="/settings" element={<Settings />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </Suspense>
       </BrowserRouter>
 
       {/* Lock screen — rendered above the router so it blocks all routes */}
