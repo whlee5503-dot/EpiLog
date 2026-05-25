@@ -7,6 +7,7 @@
 [![PWA](https://img.shields.io/badge/PWA-Offline%20Ready-teal.svg)](https://epilog-d72.pages.dev)
 [![Live Demo](https://img.shields.io/badge/Live-Demo-blue.svg)](https://epilog-d72.pages.dev)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.20318922.svg)](https://doi.org/10.5281/zenodo.20318922)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.20349994.svg)](https://doi.org/10.5281/zenodo.20349994)
 
 ---
 
