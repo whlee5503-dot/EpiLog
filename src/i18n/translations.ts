@@ -189,6 +189,8 @@ export interface Translations {
   st_new_recovery_desc: string;
   st_cancel: string;
   st_confirm: string;
+  st_privacy_desc: string;
+  st_privacy_view: string;
 }
 
 export const T: Record<Lang, Translations> = {
@@ -374,6 +376,8 @@ export const T: Record<Lang, Translations> = {
     st_new_recovery_desc: '비밀번호 변경으로 새 복구 코드가 생성되었습니다. 기존 코드는 더 이상 사용할 수 없습니다.',
     st_cancel: '취소',
     st_confirm: '확인',
+    st_privacy_desc: '데이터 보호 방식을 확인합니다.',
+    st_privacy_view: '보기',
 
     pn_title: '개인정보 안내',
     pn_item1: '모든 데이터는 이 기기에만 저장됩니다 — 서버로 전송되지 않습니다.',
@@ -564,6 +568,8 @@ export const T: Record<Lang, Translations> = {
     st_new_recovery_desc: 'A new recovery code was generated. Your old code is no longer valid.',
     st_cancel: 'Cancel',
     st_confirm: 'Confirm',
+    st_privacy_desc: 'Review how your data is protected.',
+    st_privacy_view: 'View',
 
     pn_title: 'Privacy Notice',
     pn_item1: 'All data is stored only on this device — nothing is sent to any server.',

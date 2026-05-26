@@ -5,15 +5,24 @@ import { LangToggle } from './LangToggle';
 
 const STORAGE_KEY = 'epilog-privacy-accepted';
 
-export function PrivacyNoticeModal() {
+interface PrivacyNoticeModalProps {
+  forceShow?: boolean;
+  onClose?: () => void;
+}
+
+export function PrivacyNoticeModal({ forceShow = false, onClose }: PrivacyNoticeModalProps = {}) {
   const { t } = useLanguage();
   const [accepted, setAccepted] = useState(() => localStorage.getItem(STORAGE_KEY) === 'true');
 
-  if (accepted) return null;
+  if (accepted && !forceShow) return null;
 
   const handleConfirm = () => {
-    localStorage.setItem(STORAGE_KEY, 'true');
-    setAccepted(true);
+    if (forceShow) {
+      onClose?.();
+    } else {
+      localStorage.setItem(STORAGE_KEY, 'true');
+      setAccepted(true);
+    }
   };
 
   const items = [
@@ -36,7 +45,7 @@ export function PrivacyNoticeModal() {
         </div>
 
         {/* Title */}
-        <p className="text-2xl font-bold text-gray-900 dark:text-white text-center">{t.pn_title}</p>
+        <p className="text-2xl font-bold text-white text-center">{t.pn_title}</p>
 
         {/* Items */}
         <ul className="w-full flex flex-col gap-4">

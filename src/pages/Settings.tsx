@@ -2,6 +2,7 @@ import { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   ChevronLeft,
+  Shield,
   ShieldCheck,
   ShieldOff,
   Lock,
@@ -13,6 +14,7 @@ import {
 import { useCrypto } from '../contexts/CryptoContext';
 import { useLanguage } from '../contexts/LanguageContext';
 import { EncryptionSetupModal } from '../components/EncryptionSetupModal';
+import { PrivacyNoticeModal } from '../components/PrivacyNoticeModal';
 import { db } from '../db/database';
 
 type PanelView = 'none' | 'disable' | 'changePwd' | 'newRecovery';
@@ -57,6 +59,7 @@ export default function Settings() {
   const { isEncryptionEnabled, disableEncryption, changePassword } = useCrypto();
 
   const [showSetupModal, setShowSetupModal] = useState(false);
+  const [showPrivacyModal, setShowPrivacyModal] = useState(false);
   const [panel, setPanel] = useState<PanelView>('none');
 
   // Disable encryption state
@@ -334,11 +337,39 @@ export default function Settings() {
             )}
           </div>
         </section>
+        {/* ── Privacy Notice section ── */}
+        <section className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm overflow-hidden">
+          <div className="px-4 py-4 flex items-center gap-3">
+            <div className="w-9 h-9 rounded-xl flex items-center justify-center bg-teal-100 dark:bg-teal-900/40">
+              <Shield size={18} className="text-teal-600 dark:text-teal-400" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <h2 className="font-semibold text-gray-900 dark:text-white text-sm">
+                {t.pn_title}
+              </h2>
+              <p className="text-xs text-gray-500 dark:text-gray-300 mt-0.5 leading-snug">
+                {t.st_privacy_desc}
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={() => setShowPrivacyModal(true)}
+              className="shrink-0 px-3 h-9 flex items-center justify-center bg-teal-600 text-white rounded-xl text-xs font-semibold active:bg-teal-700 touch-manipulation"
+            >
+              {t.st_privacy_view}
+            </button>
+          </div>
+        </section>
       </div>
 
       {/* Encryption setup modal */}
       {showSetupModal && (
         <EncryptionSetupModal onClose={() => setShowSetupModal(false)} />
+      )}
+
+      {/* Privacy Notice modal (re-triggered from Settings) */}
+      {showPrivacyModal && (
+        <PrivacyNoticeModal forceShow onClose={() => setShowPrivacyModal(false)} />
       )}
     </div>
   );
