@@ -10,48 +10,44 @@ export default defineConfig({
     VitePWA({
       registerType: 'autoUpdate',
 
-      // 사전 캐시에 포함할 파일 패턴
-      includeAssets: ['favicon.svg', 'icons/**'],
+      includeAssets: ['icons/**'],
 
-      // 인라인 manifest 설정
       manifest: {
         name: 'EpiLog',
         short_name: 'EpiLog',
         description: '오프라인 현장 역학조사 디지털 기록장',
-        theme_color: '#0F6E56',
+        theme_color: '#1a6b4a',
         background_color: '#ffffff',
         display: 'standalone',
+        orientation: 'portrait',
         start_url: '/',
+        scope: '/',
+        lang: 'ko',
         icons: [
           {
-            src: '/favicon.svg',
+            src: '/icons/icon-192.svg',
             sizes: 'any',
             type: 'image/svg+xml',
           },
           {
-            src: '/icons/icon-192.png',
-            sizes: '192x192',
-            type: 'image/png',
-          },
-          {
-            src: '/icons/icon-512.png',
-            sizes: '512x512',
-            type: 'image/png',
+            src: '/icons/icon-512.svg',
+            sizes: 'any',
+            type: 'image/svg+xml',
             purpose: 'any maskable',
           },
         ],
       },
 
       workbox: {
-        // 핵심 파일만 precache — JS 청크(특히 Dashboard 740KB)는 제외하고
-        // lazy chunk들은 runtimeCaching으로 처리
+        skipWaiting: true,
+        clientsClaim: true,
+
         globPatterns: [
           'index.html',
           'assets/*.css',
         ],
 
         runtimeCaching: [
-          // ── CacheFirst: JS 청크 — lazy load 시 캐시 ──────────────────────
           {
             urlPattern: /\/assets\/.*\.js$/,
             handler: 'CacheFirst',
@@ -59,12 +55,10 @@ export default defineConfig({
               cacheName: 'js-chunks',
               expiration: {
                 maxEntries: 30,
-                maxAgeSeconds: 60 * 60 * 24 * 30, // 30일
+                maxAgeSeconds: 60 * 60 * 24 * 30,
               },
             },
           },
-
-          // ── CacheFirst: CSS ───────────────────────────────────────────────
           {
             urlPattern: /\/assets\/.*\.css$/,
             handler: 'CacheFirst',
@@ -76,8 +70,6 @@ export default defineConfig({
               },
             },
           },
-
-          // ── CacheFirst: OpenStreetMap 타일 — 지도용 ──────────────────────
           {
             urlPattern: /https:\/\/.*\.tile\.openstreetmap\.org\/.*/,
             handler: 'CacheFirst',
@@ -85,12 +77,10 @@ export default defineConfig({
               cacheName: 'osm-tiles',
               expiration: {
                 maxEntries: 200,
-                maxAgeSeconds: 60 * 60 * 24 * 7, // 7일
+                maxAgeSeconds: 60 * 60 * 24 * 7,
               },
             },
           },
-
-          // ── CacheFirst: 폰트 ─────────────────────────────────────────────
           {
             urlPattern: /\/assets\/.*\.(woff|woff2)$/,
             handler: 'CacheFirst',
@@ -98,14 +88,10 @@ export default defineConfig({
               cacheName: 'fonts-cache',
               expiration: {
                 maxEntries: 10,
-                maxAgeSeconds: 60 * 60 * 24 * 365, // 1년
+                maxAgeSeconds: 60 * 60 * 24 * 365,
               },
             },
           },
-
-          // ── NetworkFirst: 외부 API 호출 ──────────────────────────────────
-          // 앱이 외부 REST API를 사용하는 경우를 대비한 캐시 전략.
-          // (현재는 IndexedDB/Dexie 사용이나 향후 확장 대비)
           {
             urlPattern: ({ url }) => url.pathname.startsWith('/api/'),
             handler: 'NetworkFirst',
@@ -115,7 +101,7 @@ export default defineConfig({
               cacheableResponse: { statuses: [0, 200] },
               expiration: {
                 maxEntries: 50,
-                maxAgeSeconds: 60 * 5, // 5 minutes
+                maxAgeSeconds: 60 * 5,
               },
             },
           },
