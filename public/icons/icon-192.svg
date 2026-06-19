@@ -1,6 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192">
-  <!-- rx = 192 * 7/32 ≈ 42 -->
-  <rect width="192" height="192" rx="42" fill="#1a6b4a"/>
-  <rect x="40" y="81" width="112" height="30" rx="6" fill="#ffffff"/>
-  <rect x="81" y="40" width="30" height="112" rx="6" fill="#ffffff"/>
+  <rect width="192" height="192" rx="42" fill="#ffffff" stroke="#1a6b4a" stroke-width="10"/>
+  <rect x="40" y="81" width="112" height="30" rx="6" fill="#1a6b4a"/>
+  <rect x="81" y="40" width="30" height="112" rx="6" fill="#1a6b4a"/>
 </svg>
