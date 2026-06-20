@@ -18,6 +18,7 @@ const RecordList = lazy(() => import('./pages/RecordList'));
 const NewRecord  = lazy(() => import('./pages/NewRecord'));
 const Dashboard  = lazy(() => import('./pages/Dashboard'));
 const Settings   = lazy(() => import('./pages/Settings'));
+const Guide      = lazy(() => import('./pages/Guide'));
 
 function RecordDetail() {
   const { id } = useParams<{ id: string }>();
@@ -105,6 +106,7 @@ function AppRoutes() {
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/records/:id" element={<RecordDetail />} />
             <Route path="/settings" element={<Settings />} />
+            <Route path="/guide" element={<Guide />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Suspense>

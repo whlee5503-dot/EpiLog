@@ -191,6 +191,42 @@ export interface Translations {
   st_confirm: string;
   st_privacy_desc: string;
   st_privacy_view: string;
+  // ── Guide ──────────────────────────────────────────────────────────────────
+  gd_title: string;
+  gd_section_start: string;
+  gd_what_title: string;
+  gd_what_desc: string;
+  gd_privacy_title: string;
+  gd_privacy_reset: string;
+  gd_section_record: string;
+  gd_record_title: string;
+  gd_step1_title: string;
+  gd_step1_desc: string;
+  gd_step2_title: string;
+  gd_step2_desc: string;
+  gd_step3_title: string;
+  gd_step3_desc: string;
+  gd_step4_title: string;
+  gd_step4_desc: string;
+  gd_section_dashboard: string;
+  gd_dashboard_title: string;
+  gd_dashboard_desc: string;
+  gd_ar_title: string;
+  gd_ar_desc: string;
+  gd_cfr_title: string;
+  gd_cfr_desc: string;
+  gd_sar_title: string;
+  gd_sar_desc: string;
+  gd_section_export: string;
+  gd_export_title: string;
+  gd_export_desc: string;
+  gd_epicalc_title: string;
+  gd_epicalc_desc: string;
+  gd_section_security: string;
+  gd_encrypt_title: string;
+  gd_encrypt_desc: string;
+  gd_reset_title: string;
+  gd_reset_desc: string;
 }
 
 export const T: Record<Lang, Translations> = {
@@ -378,6 +414,42 @@ export const T: Record<Lang, Translations> = {
     st_confirm: '확인',
     st_privacy_desc: '데이터 보호 방식을 확인합니다.',
     st_privacy_view: '보기',
+
+    gd_title: '사용 가이드',
+    gd_section_start: '시작하기',
+    gd_what_title: 'EpiLog란?',
+    gd_what_desc: 'EpiLog는 인터넷 없이 현장에서 감염병 발생 데이터를 기록하고 즉시 분석할 수 있는 오프라인 역학조사 도구입니다. 데이터는 오직 이 기기에만 저장됩니다.',
+    gd_privacy_title: '비밀번호를 잊었을 때',
+    gd_privacy_reset: '비밀번호와 복구 코드를 모두 잊은 경우, Chrome 설정 → 사이트 정보 → 저장공간 지우기로 앱을 초기화할 수 있습니다. 단, 모든 기록이 삭제됩니다.',
+    gd_section_record: '현장 기록 작성',
+    gd_record_title: '4단계 입력 방식',
+    gd_step1_title: '1단계 — 기본정보',
+    gd_step1_desc: '조사 일시, 발생 장소, 시설 유형, 위험 노출 인구를 입력합니다. GPS 버튼으로 위치를 자동 기록할 수 있습니다.',
+    gd_step2_title: '2단계 — 지표환자',
+    gd_step2_desc: '최초 발생 환자 정보를 입력합니다. 환자명은 선택사항이며 익명 코드(예: P-001) 사용을 권장합니다.',
+    gd_step3_title: '3단계 — 접촉자',
+    gd_step3_desc: '동거 가족, 직장/학교, 지역사회 접촉자 수와 당일 신규 확진·사망·입원 수를 입력합니다.',
+    gd_step4_title: '4단계 — 역학특성',
+    gd_step4_desc: '추정 전파 경로, 예방접종 여부, 메모를 입력 후 저장하거나 EpiCalc로 즉시 분석합니다.',
+    gd_section_dashboard: '대시보드 & 지표',
+    gd_dashboard_title: '발생 현황 대시보드',
+    gd_dashboard_desc: '유행 곡선(일별 발생), 누적 환자 추이, 전파 경로 분포를 시각화합니다.',
+    gd_ar_title: 'AR — 발병률',
+    gd_ar_desc: '전체 노출 인구 중 발병한 비율입니다. 5% 미만 낮음, 5~20% 보통, 20% 이상 높음.',
+    gd_cfr_title: 'CFR — 치명률',
+    gd_cfr_desc: '확진자 중 사망한 비율입니다. 1% 미만 낮음, 1~5% 보통, 5% 이상 높음.',
+    gd_sar_title: 'SAR — 2차 발병률',
+    gd_sar_desc: '접촉자 중 2차 감염된 비율입니다. 10% 미만 낮음, 10~25% 보통, 25% 이상 높음.',
+    gd_section_export: '내보내기 & 연동',
+    gd_export_title: 'CSV / JSON 내보내기',
+    gd_export_desc: '대시보드 하단에서 CSV 또는 JSON 파일로 데이터를 내보낼 수 있습니다. 인터넷 연결 시 WhatsApp이나 이메일로도 공유 가능합니다.',
+    gd_epicalc_title: 'EpiCalc 연동',
+    gd_epicalc_desc: '기록 저장 후 EpiCalc 분석 버튼을 누르면 SIR/SEIR 유행 시뮬레이터에 데이터가 자동 입력됩니다.',
+    gd_section_security: '보안 & 초기화',
+    gd_encrypt_title: 'AES-256 암호화',
+    gd_encrypt_desc: '설정에서 암호화를 활성화하면 모든 데이터가 AES-256-GCM으로 암호화됩니다. 반드시 복구 코드를 안전한 곳에 보관하세요.',
+    gd_reset_title: '앱 초기화',
+    gd_reset_desc: 'Chrome → 설정 → 사이트 정보 → 저장공간 지우기를 실행하면 앱이 초기 상태로 돌아갑니다. 모든 기록이 삭제되므로 주의하세요.',
 
     pn_title: '개인정보 안내',
     pn_item1: '모든 데이터는 이 기기에만 저장됩니다 — 서버로 전송되지 않습니다.',
@@ -570,6 +642,42 @@ export const T: Record<Lang, Translations> = {
     st_confirm: 'Confirm',
     st_privacy_desc: 'Review how your data is protected.',
     st_privacy_view: 'View',
+
+    gd_title: 'User Guide',
+    gd_section_start: 'Getting Started',
+    gd_what_title: 'What is EpiLog?',
+    gd_what_desc: 'EpiLog is an offline field epidemiology tool for recording and instantly analyzing outbreak data — without internet. All data is stored only on this device.',
+    gd_privacy_title: 'Forgot Your Password?',
+    gd_privacy_reset: 'If you forget both your password and recovery code, reset via Chrome Settings → Site Info → Clear Storage. Note: all records will be deleted.',
+    gd_section_record: 'Recording Field Data',
+    gd_record_title: '4-Step Data Entry',
+    gd_step1_title: 'Step 1 — Basic Info',
+    gd_step1_desc: 'Enter survey date/time, location, facility type, and at-risk population. Tap the GPS button to auto-record coordinates.',
+    gd_step2_title: 'Step 2 — Index Case',
+    gd_step2_desc: 'Enter information about the first confirmed case. Patient name is optional — using an anonymous code (e.g. P-001) is recommended.',
+    gd_step3_title: 'Step 3 — Contacts',
+    gd_step3_desc: 'Enter household, colleague, and community contact counts, plus daily new cases, deaths, and hospitalizations.',
+    gd_step4_title: 'Step 4 — Epi Characteristics',
+    gd_step4_desc: 'Select transmission route and vaccination status, add notes, then save or tap Analyze to send data to EpiCalc instantly.',
+    gd_section_dashboard: 'Dashboard & Metrics',
+    gd_dashboard_title: 'Outbreak Dashboard',
+    gd_dashboard_desc: 'Visualizes the epidemic curve (daily cases), cumulative case trend, and transmission route distribution.',
+    gd_ar_title: 'AR — Attack Rate',
+    gd_ar_desc: 'Proportion of exposed population that developed illness. <5% Low, 5–20% Moderate, >20% High.',
+    gd_cfr_title: 'CFR — Case Fatality Rate',
+    gd_cfr_desc: 'Proportion of confirmed cases that died. <1% Low, 1–5% Moderate, >5% High.',
+    gd_sar_title: 'SAR — Secondary Attack Rate',
+    gd_sar_desc: 'Proportion of contacts who became secondary cases. <10% Low, 10–25% Moderate, >25% High.',
+    gd_section_export: 'Export & Integration',
+    gd_export_title: 'CSV / JSON Export',
+    gd_export_desc: 'Export data as CSV or JSON from the Dashboard. When connected, share via WhatsApp or email.',
+    gd_epicalc_title: 'EpiCalc Integration',
+    gd_epicalc_desc: 'After saving a record, tap Analyze with EpiCalc to auto-populate the SIR/SEIR epidemic simulator with your field data.',
+    gd_section_security: 'Security & Reset',
+    gd_encrypt_title: 'AES-256 Encryption',
+    gd_encrypt_desc: 'Enable encryption in Settings to protect all data with AES-256-GCM. Always store your recovery code somewhere safe.',
+    gd_reset_title: 'Reset the App',
+    gd_reset_desc: 'Go to Chrome → Settings → Site Info → Clear Storage to reset the app. All records will be permanently deleted.',
 
     pn_title: 'Privacy Notice',
     pn_item1: 'All data is stored only on this device — nothing is sent to any server.',

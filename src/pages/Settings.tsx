@@ -10,6 +10,7 @@ import {
   Check,
   Loader2,
   AlertCircle,
+  BookOpen,
 } from 'lucide-react';
 import { useCrypto } from '../contexts/CryptoContext';
 import { useLanguage } from '../contexts/LanguageContext';
@@ -355,6 +356,30 @@ export default function Settings() {
               type="button"
               onClick={() => setShowPrivacyModal(true)}
               className="shrink-0 px-3 h-9 flex items-center justify-center bg-teal-600 text-white rounded-xl text-xs font-semibold active:bg-teal-700 touch-manipulation"
+            >
+              {t.st_privacy_view}
+            </button>
+          </div>
+        </section>
+
+        {/* ── User Guide section ── */}
+        <section className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm overflow-hidden">
+          <div className="px-4 py-4 flex items-center gap-3">
+            <div className="w-9 h-9 rounded-xl flex items-center justify-center bg-[#1a6b4a]/10">
+              <BookOpen size={18} className="text-[#1a6b4a]" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <h2 className="font-semibold text-gray-900 dark:text-white text-sm">
+                {t.gd_title}
+              </h2>
+              <p className="text-xs text-gray-500 dark:text-gray-300 mt-0.5 leading-snug">
+                {t.gd_what_title}
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={() => navigate('/guide')}
+              className="shrink-0 px-3 h-9 flex items-center justify-center bg-[#1a6b4a] text-white rounded-xl text-xs font-semibold active:opacity-80 touch-manipulation"
             >
               {t.st_privacy_view}
             </button>
