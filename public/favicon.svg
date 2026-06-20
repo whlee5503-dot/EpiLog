@@ -1,10 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-  <!-- Forest green rounded-square background (rx/512 ≈ rx/32=7 ratio) -->
-  <rect width="512" height="512" rx="112" fill="#1a6b4a"/>
-
-  <!-- White medical cross (horizontal arm) -->
-  <rect x="108" y="216" width="296" height="80" rx="16" fill="#ffffff"/>
-
-  <!-- White medical cross (vertical arm) -->
-  <rect x="216" y="108" width="80" height="296" rx="16" fill="#ffffff"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192">
+  <rect width="192" height="192" rx="42" fill="#ffffff"/>
+  <circle cx="96" cy="96" r="72" fill="#1a6b4a"/>
+  <rect x="44" y="81" width="104" height="30" rx="6" fill="#ffffff"/>
+  <rect x="81" y="44" width="30" height="104" rx="6" fill="#ffffff"/>
 </svg>

@@ -1,5 +1,9 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-  <rect width="512" height="512" rx="112" fill="#ffffff" stroke="#1a6b4a" stroke-width="26"/>
-  <rect x="108" y="216" width="296" height="80" rx="16" fill="#1a6b4a"/>
-  <rect x="216" y="108" width="80" height="296" rx="16" fill="#1a6b4a"/>
+  <!-- 흰색 배경 사각형 -->
+  <rect width="512" height="512" rx="112" fill="#ffffff"/>
+  <!-- forest green 원 -->
+  <circle cx="256" cy="256" r="192" fill="#1a6b4a"/>
+  <!-- 흰색 십자 -->
+  <rect x="116" y="216" width="280" height="80" rx="16" fill="#ffffff"/>
+  <rect x="216" y="116" width="80" height="280" rx="16" fill="#ffffff"/>
 </svg>
