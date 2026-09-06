@@ -1,0 +1,34 @@
+cff-version: 1.2.0
+message: "If you use EpiLog in your research or work, please cite it as below."
+title: "EpiLog: Offline Field Epidemiology Digital Diary"
+type: software
+authors:
+  - family-names: "Lee"
+    given-names: "Won Ho"
+    orcid: "https://orcid.org/0009-0005-1866-8257"
+    affiliation: "PublicHealth Tech Lab"
+repository-code: "https://github.com/whlee5503-dot/EpiLog"
+url: "https://epilog-d72.pages.dev"
+license: MIT
+version: 1.1.1
+date-released: "2026-05-23"
+keywords:
+  - epidemiology
+  - field epidemiology
+  - outbreak investigation
+  - public health
+  - offline-first
+  - digital public good
+  - open source
+abstract: >-
+  EpiLog is a free, open-source, offline-capable digital field diary for
+  epidemiologists and public health workers in low-resource settings.
+  Module 2 of the EpiCalc Suite, it provides a structured 4-step field
+  diary (basic info, index case, contacts, epidemiological
+  characteristics) with automatic calculation of attack rate, case
+  fatality rate, and secondary attack rate; an outbreak dashboard with
+  epidemic curve and transmission route visualization; CSV/JSON export;
+  and one-tap integration with EpiCalc for SIR/SEIR simulation. All data
+  is stored locally on-device via IndexedDB, with zero server
+  transmission. The app runs entirely offline after first install as a
+  Progressive Web App, optimized for 2G/3G network environments.
