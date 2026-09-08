@@ -13,6 +13,7 @@ import { LanguageProvider, useLanguage } from './contexts/LanguageContext';
 import { CryptoProvider, useCrypto } from './contexts/CryptoContext';
 import { UnlockModal } from './components/UnlockModal';
 import { PrivacyNoticeModal } from './components/PrivacyNoticeModal';
+import { Footer } from './components/Footer';
 
 const RecordList = lazy(() => import('./pages/RecordList'));
 const NewRecord  = lazy(() => import('./pages/NewRecord'));
@@ -110,6 +111,7 @@ function AppRoutes() {
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Suspense>
+        <Footer />
       </BrowserRouter>
 
       {/* Lock screen — rendered above the router so it blocks all routes */}

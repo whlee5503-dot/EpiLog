@@ -227,6 +227,11 @@ export interface Translations {
   gd_encrypt_desc: string;
   gd_reset_title: string;
   gd_reset_desc: string;
+  // ── Footer ─────────────────────────────────────────────────────────────
+  ftr_siblings_heading: string;
+  ftr_hub: string;
+  ftr_orcid: string;
+  ftr_disclaimer: string;
 }
 
 export const T: Record<Lang, Translations> = {
@@ -456,6 +461,11 @@ export const T: Record<Lang, Translations> = {
     pn_item2: '환자 이름 입력은 선택사항입니다 — 익명 코드(예: P-001) 사용을 권장합니다.',
     pn_item3: 'AES-256 암호화를 사용할 수 있습니다 — 설정에서 활성화하세요.',
     pn_confirm: '확인했습니다',
+
+    ftr_siblings_heading: 'PHT Lab 앱 패밀리',
+    ftr_hub: 'phtlab.org',
+    ftr_orcid: 'ORCID',
+    ftr_disclaimer: '이 도구는 역학 연구 및 교육 목적으로 제공됩니다. 논문 등 출판용 분석을 위한 전문 통계 상담을 대체하지 않습니다.',
   },
 
   en: {
@@ -684,5 +694,10 @@ export const T: Record<Lang, Translations> = {
     pn_item2: 'Patient name is optional — using an anonymous code (e.g. P-001) is recommended.',
     pn_item3: 'AES-256 encryption is available — enable it in Settings.',
     pn_confirm: 'I Understand',
+
+    ftr_siblings_heading: 'Part of the PHT Lab family',
+    ftr_hub: 'phtlab.org',
+    ftr_orcid: 'ORCID',
+    ftr_disclaimer: 'This tool is for epidemiological and educational purposes. It does not replace professional statistical consultation for publication-grade analyses.',
   },
 };
