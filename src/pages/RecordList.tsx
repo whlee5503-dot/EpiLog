@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import { db } from '../db/database';
 import type { FieldRecord } from '../types/index';
+import { TRANSMISSION_COLORS, TRANSMISSION_LABELS } from '../utils/transmission';
 import { useTheme } from '../hooks/useTheme';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useCrypto } from '../contexts/CryptoContext';
@@ -48,7 +49,7 @@ function RecordCard({
   record: FieldRecord;
   onClick: () => void;
 }) {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
 
   const facilityLabels: Record<string, string> = {
     school: t.ft_school,
@@ -77,6 +78,12 @@ function RecordCard({
             <span className="shrink-0 px-2 py-0.5 bg-teal-100 dark:bg-teal-900/40 text-teal-700 dark:text-teal-300 rounded-full text-xs font-medium">
               {facilityLabel}
             </span>
+            <span
+              className="shrink-0 w-2.5 h-2.5 rounded-full"
+              style={{ backgroundColor: TRANSMISSION_COLORS[record.transmission] }}
+              title={TRANSMISSION_LABELS[lang][record.transmission]}
+              aria-label={TRANSMISSION_LABELS[lang][record.transmission]}
+            />
           </div>
           <div className="flex items-center gap-1.5 mt-1">
             <MapPin size={12} className="text-gray-400 shrink-0" />

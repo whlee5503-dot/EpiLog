@@ -9,8 +9,9 @@ import { MapPin } from 'lucide-react';
 import markerIconPng from 'leaflet/dist/images/marker-icon.png';
 import markerIcon2xPng from 'leaflet/dist/images/marker-icon-2x.png';
 import markerShadowPng from 'leaflet/dist/images/marker-shadow.png';
-import type { FieldRecord, GpsCoords, TransmissionRoute } from '../types/index';
+import type { FieldRecord, GpsCoords } from '../types/index';
 import { useLanguage } from '../contexts/LanguageContext';
+import { TRANSMISSION_COLORS, TRANSMISSION_ORDER, TRANSMISSION_LABELS } from '../utils/transmission';
 
 // Fix Leaflet default marker icon URLs broken by Vite bundler
 delete (L.Icon.Default.prototype as unknown as Record<string, unknown>)._getIconUrl;
@@ -21,42 +22,6 @@ L.Icon.Default.mergeOptions({
 });
 
 type RecordWithGps = FieldRecord & { gps: GpsCoords };
-
-// ── Transmission route → marker color ──────────────────────────────
-const TRANSMISSION_COLORS: Record<TransmissionRoute, string> = {
-  airborne: '#e74c3c',
-  droplet: '#f39c12',
-  contact: '#3498db',
-  foodborne: '#9b59b6',
-  waterborne: '#16a085',
-  vector: '#8b5a2b',
-  unknown: '#7f8c8d',
-};
-
-const TRANSMISSION_ORDER: TransmissionRoute[] = [
-  'airborne', 'droplet', 'contact', 'foodborne', 'waterborne', 'vector', 'unknown',
-];
-
-const TRANSMISSION_LABELS: Record<'ko' | 'en', Record<TransmissionRoute, string>> = {
-  ko: {
-    airborne: '공기 전파',
-    droplet: '비말 전파',
-    contact: '접촉 전파',
-    foodborne: '식품 매개',
-    waterborne: '수인성',
-    vector: '매개체',
-    unknown: '미상',
-  },
-  en: {
-    airborne: 'Airborne',
-    droplet: 'Droplet',
-    contact: 'Contact',
-    foodborne: 'Foodborne',
-    waterborne: 'Waterborne',
-    vector: 'Vector-borne',
-    unknown: 'Unknown',
-  },
-};
 
 // ── Marker size scaled by new-case count (sqrt scale, capped) ──────
 const MIN_MARKER_SIZE = 22;
