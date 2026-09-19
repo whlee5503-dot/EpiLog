@@ -19,6 +19,7 @@ import { useTheme } from '../hooks/useTheme';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useCrypto } from '../contexts/CryptoContext';
 import { LangToggle } from '../components/LangToggle';
+import { GuideButton } from '../components/GuideButton';
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -179,26 +180,30 @@ export default function RecordList() {
             <button
               type="button"
               onClick={toggleTheme}
-              className="p-2 rounded-xl bg-white/20 active:bg-white/30 touch-manipulation"
+              className="flex flex-col items-center gap-0.5 px-1.5 py-1 rounded-xl bg-white/20 active:bg-white/30 touch-manipulation"
               aria-label={theme === 'dark' ? '라이트 모드로 전환' : '다크 모드로 전환'}
             >
-              {theme === 'dark' ? <Sun size={22} /> : <Moon size={22} />}
+              {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
+              <span className="text-[9px] leading-none font-medium">{lang === 'ko' ? '테마' : 'Theme'}</span>
             </button>
+            <GuideButton />
             <button
               type="button"
               onClick={() => navigate('/dashboard')}
-              className="p-2 rounded-xl bg-white/20 active:bg-white/30 touch-manipulation"
+              className="flex flex-col items-center gap-0.5 px-1.5 py-1 rounded-xl bg-white/20 active:bg-white/30 touch-manipulation"
               aria-label="Dashboard"
             >
-              <LayoutDashboard size={22} />
+              <LayoutDashboard size={18} />
+              <span className="text-[9px] leading-none font-medium">{lang === 'ko' ? '현황' : 'Stats'}</span>
             </button>
             <button
               type="button"
               onClick={() => navigate('/settings')}
-              className="p-2 rounded-xl bg-white/20 active:bg-white/30 touch-manipulation"
+              className="flex flex-col items-center gap-0.5 px-1.5 py-1 rounded-xl bg-white/20 active:bg-white/30 touch-manipulation"
               aria-label={t.st_title}
             >
-              <Settings size={22} />
+              <Settings size={18} />
+              <span className="text-[9px] leading-none font-medium">{lang === 'ko' ? '설정' : 'Settings'}</span>
             </button>
           </div>
         </div>
@@ -239,10 +244,11 @@ export default function RecordList() {
       <button
         type="button"
         onClick={() => navigate('/new')}
-        className="fixed bottom-6 right-5 w-14 h-14 bg-teal-600 text-white rounded-full shadow-xl flex items-center justify-center active:bg-teal-700 touch-manipulation z-20"
-        aria-label="새 기록 추가"
+        className="fixed bottom-6 right-5 flex items-center gap-2 pl-4 pr-5 h-14 bg-teal-600 text-white rounded-full shadow-xl active:bg-teal-700 touch-manipulation z-20"
+        aria-label={lang === 'ko' ? '새 현장기록 추가' : 'Add new field record'}
       >
-        <Plus size={26} />
+        <Plus size={22} />
+        <span className="text-sm font-semibold whitespace-nowrap">{lang === 'ko' ? '새 기록' : 'New Record'}</span>
       </button>
     </div>
   );

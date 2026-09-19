@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Shield, HardDrive, UserX, Lock } from 'lucide-react';
+import { Shield, HardDrive, UserX, Lock, X } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { LangToggle } from './LangToggle';
 
@@ -11,7 +11,7 @@ interface PrivacyNoticeModalProps {
 }
 
 export function PrivacyNoticeModal({ forceShow = false, onClose }: PrivacyNoticeModalProps = {}) {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   const [accepted, setAccepted] = useState(() => localStorage.getItem(STORAGE_KEY) === 'true');
 
   if (accepted && !forceShow) return null;
@@ -34,6 +34,20 @@ export function PrivacyNoticeModal({ forceShow = false, onClose }: PrivacyNotice
   return (
     <div className="fixed inset-0 z-[60] flex items-center justify-center bg-gray-900/95 backdrop-blur-md px-6">
       <div className="relative w-full max-w-sm flex flex-col items-center gap-6">
+        {/* Close button — only when re-opened from Settings for review.
+            The first-launch (mandatory) notice has no close-without-accepting
+            path, so this is intentionally absent in that case. */}
+        {forceShow && (
+          <button
+            type="button"
+            onClick={() => onClose?.()}
+            className="absolute top-0 left-0 w-9 h-9 flex items-center justify-center rounded-full bg-white/10 active:bg-white/20 touch-manipulation"
+            aria-label={lang === 'ko' ? '닫기' : 'Close'}
+          >
+            <X size={18} className="text-white" />
+          </button>
+        )}
+
         {/* Language toggle — top-right corner, above Shield icon */}
         <div className="absolute top-0 right-0">
           <LangToggle />

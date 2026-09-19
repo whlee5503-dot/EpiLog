@@ -152,6 +152,19 @@ class EpiLogDB extends Dexie {
   }
 
   /**
+   * Deletes every record in the table.
+   *
+   * Used by the "forgot both password and recovery code" reset flow: once
+   * both credentials are gone, any encrypted rows are permanently
+   * unreadable ciphertext (AES-256 has no back door), so clearing them
+   * alongside the crypto metadata leaves the app in a clean, honest state
+   * rather than an inbox full of data nobody can ever open again.
+   */
+  async clearAll(): Promise<void> {
+    await this.fieldRecords.clear();
+  }
+
+  /**
    * Re-encrypts every row from `oldKey` to `newKey` in a single Dexie transaction.
    * Plain rows are encrypted with `newKey`. Call this after a password change to
    * keep all existing data accessible with the new key.

@@ -27,6 +27,7 @@ import {
   generateSalt,
   hashRecoveryCode,
 } from '../utils/crypto';
+import { db } from '../db/database';
 
 // ─── localStorage keys ──────────────────────────────────────────────────────
 
@@ -159,6 +160,18 @@ interface CryptoContextValue {
     newPassword: string,
     onBeforeCommit?: (oldKey: CryptoKey, newKey: CryptoKey) => Promise<void>,
   ): Promise<string>;
+  /**
+   * Last-resort escape hatch for the lock screen: when both the password
+   * and the recovery code are lost, there is no cryptographic way to
+   * recover the existing data (that's the point of AES-256). This clears
+   * all encryption metadata AND deletes every stored record — including
+   * encrypted ones, which would otherwise sit forever as unreadable
+   * ciphertext — and returns the app to a clean, unencrypted state.
+   *
+   * Irreversible. Callers must obtain explicit, unambiguous confirmation
+   * before calling this (see UnlockModal's reset-confirmation panel).
+   */
+  resetForgotten(): Promise<void>;
 }
 
 // ─── Context + default ───────────────────────────────────────────────────────
@@ -168,11 +181,12 @@ const CryptoContext = createContext<CryptoContextValue>({
   isUnlocked: false,
   cryptoKey: null,
   enableEncryption: async () => '',
-  disableEncryption: async () => {},
+  disableEncryption: async () => { },
   unlock: async () => false,
   unlockWithRecoveryCode: async () => false,
-  lock: () => {},
+  lock: () => { },
   changePassword: async () => '',
+  resetForgotten: async () => { },
 });
 
 // ─── Provider ────────────────────────────────────────────────────────────────
@@ -343,6 +357,20 @@ export function CryptoProvider({ children }: { children: ReactNode }) {
     return recoveryCode;
   }, []);
 
+  // ── resetForgotten ────────────────────────────────────────────────────────
+
+  const resetForgotten = useCallback(async (): Promise<void> => {
+    // No key is available at this point (that's the whole premise), so any
+    // encrypted rows can never be decrypted again — delete them along with
+    // the crypto metadata rather than leave permanently-orphaned ciphertext.
+    await db.clearAll();
+    for (const k of [LS_ENABLED, LS_SALT, LS_RECOVERY_HASH, LS_RECOVERY_SALT, LS_RECOVERY_BLOB, LS_VERIFIER]) {
+      localStorage.removeItem(k);
+    }
+    setIsEncryptionEnabled(false);
+    setCryptoKey(null);
+  }, []);
+
   // ─────────────────────────────────────────────────────────────────────────
 
   return (
@@ -357,6 +385,7 @@ export function CryptoProvider({ children }: { children: ReactNode }) {
         unlockWithRecoveryCode,
         lock,
         changePassword,
+        resetForgotten,
       }}
     >
       {children}

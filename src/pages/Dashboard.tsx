@@ -46,6 +46,7 @@ import { useTheme } from '../hooks/useTheme';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useCrypto } from '../contexts/CryptoContext';
 import { LangToggle } from '../components/LangToggle';
+import { GuideButton } from '../components/GuideButton';
 import { GpsMap } from '../components/GpsMap';
 
 // ─── Constants ────────────────────────────────────────────────────────────────
@@ -348,10 +349,11 @@ export default function Dashboard() {
         <div className="flex items-center gap-3">
           <Link
             to="/"
-            className="p-1.5 -ml-1 rounded-lg bg-white/20 active:bg-white/30 touch-manipulation"
+            className="flex flex-col items-center gap-0.5 px-1.5 py-1 -ml-1 rounded-xl bg-white/20 active:bg-white/30 touch-manipulation"
             aria-label="뒤로가기"
           >
-            <ArrowLeft size={18} />
+            <ArrowLeft size={16} />
+            <span className="text-[9px] leading-none font-medium">{lang === 'ko' ? '목록' : 'List'}</span>
           </Link>
           <div className="flex-1">
             <h1 className="text-lg font-bold leading-tight">{t.db_title}</h1>
@@ -361,17 +363,20 @@ export default function Dashboard() {
           <button
             type="button"
             onClick={toggleTheme}
-            className="p-2 rounded-xl bg-white/20 active:bg-white/30 touch-manipulation"
+            className="flex flex-col items-center gap-0.5 px-1.5 py-1 rounded-xl bg-white/20 active:bg-white/30 touch-manipulation"
             aria-label={isDark ? '라이트 모드로 전환' : '다크 모드로 전환'}
           >
-            {isDark ? <Sun size={20} /> : <Moon size={20} />}
+            {isDark ? <Sun size={18} /> : <Moon size={18} />}
+            <span className="text-[9px] leading-none font-medium">{lang === 'ko' ? '테마' : 'Theme'}</span>
           </button>
+          <GuideButton />
           <Link
             to="/settings"
-            className="p-2 rounded-xl bg-white/20 active:bg-white/30 touch-manipulation"
+            className="flex flex-col items-center gap-0.5 px-1.5 py-1 rounded-xl bg-white/20 active:bg-white/30 touch-manipulation"
             aria-label={t.st_title}
           >
-            <Settings size={20} />
+            <Settings size={18} />
+            <span className="text-[9px] leading-none font-medium">{lang === 'ko' ? '설정' : 'Settings'}</span>
           </Link>
         </div>
       </header>
