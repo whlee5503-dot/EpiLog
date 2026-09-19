@@ -19,7 +19,7 @@ export function useTheme() {
 
   const toggle = () => setTheme((t) => (t === 'light' ? 'dark' : 'light'));
 
-  const isDark = document.documentElement.classList.contains('dark');
+  const isDark = theme === 'dark';
 
   return { theme, toggle, isDark };
 }

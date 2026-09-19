@@ -25,6 +25,9 @@ import {
   Loader2,
   Mail,
   MessageCircle,
+  Moon,
+  Settings,
+  Sun,
   TrendingUp,
   Users,
 } from 'lucide-react';
@@ -108,27 +111,21 @@ function EpiMetricRow({
   value,
   interpretation,
   interpretColor,
-  isDark,
-}: {
-  label: string;
-  value: string;
-  interpretation: string;
-  interpretColor: string;
-  isDark: boolean;
-}) {
+}:
+  {
+    label: string;
+    value: string;
+    interpretation: string;
+    interpretColor: string;
+    isDark: boolean;
+  }) {
   return (
     <div className="flex items-center justify-between py-3 border-b border-gray-100 dark:border-gray-700 last:border-b-0">
-      <span
-        className="text-sm flex-1 mr-3"
-        style={{ color: isDark ? '#d1d5db' : '#374151' }}
-      >
+      <span className="text-sm flex-1 mr-3 text-gray-700 dark:text-gray-300">
         {label}
       </span>
       <div className="flex items-center gap-2 shrink-0">
-        <span
-          className="text-sm font-bold"
-          style={{ color: isDark ? '#ffffff' : '#111827' }}
-        >
+        <span className="text-sm font-bold text-gray-900 dark:text-white">
           {value}
         </span>
         <span className={`text-xs font-medium ${interpretColor}`}>{interpretation}</span>
@@ -150,7 +147,7 @@ function EmptyChartState() {
 // ─── Main Component ───────────────────────────────────────────────────────────
 
 export default function Dashboard() {
-  const { isDark } = useTheme();
+  const { isDark, toggle: toggleTheme } = useTheme();
   const { t, lang } = useLanguage();
   const { cryptoKey } = useCrypto();
   const [records, setRecords] = useState<FieldRecord[]>([]);
@@ -264,6 +261,21 @@ export default function Dashboard() {
             <p className="text-xs text-teal-200">{t.db_subtitle}</p>
           </div>
           <LangToggle />
+          <button
+            type="button"
+            onClick={toggleTheme}
+            className="p-2 rounded-xl bg-white/20 active:bg-white/30 touch-manipulation"
+            aria-label={isDark ? '라이트 모드로 전환' : '다크 모드로 전환'}
+          >
+            {isDark ? <Sun size={20} /> : <Moon size={20} />}
+          </button>
+          <Link
+            to="/settings"
+            className="p-2 rounded-xl bg-white/20 active:bg-white/30 touch-manipulation"
+            aria-label={t.st_title}
+          >
+            <Settings size={20} />
+          </Link>
         </div>
       </header>
 

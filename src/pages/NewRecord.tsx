@@ -503,6 +503,11 @@ export default function NewRecord() {
                     setForm((p) => ({ ...p, dailyCases: { ...p.dailyCases, newCases: v } }))
                   }
                 />
+                <p className="pb-3 -mt-1 text-xs text-gray-400 leading-relaxed">
+                  {lang === 'ko'
+                    ? `지표환자로 기록한 ${form.indexCases.length}명을 포함해, 오늘 이 장소에서 확진된 전체 인원수를 입력하세요. 지표환자 수와 같을 필요는 없습니다.`
+                    : `Enter the total number confirmed today at this location, including the ${form.indexCases.length} index patient(s) recorded above. It doesn't need to match the index patient count exactly.`}
+                </p>
                 <Counter
                   label={t.nr_deaths}
                   value={form.dailyCases.deaths}
