@@ -7,9 +7,6 @@ import {
   Loader2,
   AlertCircle,
   FileText,
-  Activity,
-  Users,
-  Heart,
   LayoutDashboard,
   Sun,
   Moon,
@@ -43,37 +40,6 @@ function formatTimestamp(iso: string): string {
 }
 
 // ─── Sub-components ───────────────────────────────────────────────────────────
-
-function StatCard({
-  label,
-  value,
-  icon,
-  accent,
-}: {
-  label: string;
-  value: number | string;
-  icon: React.ReactNode;
-  accent: 'teal' | 'orange' | 'red';
-}) {
-  const bg = {
-    teal: 'bg-teal-50 dark:bg-teal-700',
-    orange: 'bg-orange-50 dark:bg-orange-700',
-    red: 'bg-red-50 dark:bg-red-700',
-  }[accent];
-  const text = {
-    teal: 'text-teal-600 dark:text-white',
-    orange: 'text-orange-500 dark:text-white',
-    red: 'text-red-500 dark:text-white',
-  }[accent];
-
-  return (
-    <div className={`rounded-2xl p-4 ${bg}`}>
-      <div className={`mb-1.5 ${text}`}>{icon}</div>
-      <p className="text-2xl font-bold text-gray-800 dark:text-white leading-tight">{value}</p>
-      <p className="text-sm text-gray-600 dark:text-white dark:opacity-80 mt-0.5">{label}</p>
-    </div>
-  );
-}
 
 function RecordCard({
   record,
@@ -170,7 +136,7 @@ function EmptyState({ onAdd }: { onAdd: () => void }) {
 export default function RecordList() {
   const navigate = useNavigate();
   const { theme, toggle: toggleTheme } = useTheme();
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   const { cryptoKey } = useCrypto();
   const [records, setRecords] = useState<FieldRecord[]>([]);
   const [loading, setLoading] = useState(true);
@@ -183,8 +149,12 @@ export default function RecordList() {
       .finally(() => setLoading(false));
   }, [cryptoKey]);
 
-  const totalCases = records.reduce((sum, r) => sum + r.dailyCases.newCases, 0);
-  const totalDeaths = records.reduce((sum, r) => sum + r.dailyCases.deaths, 0);
+  // Record count is metadata about the list itself, so it stays here as a
+  // one-line subtitle. Aggregate statistics (total cases, deaths, AR%) live
+  // exclusively on the Dashboard now, to avoid showing the same numbers
+  // twice across two screens.
+  const recordCountLabel =
+    lang === 'ko' ? `${t.rl_subtitle} · 총 ${records.length}건` : `${t.rl_subtitle} · ${records.length} total`;
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white flex flex-col">
@@ -193,7 +163,9 @@ export default function RecordList() {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-xl font-bold">{t.rl_title}</h1>
-            <p className="text-sm text-teal-200 mt-0.5">{t.rl_subtitle}</p>
+            <p className="text-sm text-teal-200 mt-0.5">
+              {loading || error ? t.rl_subtitle : recordCountLabel}
+            </p>
           </div>
           <div className="flex items-center gap-2">
             <LangToggle />
@@ -224,32 +196,6 @@ export default function RecordList() {
           </div>
         </div>
       </header>
-
-      {/* Summary stats */}
-      {!loading && !error && (
-        <div className="px-4 -mt-2 mb-2">
-          <div className="bg-white dark:bg-gray-800 shadow-sm rounded-xl p-4 grid grid-cols-3 gap-3">
-            <StatCard
-              label={t.rl_stat_records}
-              value={records.length}
-              icon={<Activity size={18} />}
-              accent="teal"
-            />
-            <StatCard
-              label={t.rl_stat_cases}
-              value={totalCases.toLocaleString()}
-              icon={<Users size={18} />}
-              accent="orange"
-            />
-            <StatCard
-              label={t.rl_stat_deaths}
-              value={totalDeaths.toLocaleString()}
-              icon={<Heart size={18} />}
-              accent="red"
-            />
-          </div>
-        </div>
-      )}
 
       {/* Content */}
       <main className="flex-1 px-4 py-4 pb-28 space-y-3">
