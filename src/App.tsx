@@ -3,11 +3,9 @@ import {
   BrowserRouter,
   Routes,
   Route,
-  useParams,
-  useNavigate,
   Link,
 } from 'react-router-dom';
-import { ClipboardList, Home } from 'lucide-react';
+import { Home } from 'lucide-react';
 import { useTheme } from './hooks/useTheme';
 import { LanguageProvider, useLanguage } from './contexts/LanguageContext';
 import { CryptoProvider, useCrypto } from './contexts/CryptoContext';
@@ -16,41 +14,11 @@ import { PrivacyNoticeModal } from './components/PrivacyNoticeModal';
 import { Footer } from './components/Footer';
 
 const RecordList = lazy(() => import('./pages/RecordList'));
-const NewRecord  = lazy(() => import('./pages/NewRecord'));
-const Dashboard  = lazy(() => import('./pages/Dashboard'));
-const Settings   = lazy(() => import('./pages/Settings'));
-const Guide      = lazy(() => import('./pages/Guide'));
-
-function RecordDetail() {
-  const { id } = useParams<{ id: string }>();
-  const navigate = useNavigate();
-  const { t } = useLanguage();
-
-  return (
-    <div className="flex flex-col flex-1 px-4 py-10 items-center gap-6">
-      <div className="w-20 h-20 rounded-full bg-teal-50 dark:bg-teal-900/30 flex items-center justify-center">
-        <ClipboardList size={36} className="text-teal-400" />
-      </div>
-
-      <div className="text-center">
-        <p className="text-lg font-semibold text-gray-700 dark:text-gray-200">{t.app_detail_title}</p>
-        <p className="text-sm text-gray-400 mt-1">
-          {t.app_record_id} <span className="font-mono font-medium text-teal-600">{id}</span>
-        </p>
-      </div>
-
-      <div className="flex flex-col gap-3 w-full max-w-xs">
-        <button
-          type="button"
-          onClick={() => navigate(-1)}
-          className="w-full h-11 bg-teal-600 text-white rounded-xl font-semibold text-sm active:bg-teal-700 touch-manipulation"
-        >
-          {t.app_back_list}
-        </button>
-      </div>
-    </div>
-  );
-}
+const NewRecord = lazy(() => import('./pages/NewRecord'));
+const Dashboard = lazy(() => import('./pages/Dashboard'));
+const RecordDetail = lazy(() => import('./pages/RecordDetail'));
+const Settings = lazy(() => import('./pages/Settings'));
+const Guide = lazy(() => import('./pages/Guide'));
 
 function NotFound() {
   const { t } = useLanguage();

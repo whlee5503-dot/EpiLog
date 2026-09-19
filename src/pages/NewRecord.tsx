@@ -8,9 +8,11 @@ import {
   Loader2,
   Navigation,
   MapPin,
+  Plus,
+  Trash2,
 } from 'lucide-react';
 import { db } from '../db/database';
-import type { FieldRecord, TransmissionRoute, VaccinationStatus } from '../types/index';
+import type { FieldRecord, IndexCase, TransmissionRoute, VaccinationStatus } from '../types/index';
 import { buildEpiCalcURL } from '../utils/exportData';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useCrypto } from '../contexts/CryptoContext';
@@ -23,6 +25,16 @@ const SYMPTOMS_KEYS = ['발열', '기침', '설사', '구토', '복통', '발진
 
 type FormData = Omit<FieldRecord, 'id'>;
 
+function emptyPatient(): IndexCase {
+  return {
+    name: '',
+    gender: 'unknown',
+    age: 0,
+    onsetDate: new Date().toISOString().split('T')[0],
+    symptoms: [],
+  };
+}
+
 function initForm(): FormData {
   return {
     timestamp: new Date().toISOString(),
@@ -30,13 +42,7 @@ function initForm(): FormData {
     facilityType: 'school',
     totalPopulation: 0,
     gps: undefined,
-    indexCase: {
-      name: '',
-      gender: 'unknown',
-      age: 0,
-      onsetDate: new Date().toISOString().split('T')[0],
-      symptoms: [],
-    },
+    indexCases: [emptyPatient()],
     contacts: { household: 0, colleague: 0, community: 0 },
     dailyCases: { newCases: 0, deaths: 0, hospitalized: 0 },
     transmission: 'unknown',
@@ -169,17 +175,37 @@ export default function NewRecord() {
     );
   }, []);
 
-  const toggleSymptom = (symptom: string) => {
+  const updatePatient = (idx: number, patch: Partial<IndexCase>) => {
+    setForm((prev) => ({
+      ...prev,
+      indexCases: prev.indexCases.map((ic, i) => (i === idx ? { ...ic, ...patch } : ic)),
+    }));
+  };
+
+  const addPatient = () => {
+    setForm((prev) => ({ ...prev, indexCases: [...prev.indexCases, emptyPatient()] }));
+  };
+
+  const removePatient = (idx: number) => {
+    setForm((prev) => ({
+      ...prev,
+      indexCases:
+        prev.indexCases.length > 1
+          ? prev.indexCases.filter((_, i) => i !== idx)
+          : prev.indexCases,
+    }));
+  };
+
+  const toggleSymptom = (idx: number, symptom: string) => {
     setForm((prev) => {
-      const has = prev.indexCase.symptoms.includes(symptom);
+      const patient = prev.indexCases[idx];
+      const has = patient.symptoms.includes(symptom);
+      const symptoms = has
+        ? patient.symptoms.filter((s) => s !== symptom)
+        : [...patient.symptoms, symptom];
       return {
         ...prev,
-        indexCase: {
-          ...prev.indexCase,
-          symptoms: has
-            ? prev.indexCase.symptoms.filter((s) => s !== symptom)
-            : [...prev.indexCase.symptoms, symptom],
-        },
+        indexCases: prev.indexCases.map((ic, i) => (i === idx ? { ...ic, symptoms } : ic)),
       };
     });
   };
@@ -251,11 +277,10 @@ export default function NewRecord() {
                     key={opt.value}
                     type="button"
                     onClick={() => setForm((p) => ({ ...p, facilityType: opt.value }))}
-                    className={`px-4 py-2 rounded-xl text-sm font-medium border touch-manipulation transition-colors ${
-                      form.facilityType === opt.value
+                    className={`px-4 py-2 rounded-xl text-sm font-medium border touch-manipulation transition-colors ${form.facilityType === opt.value
                         ? 'bg-teal-600 text-white border-teal-600'
                         : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 border-gray-300 dark:border-gray-600 active:bg-gray-50 dark:active:bg-gray-600'
-                    }`}
+                      }`}
                   >
                     {opt.label}
                   </button>
@@ -318,101 +343,118 @@ export default function NewRecord() {
 
       case 2:
         return (
-          <div>
-            <div className="mb-5">
-              <label className="block text-sm text-gray-600 dark:text-gray-300 mb-1">
-                {t.nr_patient_name}{' '}
-                <span className="text-xs text-gray-400 dark:text-gray-500">{t.nr_optional}</span>
-              </label>
-              <input
-                type="text"
-                placeholder={t.nr_placeholder_name}
-                value={form.indexCase.name}
-                onChange={(e) =>
-                  setForm((p) => ({ ...p, indexCase: { ...p.indexCase, name: e.target.value } }))
-                }
-                className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
-              />
-            </div>
-
-            <div className="mb-5">
-              <span className="block text-sm text-gray-600 dark:text-gray-300 mb-1">{t.nr_gender}</span>
-              <div className="flex gap-2">
-                {GENDER_OPTIONS.map((opt) => (
-                  <button
-                    key={opt.value}
-                    type="button"
-                    onClick={() =>
-                      setForm((p) => ({ ...p, indexCase: { ...p.indexCase, gender: opt.value } }))
-                    }
-                    className={`flex-1 py-2 rounded-xl text-sm font-medium border touch-manipulation transition-colors ${
-                      form.indexCase.gender === opt.value
-                        ? 'bg-teal-600 text-white border-teal-600'
-                        : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 border-gray-300 dark:border-gray-600 active:bg-gray-50 dark:active:bg-gray-600'
-                    }`}
-                  >
-                    {opt.label}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            <div className="mb-5">
-              <label className="block text-sm text-gray-600 dark:text-gray-300 mb-1">{t.nr_age}</label>
-              <input
-                type="number"
-                inputMode="numeric"
-                min={0}
-                max={130}
-                placeholder="0"
-                value={form.indexCase.age || ''}
-                onChange={(e) =>
-                  setForm((p) => ({
-                    ...p,
-                    indexCase: { ...p.indexCase, age: parseInt(e.target.value) || 0 },
-                  }))
-                }
-                className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
-              />
-            </div>
-
-            <div className="mb-5">
-              <label className="block text-sm text-gray-600 dark:text-gray-300 mb-1">{t.nr_onset}</label>
-              <input
-                type="date"
-                value={form.indexCase.onsetDate}
-                onChange={(e) =>
-                  setForm((p) => ({
-                    ...p,
-                    indexCase: { ...p.indexCase, onsetDate: e.target.value },
-                  }))
-                }
-                className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-              />
-            </div>
-
-            <div className="mb-5">
-              <label className="block text-sm text-gray-600 dark:text-gray-300 mb-1">{t.nr_symptoms}</label>
-              <div className="flex flex-wrap gap-2">
-                {SYMPTOMS_KEYS.map((symptom) => {
-                  const selected = form.indexCase.symptoms.includes(symptom);
-                  return (
+          <div className="space-y-5">
+            {form.indexCases.map((patient, idx) => (
+              <div
+                key={idx}
+                className="border border-gray-200 dark:border-gray-700 rounded-2xl p-4 bg-gray-50/50 dark:bg-gray-800/50"
+              >
+                <div className="flex items-center justify-between mb-4">
+                  <span className="text-sm font-semibold text-teal-700 dark:text-teal-400">
+                    {lang === 'ko' ? `환자 ${idx + 1}` : `Patient ${idx + 1}`}
+                  </span>
+                  {form.indexCases.length > 1 && (
                     <button
-                      key={symptom}
                       type="button"
-                      onClick={() => toggleSymptom(symptom)}
-                      className={`px-4 py-2 rounded-xl text-sm font-medium border touch-manipulation transition-colors ${
-                        selected
-                          ? 'bg-teal-600 text-white border-teal-600'
-                          : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 border-gray-300 dark:border-gray-600 active:bg-gray-50 dark:active:bg-gray-600'
-                      }`}
+                      onClick={() => removePatient(idx)}
+                      className="flex items-center gap-1 text-xs text-red-500 active:text-red-600 touch-manipulation"
+                      aria-label={lang === 'ko' ? '이 환자 삭제' : 'Remove this patient'}
                     >
-                      {SYMPTOM_LABELS[symptom] ?? symptom}
+                      <Trash2 size={14} />
+                      {lang === 'ko' ? '삭제' : 'Remove'}
                     </button>
-                  );
-                })}
+                  )}
+                </div>
+
+                <div className="mb-4">
+                  <label className="block text-sm text-gray-600 dark:text-gray-300 mb-1">
+                    {t.nr_patient_name}{' '}
+                    <span className="text-xs text-gray-400 dark:text-gray-500">{t.nr_optional}</span>
+                  </label>
+                  <input
+                    type="text"
+                    placeholder={t.nr_placeholder_name}
+                    value={patient.name}
+                    onChange={(e) => updatePatient(idx, { name: e.target.value })}
+                    className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
+                  />
+                </div>
+
+                <div className="mb-4">
+                  <span className="block text-sm text-gray-600 dark:text-gray-300 mb-1">{t.nr_gender}</span>
+                  <div className="flex gap-2">
+                    {GENDER_OPTIONS.map((opt) => (
+                      <button
+                        key={opt.value}
+                        type="button"
+                        onClick={() => updatePatient(idx, { gender: opt.value })}
+                        className={`flex-1 py-2 rounded-xl text-sm font-medium border touch-manipulation transition-colors ${patient.gender === opt.value
+                            ? 'bg-teal-600 text-white border-teal-600'
+                            : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 border-gray-300 dark:border-gray-600 active:bg-gray-50 dark:active:bg-gray-600'
+                          }`}
+                      >
+                        {opt.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="mb-4">
+                  <label className="block text-sm text-gray-600 dark:text-gray-300 mb-1">{t.nr_age}</label>
+                  <input
+                    type="number"
+                    inputMode="numeric"
+                    min={0}
+                    max={130}
+                    placeholder="0"
+                    value={patient.age || ''}
+                    onChange={(e) => updatePatient(idx, { age: parseInt(e.target.value) || 0 })}
+                    className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
+                  />
+                </div>
+
+                <div className="mb-4">
+                  <label className="block text-sm text-gray-600 dark:text-gray-300 mb-1">{t.nr_onset}</label>
+                  <input
+                    type="date"
+                    value={patient.onsetDate}
+                    onChange={(e) => updatePatient(idx, { onsetDate: e.target.value })}
+                    className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm text-gray-600 dark:text-gray-300 mb-1">{t.nr_symptoms}</label>
+                  <div className="flex flex-wrap gap-2">
+                    {SYMPTOMS_KEYS.map((symptom) => {
+                      const selected = patient.symptoms.includes(symptom);
+                      return (
+                        <button
+                          key={symptom}
+                          type="button"
+                          onClick={() => toggleSymptom(idx, symptom)}
+                          className={`px-4 py-2 rounded-xl text-sm font-medium border touch-manipulation transition-colors ${selected
+                              ? 'bg-teal-600 text-white border-teal-600'
+                              : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 border-gray-300 dark:border-gray-600 active:bg-gray-50 dark:active:bg-gray-600'
+                            }`}
+                        >
+                          {SYMPTOM_LABELS[symptom] ?? symptom}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
               </div>
-            </div>
+            ))}
+
+            <button
+              type="button"
+              onClick={addPatient}
+              className="w-full flex items-center justify-center gap-2 py-2.5 border-2 border-dashed border-teal-300 dark:border-teal-600 rounded-xl text-teal-600 dark:text-teal-400 font-medium text-sm active:bg-teal-50 dark:active:bg-teal-900/20 touch-manipulation"
+            >
+              <Plus size={16} />
+              {lang === 'ko' ? '환자 추가' : 'Add patient'}
+            </button>
           </div>
         );
 
@@ -491,11 +533,10 @@ export default function NewRecord() {
                     key={opt.value}
                     type="button"
                     onClick={() => setForm((p) => ({ ...p, transmission: opt.value }))}
-                    className={`px-4 py-2 rounded-xl text-sm font-medium border touch-manipulation transition-colors ${
-                      form.transmission === opt.value
+                    className={`px-4 py-2 rounded-xl text-sm font-medium border touch-manipulation transition-colors ${form.transmission === opt.value
                         ? 'bg-teal-600 text-white border-teal-600'
                         : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 border-gray-300 dark:border-gray-600 active:bg-gray-50 dark:active:bg-gray-600'
-                    }`}
+                      }`}
                   >
                     {opt.label}
                   </button>
@@ -511,11 +552,10 @@ export default function NewRecord() {
                     key={opt.value}
                     type="button"
                     onClick={() => setForm((p) => ({ ...p, vaccinated: opt.value }))}
-                    className={`px-4 py-2 rounded-xl text-sm font-medium border touch-manipulation transition-colors ${
-                      form.vaccinated === opt.value
+                    className={`px-4 py-2 rounded-xl text-sm font-medium border touch-manipulation transition-colors ${form.vaccinated === opt.value
                         ? 'bg-teal-600 text-white border-teal-600'
                         : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 border-gray-300 dark:border-gray-600 active:bg-gray-50 dark:active:bg-gray-600'
-                    }`}
+                      }`}
                   >
                     {opt.label}
                   </button>

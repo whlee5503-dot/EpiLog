@@ -55,7 +55,9 @@ export interface GpsCoords {
 
 /**
  * 지표 환자(Index Case) 정보
- * 역학조사에서 최초로 확인된 환자
+ * 역학조사에서 최초로 확인된 환자 1명에 대한 프로필.
+ * `FieldRecord.indexCases`는 이 타입의 배열이며, 학교 급식 식중독처럼
+ * 한 사건에서 여러 명이 동시에 지표환자로 확인되는 경우를 지원한다.
  */
 export interface IndexCase {
   /** 환자 이름 또는 익명 코드 (예: "홍길동", "P-001") */
@@ -134,8 +136,11 @@ export interface FieldRecord {
   /** 현장 GPS 좌표 (기기 위치 정보 미허용 시 undefined) */
   gps?: GpsCoords;
 
-  /** 지표 환자 정보 */
-  indexCase: IndexCase;
+  /**
+   * 지표 환자 목록 (1명 이상)
+   * 다수 발병(예: 학교 급식 식중독)의 경우 여러 명이 함께 들어간다.
+   */
+  indexCases: IndexCase[];
 
   /** 접촉자 분류별 수 */
   contacts: ContactCount;

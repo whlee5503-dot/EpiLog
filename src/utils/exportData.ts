@@ -1,4 +1,4 @@
-import type { FieldRecord } from '../types/index';
+import type { FieldRecord, IndexCase } from '../types/index';
 import { attackRate, caseFatalityRate, formatRate } from './epiCalc';
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -17,6 +17,19 @@ function triggerDownload(content: string, filename: string, mimeType: string): v
   URL.revokeObjectURL(url);
 }
 
+/**
+ * Returns a record's index cases, regardless of whether it was saved before
+ * or after the multi-patient change: newer records store `indexCases: IndexCase[]`;
+ * older records (saved when only a single patient was supported) stored a
+ * single `indexCase: IndexCase` object. Exported so other views (e.g. the
+ * record detail page) can render both shapes safely without a data migration.
+ */
+export function getIndexCases(r: FieldRecord): IndexCase[] {
+  if (Array.isArray(r.indexCases) && r.indexCases.length > 0) return r.indexCases;
+  const legacy = (r as unknown as { indexCase?: IndexCase }).indexCase;
+  return legacy ? [legacy] : [];
+}
+
 // ─── CSV ──────────────────────────────────────────────────────────────────────
 
 const CSV_COLUMNS = [
@@ -24,7 +37,7 @@ const CSV_COLUMNS = [
   'totalPopulation', 'newCases', 'deaths',
   'hospitalized', 'household', 'colleague',
   'community', 'transmission', 'vaccinated',
-  'symptoms', 'gps_lat', 'gps_lng', 'notes',
+  'indexCaseCount', 'symptoms', 'gps_lat', 'gps_lng', 'notes',
 ] as const;
 
 function escapeCSV(value: string | number | undefined | null): string {
@@ -37,6 +50,9 @@ function escapeCSV(value: string | number | undefined | null): string {
 }
 
 function recordToCSVRow(r: FieldRecord): string {
+  const cases = getIndexCases(r);
+  const allSymptoms = Array.from(new Set(cases.flatMap((c) => c.symptoms))).join(';');
+
   const values = [
     r.id,
     r.timestamp,
@@ -51,7 +67,8 @@ function recordToCSVRow(r: FieldRecord): string {
     r.contacts.community,
     r.transmission,
     r.vaccinated,
-    r.indexCase.symptoms.join(';'),
+    cases.length,
+    allSymptoms,
     r.gps?.lat,
     r.gps?.lng,
     r.notes,
