@@ -102,6 +102,8 @@ export default function Guide() {
           <Item title={t.gd_cfr_title} desc={t.gd_cfr_desc} />
           <Divider />
           <Item title={t.gd_sar_title} desc={t.gd_sar_desc} />
+          <Divider />
+          <Item title={t.gd_map_title} desc={t.gd_map_desc} />
         </Section>
 
         {/* ── Export ── */}
