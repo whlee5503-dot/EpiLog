@@ -324,7 +324,7 @@ export const T: Record<Lang, Translations> = {
     sy_myalgia: '근육통',
 
     db_title: '발생 현황 대시보드',
-    db_subtitle: '역학 지표 요약',
+    db_subtitle: '핵심 지표 한눈에 보기',
     db_stat_records: '총 기록 수',
     db_stat_cases: '누적 환자 수',
     db_stat_deaths: '누적 사망 수',
@@ -557,7 +557,7 @@ export const T: Record<Lang, Translations> = {
     sy_myalgia: 'Myalgia',
 
     db_title: 'Outbreak Dashboard',
-    db_subtitle: 'Epi Metrics Summary',
+    db_subtitle: 'Key Indicators at a Glance',
     db_stat_records: 'Records',
     db_stat_cases: 'Total Cases',
     db_stat_deaths: 'Deaths',

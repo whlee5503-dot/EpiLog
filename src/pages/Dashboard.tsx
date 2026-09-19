@@ -52,6 +52,18 @@ import { GpsMap } from '../components/GpsMap';
 
 const PIE_COLORS = ['#0d9488', '#f97316', '#ef4444', '#3b82f6', '#8b5cf6', '#ec4899', '#6b7280'];
 
+// Section ids + short jump-nav labels. Kept in one place so the nav pills
+// and each SectionCard's anchor id can't drift out of sync.
+const SECTIONS = {
+  epicurve: 'section-epicurve',
+  cumulative: 'section-cumulative',
+  metrics: 'section-metrics',
+  transmission: 'section-transmission',
+  records: 'section-records',
+  map: 'section-map',
+  export: 'section-export',
+} as const;
+
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
 function getDateKey(ts: string): string {
@@ -61,6 +73,10 @@ function getDateKey(ts: string): string {
 function formatDateLabel(dateKey: string): string {
   const parts = dateKey.split('-');
   return `${parts[1]}/${parts[2]}`;
+}
+
+function scrollToSection(id: string) {
+  document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 // ─── Sub-components ───────────────────────────────────────────────────────────
@@ -84,17 +100,72 @@ function SummaryCard({
   }[accent];
 
   return (
-    <div className={`rounded-2xl p-4 ${styles.bg} flex flex-col gap-2`}>
+    <div className={`rounded-xl p-3 ${styles.bg} flex flex-col gap-1`}>
       <div className={styles.iconColor}>{icon}</div>
-      <p className='text-2xl font-bold text-gray-800 dark:text-white leading-tight'>{value}</p>
-      <p className='text-sm text-gray-600 dark:text-white dark:opacity-90 mt-0.5'>{label}</p>
+      <p className='text-xl font-bold text-gray-800 dark:text-white leading-tight'>{value}</p>
+      <p className='text-xs text-gray-600 dark:text-white dark:opacity-90'>{label}</p>
     </div>
   );
 }
 
-function SectionCard({ title, children, isDark }: { title: string; children: React.ReactNode; isDark: boolean }) {
+/**
+ * Small horizontally-scrolling row of pills that jump the page to each
+ * section below. Kept as a thin wrapper over scrollIntoView rather than
+ * real tabs, so the page structure (and each section's own state) is
+ * untouched — this only changes how the user gets there.
+ */
+function QuickJumpNav({ lang, activeSection }: { lang: 'ko' | 'en'; activeSection: string }) {
+  const items: { id: string; label: string }[] = [
+    { id: SECTIONS.epicurve, label: lang === 'ko' ? '발생곡선' : 'Curve' },
+    { id: SECTIONS.cumulative, label: lang === 'ko' ? '누적추이' : 'Cumulative' },
+    { id: SECTIONS.metrics, label: lang === 'ko' ? '지표' : 'Metrics' },
+    { id: SECTIONS.transmission, label: lang === 'ko' ? '전파경로' : 'Routes' },
+    { id: SECTIONS.records, label: lang === 'ko' ? '개별기록' : 'Records' },
+    { id: SECTIONS.map, label: lang === 'ko' ? '지도' : 'Map' },
+    { id: SECTIONS.export, label: lang === 'ko' ? '내보내기' : 'Export' },
+  ];
+
   return (
-    <div className="bg-white dark:bg-[#2d3748] rounded-2xl shadow-sm border border-gray-200 dark:border-gray-600 p-4">
+    <div className="flex gap-2 overflow-x-auto pb-1 -mx-4 px-4">
+      {items.map((item) => {
+        const isActive = activeSection === item.id;
+        return (
+          <button
+            key={item.id}
+            type="button"
+            onClick={() => scrollToSection(item.id)}
+            className={`shrink-0 px-3 py-1.5 rounded-full text-xs font-medium touch-manipulation transition-colors border ${isActive
+                ? 'bg-teal-600 border-teal-600 text-white'
+                : 'bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 active:bg-gray-100 dark:active:bg-gray-700'
+              }`}
+          >
+            {item.label}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
+function SectionCard({
+  title,
+  children,
+  isDark,
+  id,
+}: {
+  title: string;
+  children: React.ReactNode;
+  isDark: boolean;
+  /** Anchor id for QuickJumpNav to scroll to. Omit for sections without a nav pill. */
+  id?: string;
+}) {
+  return (
+    <div
+      id={id}
+      // scroll-mt offsets the anchor below the sticky header + jump-nav
+      // row, so scrollIntoView doesn't tuck the section's title under them.
+      className="scroll-mt-32 bg-white dark:bg-[#2d3748] rounded-2xl shadow-sm border border-gray-200 dark:border-gray-600 p-4"
+    >
       <h2
         className="text-sm font-semibold text-gray-900 dark:text-white mb-3"
         style={{ color: isDark ? '#ffffff' : '#111827' }}
@@ -111,14 +182,12 @@ function EpiMetricRow({
   value,
   interpretation,
   interpretColor,
-}:
-  {
-    label: string;
-    value: string;
-    interpretation: string;
-    interpretColor: string;
-    isDark: boolean;
-  }) {
+}: {
+  label: string;
+  value: string;
+  interpretation: string;
+  interpretColor: string;
+}) {
   return (
     <div className="flex items-center justify-between py-3 border-b border-gray-100 dark:border-gray-700 last:border-b-0">
       <span className="text-sm flex-1 mr-3 text-gray-700 dark:text-gray-300">
@@ -160,6 +229,34 @@ export default function Dashboard() {
       .catch((e: unknown) => setError(String(e)))
       .finally(() => setLoading(false));
   }, [cryptoKey]);
+
+  const [activeSection, setActiveSection] = useState<string>(SECTIONS.epicurve);
+
+  useEffect(() => {
+    if (records.length === 0) return;
+    const ids = Object.values(SECTIONS);
+    const elements = ids
+      .map((id) => document.getElementById(id))
+      .filter((el): el is HTMLElement => el !== null);
+    if (elements.length === 0) return;
+
+    // "Scrollspy": treat whichever section sits in a thin band near the top
+    // of the viewport (just below the sticky header + nav) as the active
+    // one, so the matching pill highlights as the user scrolls — not only
+    // when they tap a pill.
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            setActiveSection(entry.target.id);
+          }
+        }
+      },
+      { rootMargin: '-45% 0px -50% 0px', threshold: 0 },
+    );
+    elements.forEach((el) => observer.observe(el));
+    return () => observer.disconnect();
+  }, [records.length]);
 
   const summary = useMemo(() => summarizeRecords(records), [records]);
 
@@ -320,15 +417,19 @@ export default function Dashboard() {
       {!loading && !error && records.length > 0 && (
         <main className="flex-1 px-4 py-4 pb-10 space-y-4">
           {/* 1. Summary stats */}
-          <div className="grid grid-cols-2 gap-3">
-            <SummaryCard label={t.db_stat_records} value={summary.recordCount} icon={<Activity size={22} />} accent="teal" />
-            <SummaryCard label={t.db_stat_cases} value={summary.totalCases.toLocaleString()} icon={<Users size={22} />} accent="orange" />
-            <SummaryCard label={t.db_stat_deaths} value={summary.totalDeaths.toLocaleString()} icon={<Heart size={22} />} accent="red" />
-            <SummaryCard label={t.db_stat_ar} value={formatRate(summary.overallAR)} icon={<TrendingUp size={22} />} accent="blue" />
+          <div className="grid grid-cols-2 gap-2">
+            <SummaryCard label={t.db_stat_records} value={summary.recordCount} icon={<Activity size={18} />} accent="teal" />
+            <SummaryCard label={t.db_stat_cases} value={summary.totalCases.toLocaleString()} icon={<Users size={18} />} accent="orange" />
+            <SummaryCard label={t.db_stat_deaths} value={summary.totalDeaths.toLocaleString()} icon={<Heart size={18} />} accent="red" />
+            <SummaryCard label={t.db_stat_ar} value={formatRate(summary.overallAR)} icon={<TrendingUp size={18} />} accent="blue" />
           </div>
 
+          {/* Quick jump nav — lets users go straight to the section they
+              care about instead of scrolling through all seven below. */}
+          <QuickJumpNav lang={lang} activeSection={activeSection} />
+
           {/* 2. Epidemic curve */}
-          <SectionCard title={t.db_epicurve} isDark={isDark}>
+          <SectionCard id={SECTIONS.epicurve} title={t.db_epicurve} isDark={isDark}>
             {epicurveData.length === 0 ? (
               <EmptyChartState />
             ) : (
@@ -345,7 +446,7 @@ export default function Dashboard() {
           </SectionCard>
 
           {/* 3. Cumulative trend */}
-          <SectionCard title={t.db_cumulative} isDark={isDark}>
+          <SectionCard id={SECTIONS.cumulative} title={t.db_cumulative} isDark={isDark}>
             {cumulativeData.length === 0 ? (
               <EmptyChartState />
             ) : (
@@ -370,14 +471,14 @@ export default function Dashboard() {
           </SectionCard>
 
           {/* 4. Epi metrics */}
-          <SectionCard title={t.db_metrics_title} isDark={isDark}>
-            <EpiMetricRow label={t.db_ar_label} value={formatRate(summary.overallAR)} interpretation={arInterp.label} interpretColor={arInterp.color} isDark={isDark} />
-            <EpiMetricRow label={t.db_cfr_label} value={formatRate(summary.overallCFR)} interpretation={cfrInterp.label} interpretColor={cfrInterp.color} isDark={isDark} />
-            <EpiMetricRow label={t.db_sar_label} value={formatRate(sarValue)} interpretation={sarInterp.label} interpretColor={sarInterp.color} isDark={isDark} />
+          <SectionCard id={SECTIONS.metrics} title={t.db_metrics_title} isDark={isDark}>
+            <EpiMetricRow label={t.db_ar_label} value={formatRate(summary.overallAR)} interpretation={arInterp.label} interpretColor={arInterp.color} />
+            <EpiMetricRow label={t.db_cfr_label} value={formatRate(summary.overallCFR)} interpretation={cfrInterp.label} interpretColor={cfrInterp.color} />
+            <EpiMetricRow label={t.db_sar_label} value={formatRate(sarValue)} interpretation={sarInterp.label} interpretColor={sarInterp.color} />
           </SectionCard>
 
           {/* 5. Transmission routes */}
-          <SectionCard title={t.db_transmission} isDark={isDark}>
+          <SectionCard id={SECTIONS.transmission} title={t.db_transmission} isDark={isDark}>
             {transmissionData.length === 0 ? (
               <EmptyChartState />
             ) : (
@@ -405,7 +506,7 @@ export default function Dashboard() {
           </SectionCard>
 
           {/* 6. Individual record analysis */}
-          <SectionCard title={t.db_individual_section} isDark={isDark}>
+          <SectionCard id={SECTIONS.records} title={t.db_individual_section} isDark={isDark}>
             <div className="space-y-3">
               {records.map((record) => {
                 const ar = attackRate(record.dailyCases.newCases, record.totalPopulation);
@@ -449,6 +550,7 @@ export default function Dashboard() {
 
           {/* 7. Outbreak map */}
           <SectionCard
+            id={SECTIONS.map}
             title={
               lang === 'ko'
                 ? `발생 지도 (Outbreak Map) — GPS ${gpsRecordsCount}건`
@@ -459,8 +561,8 @@ export default function Dashboard() {
             <GpsMap records={records} />
           </SectionCard>
 
-          {/* 7. Export / Share */}
-          <SectionCard title={lang === 'ko' ? '데이터 내보내기' : 'Export Data'} isDark={isDark}>
+          {/* 8. Export / Share */}
+          <SectionCard id={SECTIONS.export} title={lang === 'ko' ? '데이터 내보내기' : 'Export Data'} isDark={isDark}>
             <div className="grid grid-cols-2 gap-3">
               <button
                 type="button"
