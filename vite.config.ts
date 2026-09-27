@@ -15,26 +15,20 @@ export default defineConfig({
       manifest: {
         name: 'EpiLog',
         short_name: 'EpiLog',
-        description: '오프라인 현장 역학조사 디지털 기록장',
+        id: '/',
+        description: 'Offline field epidemiology diary for outbreak investigation and contact tracing',
         theme_color: '#1a6b4a',
         background_color: '#ffffff',
         display: 'standalone',
         orientation: 'portrait',
         start_url: '/',
         scope: '/',
-        lang: 'ko',
+        lang: 'en',
         icons: [
-          {
-            src: '/icons/icon-192.svg',
-            sizes: 'any',
-            type: 'image/svg+xml',
-          },
-          {
-            src: '/icons/icon-512.svg',
-            sizes: 'any',
-            type: 'image/svg+xml',
-            purpose: 'any maskable',
-          },
+          { src: '/icons/pwa-64x64.png', sizes: '64x64', type: 'image/png' },
+          { src: '/icons/pwa-192x192.png', sizes: '192x192', type: 'image/png' },
+          { src: '/icons/pwa-512x512.png', sizes: '512x512', type: 'image/png', purpose: 'any' },
+          { src: '/icons/maskable-icon-512x512.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' },
         ],
       },
 
@@ -42,10 +36,8 @@ export default defineConfig({
         skipWaiting: true,
         clientsClaim: true,
 
-        globPatterns: [
-          'index.html',
-          'assets/*.css',
-        ],
+        globPatterns: ['**/*.{html,js,css,png,svg,ico,woff2}'],
+        maximumFileSizeToCacheInBytes: 3 * 1024 * 1024,
 
         runtimeCaching: [
           {
