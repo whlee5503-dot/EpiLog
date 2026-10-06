@@ -9,7 +9,7 @@ import {
   FileText,
   LayoutDashboard,
 
-  Settings,
+  ShieldCheck,
 } from 'lucide-react';
 import { db } from '../db/database';
 import type { FieldRecord } from '../types/index';
@@ -184,7 +184,7 @@ export default function RecordList() {
               aria-label="Dashboard"
             >
               <LayoutDashboard size={18} />
-              <span className="text-[9px] leading-none font-medium">{lang === 'ko' ? '현황' : 'Stats'}</span>
+              <span className="text-[9px] leading-none font-medium">{lang === 'ko' ? '대시보드' : 'Dashboard'}</span>
             </button>
             <button
               type="button"
@@ -192,8 +192,8 @@ export default function RecordList() {
               className="flex flex-col items-center gap-0.5 px-1.5 py-1 rounded-xl bg-white/20 active:bg-white/30 touch-manipulation"
               aria-label={t.st_title}
             >
-              <Settings size={18} />
-              <span className="text-[9px] leading-none font-medium">{lang === 'ko' ? '설정' : 'Settings'}</span>
+              <ShieldCheck size={18} />
+              <span className="text-[9px] leading-none font-medium">{lang === 'ko' ? '개인정보' : 'Privacy'}</span>
             </button>
           </div>
         </div>

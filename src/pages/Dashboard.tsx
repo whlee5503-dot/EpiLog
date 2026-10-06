@@ -25,7 +25,7 @@ import {
   Loader2,
   Mail,
   MessageCircle,
-  Settings,
+  ShieldCheck,
   TrendingUp,
   Users,
 } from 'lucide-react';
@@ -366,8 +366,8 @@ export default function Dashboard() {
             className="flex flex-col items-center gap-0.5 px-1.5 py-1 rounded-xl bg-white/20 active:bg-white/30 touch-manipulation"
             aria-label={t.st_title}
           >
-            <Settings size={18} />
-            <span className="text-[9px] leading-none font-medium">{lang === 'ko' ? '설정' : 'Settings'}</span>
+            <ShieldCheck size={18} />
+            <span className="text-[9px] leading-none font-medium">{lang === 'ko' ? '개인정보' : 'Privacy'}</span>
           </Link>
         </div>
       </header>

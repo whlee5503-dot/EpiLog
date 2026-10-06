@@ -400,7 +400,7 @@ export const T: Record<Lang, Translations> = {
     ul_recovery_ph: '복구 코드를 입력하세요',
     ul_recovery_error: '복구 코드가 올바르지 않습니다.',
 
-    st_title: '설정',
+    st_title: '개인정보 및 보안',
     st_section_encryption: '데이터 암호화',
     st_encryption_desc: '현장 조사 데이터를 AES-256-GCM으로 암호화하여 보호합니다.',
     st_status_on: '활성화됨',
@@ -635,7 +635,7 @@ export const T: Record<Lang, Translations> = {
     ul_recovery_ph: 'Enter recovery code',
     ul_recovery_error: 'Invalid recovery code.',
 
-    st_title: 'Settings',
+    st_title: 'Privacy & Security',
     st_section_encryption: 'Data Encryption',
     st_encryption_desc: 'Protect your field investigation data with AES-256-GCM encryption.',
     st_status_on: 'Enabled',
