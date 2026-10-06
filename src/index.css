@@ -10,14 +10,17 @@
    Reference: EpiCalc --color-primary:#1a6b4a / --color-primary-light:#2d9068
    ─────────────────────────────────────────────────────────────────────────── */
 @theme {
-  --color-teal-50:  #f0f7f2;
+  --color-teal-50: #f0f7f2;
   --color-teal-100: #d4ebdc;
   --color-teal-200: #a9d6b9;
   --color-teal-300: #6cbf8d;
   --color-teal-400: #3aab72;
-  --color-teal-500: #2d9068;   /* EpiCalc --color-primary-light */
-  --color-teal-600: #1a6b4a;   /* EpiCalc --color-primary       */
-  --color-teal-700: #0f4a32;   /* EpiCalc --color-primary-dark  */
+  --color-teal-500: #2d9068;
+  /* EpiCalc --color-primary-light */
+  --color-teal-600: #1a6b4a;
+  /* EpiCalc --color-primary       */
+  --color-teal-700: #0f4a32;
+  /* EpiCalc --color-primary-dark  */
   --color-teal-800: #0a3322;
   --color-teal-900: #061f15;
   --color-teal-950: #030f0a;
@@ -73,6 +76,7 @@ body {
 }
 
 @layer base {
+
   h1,
   h2 {
     font-family: var(--heading);
@@ -84,24 +88,36 @@ body {
     font-size: 56px;
     letter-spacing: -1.68px;
     margin: 32px 0;
+
     @media (max-width: 1024px) {
       font-size: 36px;
       margin: 20px 0;
     }
   }
+
   h2 {
     font-size: 24px;
     line-height: 118%;
     letter-spacing: -0.24px;
     margin: 0 0 8px;
+
     @media (max-width: 1024px) {
       font-size: 20px;
     }
   }
+
   :where(.dark) h2 {
     color: #f9fafb;
   }
+
+  /* Titles inside colored page headers inherit the header's text color
+     (white on teal) instead of the global heading color. */
+  header h1,
+  header h2 {
+    color: inherit;
+  }
 }
+
 p {
   margin: 0;
 }
