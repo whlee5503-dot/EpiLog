@@ -124,7 +124,7 @@ export default function NewRecord() {
   ];
 
   const TRANSMISSION_OPTIONS: { value: TransmissionRoute; label: string }[] = [
-    { value: 'droplet', label: t.tr_droplet },
+    { value: 'airborne', label: t.rt_airborne },
     { value: 'contact', label: t.tr_contact },
     { value: 'waterborne', label: t.tr_waterborne },
     { value: 'foodborne', label: t.tr_foodborne },
@@ -283,8 +283,8 @@ export default function NewRecord() {
                     type="button"
                     onClick={() => setForm((p) => ({ ...p, facilityType: opt.value }))}
                     className={`px-4 py-2 rounded-xl text-sm font-medium border touch-manipulation transition-colors ${form.facilityType === opt.value
-                        ? 'bg-teal-600 text-white border-teal-600'
-                        : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 border-gray-300 dark:border-gray-600 active:bg-gray-50 dark:active:bg-gray-600'
+                      ? 'bg-teal-600 text-white border-teal-600'
+                      : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 border-gray-300 dark:border-gray-600 active:bg-gray-50 dark:active:bg-gray-600'
                       }`}
                   >
                     {opt.label}
@@ -394,8 +394,8 @@ export default function NewRecord() {
                         type="button"
                         onClick={() => updatePatient(idx, { gender: opt.value })}
                         className={`flex-1 py-2 rounded-xl text-sm font-medium border touch-manipulation transition-colors ${patient.gender === opt.value
-                            ? 'bg-teal-600 text-white border-teal-600'
-                            : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 border-gray-300 dark:border-gray-600 active:bg-gray-50 dark:active:bg-gray-600'
+                          ? 'bg-teal-600 text-white border-teal-600'
+                          : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 border-gray-300 dark:border-gray-600 active:bg-gray-50 dark:active:bg-gray-600'
                           }`}
                       >
                         {opt.label}
@@ -439,8 +439,8 @@ export default function NewRecord() {
                           type="button"
                           onClick={() => toggleSymptom(idx, symptom)}
                           className={`px-4 py-2 rounded-xl text-sm font-medium border touch-manipulation transition-colors ${selected
-                              ? 'bg-teal-600 text-white border-teal-600'
-                              : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 border-gray-300 dark:border-gray-600 active:bg-gray-50 dark:active:bg-gray-600'
+                            ? 'bg-teal-600 text-white border-teal-600'
+                            : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 border-gray-300 dark:border-gray-600 active:bg-gray-50 dark:active:bg-gray-600'
                             }`}
                         >
                           {SYMPTOM_LABELS[symptom] ?? symptom}
@@ -544,8 +544,8 @@ export default function NewRecord() {
                     type="button"
                     onClick={() => setForm((p) => ({ ...p, transmission: opt.value }))}
                     className={`px-4 py-2 rounded-xl text-sm font-medium border touch-manipulation transition-colors ${form.transmission === opt.value
-                        ? 'bg-teal-600 text-white border-teal-600'
-                        : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 border-gray-300 dark:border-gray-600 active:bg-gray-50 dark:active:bg-gray-600'
+                      ? 'bg-teal-600 text-white border-teal-600'
+                      : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 border-gray-300 dark:border-gray-600 active:bg-gray-50 dark:active:bg-gray-600'
                       }`}
                   >
                     {opt.label}
@@ -563,8 +563,8 @@ export default function NewRecord() {
                     type="button"
                     onClick={() => setForm((p) => ({ ...p, vaccinated: opt.value }))}
                     className={`px-4 py-2 rounded-xl text-sm font-medium border touch-manipulation transition-colors ${form.vaccinated === opt.value
-                        ? 'bg-teal-600 text-white border-teal-600'
-                        : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 border-gray-300 dark:border-gray-600 active:bg-gray-50 dark:active:bg-gray-600'
+                      ? 'bg-teal-600 text-white border-teal-600'
+                      : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 border-gray-300 dark:border-gray-600 active:bg-gray-50 dark:active:bg-gray-600'
                       }`}
                   >
                     {opt.label}
