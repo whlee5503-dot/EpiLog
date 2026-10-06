@@ -10,16 +10,14 @@ import {
   Check,
   Loader2,
   AlertCircle,
-  Sun,
-  Moon,
 } from 'lucide-react';
 import { useCrypto } from '../contexts/CryptoContext';
 import { useLanguage } from '../contexts/LanguageContext';
-import { useTheme } from '../hooks/useTheme';
 import { EncryptionSetupModal } from '../components/EncryptionSetupModal';
 import { PrivacyNoticeModal } from '../components/PrivacyNoticeModal';
 import { LangToggle } from '../components/LangToggle';
 import { GuideButton } from '../components/GuideButton';
+import { ThemeButton } from '../components/ThemeButton';
 import { db } from '../db/database';
 
 type PanelView = 'none' | 'disable' | 'changePwd' | 'newRecovery';
@@ -61,7 +59,6 @@ function PasswordInput({
 export default function Settings() {
   const navigate = useNavigate();
   const { t, lang } = useLanguage();
-  const { theme, toggle: toggleTheme } = useTheme();
   const { isEncryptionEnabled, disableEncryption, changePassword } = useCrypto();
 
   const [showSetupModal, setShowSetupModal] = useState(false);
@@ -157,15 +154,7 @@ export default function Settings() {
           </button>
           <h1 className="text-xl font-bold flex-1">{t.st_title}</h1>
           <LangToggle />
-          <button
-            type="button"
-            onClick={toggleTheme}
-            className="flex flex-col items-center gap-0.5 px-1.5 py-1 rounded-xl bg-white/20 active:bg-white/30 touch-manipulation"
-            aria-label={theme === 'dark' ? (lang === 'ko' ? '라이트 모드로 전환' : 'Switch to light mode') : (lang === 'ko' ? '다크 모드로 전환' : 'Switch to dark mode')}
-          >
-            {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
-            <span className="text-[9px] leading-none font-medium">{lang === 'ko' ? '테마' : 'Theme'}</span>
-          </button>
+          <ThemeButton />
           <GuideButton />
         </div>
       </header>
@@ -176,8 +165,8 @@ export default function Settings() {
         <section className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm overflow-hidden">
           <div className="px-4 py-4 border-b border-gray-100 dark:border-gray-700 flex items-center gap-3">
             <div className={`w-9 h-9 rounded-xl flex items-center justify-center ${isEncryptionEnabled
-                ? 'bg-teal-100 dark:bg-teal-900/40'
-                : 'bg-gray-100 dark:bg-gray-700'
+              ? 'bg-teal-100 dark:bg-teal-900/40'
+              : 'bg-gray-100 dark:bg-gray-700'
               }`}>
               {isEncryptionEnabled
                 ? <ShieldCheck size={18} className="text-teal-600 dark:text-teal-400" />
@@ -192,8 +181,8 @@ export default function Settings() {
               </p>
             </div>
             <span className={`shrink-0 px-2.5 py-1 rounded-full text-xs font-semibold ${isEncryptionEnabled
-                ? 'bg-teal-100 dark:bg-teal-900/50 text-teal-700 dark:text-teal-300'
-                : 'bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400'
+              ? 'bg-teal-100 dark:bg-teal-900/50 text-teal-700 dark:text-teal-300'
+              : 'bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400'
               }`}>
               {isEncryptionEnabled ? t.st_status_on : t.st_status_off}
             </span>

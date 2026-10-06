@@ -8,18 +8,17 @@ import {
   AlertCircle,
   FileText,
   LayoutDashboard,
-  Sun,
-  Moon,
+
   Settings,
 } from 'lucide-react';
 import { db } from '../db/database';
 import type { FieldRecord } from '../types/index';
 import { TRANSMISSION_COLORS, TRANSMISSION_LABELS } from '../utils/transmission';
-import { useTheme } from '../hooks/useTheme';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useCrypto } from '../contexts/CryptoContext';
 import { LangToggle } from '../components/LangToggle';
 import { GuideButton } from '../components/GuideButton';
+import { ThemeButton } from '../components/ThemeButton';
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -143,7 +142,6 @@ function EmptyState({ onAdd }: { onAdd: () => void }) {
 
 export default function RecordList() {
   const navigate = useNavigate();
-  const { theme, toggle: toggleTheme } = useTheme();
   const { t, lang } = useLanguage();
   const { cryptoKey } = useCrypto();
   const [records, setRecords] = useState<FieldRecord[]>([]);
@@ -177,15 +175,7 @@ export default function RecordList() {
           </div>
           <div className="flex items-center gap-2">
             <LangToggle />
-            <button
-              type="button"
-              onClick={toggleTheme}
-              className="flex flex-col items-center gap-0.5 px-1.5 py-1 rounded-xl bg-white/20 active:bg-white/30 touch-manipulation"
-              aria-label={theme === 'dark' ? '라이트 모드로 전환' : '다크 모드로 전환'}
-            >
-              {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
-              <span className="text-[9px] leading-none font-medium">{lang === 'ko' ? '테마' : 'Theme'}</span>
-            </button>
+            <ThemeButton />
             <GuideButton />
             <button
               type="button"

@@ -25,9 +25,7 @@ import {
   Loader2,
   Mail,
   MessageCircle,
-  Moon,
   Settings,
-  Sun,
   TrendingUp,
   Users,
 } from 'lucide-react';
@@ -47,6 +45,7 @@ import { useLanguage } from '../contexts/LanguageContext';
 import { useCrypto } from '../contexts/CryptoContext';
 import { LangToggle } from '../components/LangToggle';
 import { GuideButton } from '../components/GuideButton';
+import { ThemeButton } from '../components/ThemeButton';
 import { GpsMap } from '../components/GpsMap';
 
 // ─── Constants ────────────────────────────────────────────────────────────────
@@ -136,8 +135,8 @@ function QuickJumpNav({ lang, activeSection }: { lang: 'ko' | 'en'; activeSectio
             type="button"
             onClick={() => scrollToSection(item.id)}
             className={`shrink-0 px-3 py-1.5 rounded-full text-xs font-medium touch-manipulation transition-colors border ${isActive
-                ? 'bg-teal-600 border-teal-600 text-white'
-                : 'bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 active:bg-gray-100 dark:active:bg-gray-700'
+              ? 'bg-teal-600 border-teal-600 text-white'
+              : 'bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 active:bg-gray-100 dark:active:bg-gray-700'
               }`}
           >
             {item.label}
@@ -217,7 +216,7 @@ function EmptyChartState() {
 // ─── Main Component ───────────────────────────────────────────────────────────
 
 export default function Dashboard() {
-  const { isDark, toggle: toggleTheme } = useTheme();
+  const { isDark } = useTheme();
   const { t, lang } = useLanguage();
   const { cryptoKey } = useCrypto();
   const [records, setRecords] = useState<FieldRecord[]>([]);
@@ -360,15 +359,7 @@ export default function Dashboard() {
             <p className="text-xs text-teal-200">{t.db_subtitle}</p>
           </div>
           <LangToggle />
-          <button
-            type="button"
-            onClick={toggleTheme}
-            className="flex flex-col items-center gap-0.5 px-1.5 py-1 rounded-xl bg-white/20 active:bg-white/30 touch-manipulation"
-            aria-label={isDark ? '라이트 모드로 전환' : '다크 모드로 전환'}
-          >
-            {isDark ? <Sun size={18} /> : <Moon size={18} />}
-            <span className="text-[9px] leading-none font-medium">{lang === 'ko' ? '테마' : 'Theme'}</span>
-          </button>
+          <ThemeButton />
           <GuideButton />
           <Link
             to="/settings"

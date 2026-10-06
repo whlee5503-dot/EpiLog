@@ -10,18 +10,15 @@ import {
   MapPin,
   Plus,
   Trash2,
-  Sun,
-  Moon,
 } from 'lucide-react';
 import { db } from '../db/database';
 import type { FieldRecord, IndexCase, TransmissionRoute, VaccinationStatus } from '../types/index';
 import { buildEpiCalcURL } from '../utils/exportData';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useCrypto } from '../contexts/CryptoContext';
-import { useTheme } from '../hooks/useTheme';
 import { LangToggle } from '../components/LangToggle';
 import { GuideButton } from '../components/GuideButton';
-
+import { ThemeButton } from '../components/ThemeButton';
 // Internal keys for symptoms (stored in DB as Korean)
 const SYMPTOMS_KEYS = ['발열', '기침', '설사', '구토', '복통', '발진', '호흡곤란', '두통', '근육통'] as const;
 
@@ -104,7 +101,6 @@ export default function NewRecord() {
   const navigate = useNavigate();
   const { t, lang } = useLanguage();
   const { cryptoKey } = useCrypto();
-  const { theme, toggle: toggleTheme } = useTheme();
   const [step, setStep] = useState(1);
   const [form, setForm] = useState<FormData>(initForm);
   const [gpsLoading, setGpsLoading] = useState(false);
@@ -629,15 +625,7 @@ export default function NewRecord() {
           </button>
           <h1 className="text-lg font-semibold flex-1">{t.nr_title}</h1>
           <LangToggle />
-          <button
-            type="button"
-            onClick={toggleTheme}
-            className="flex flex-col items-center gap-0.5 px-1.5 py-1 rounded-xl bg-white/20 active:bg-white/30 touch-manipulation"
-            aria-label={theme === 'dark' ? (lang === 'ko' ? '라이트 모드로 전환' : 'Switch to light mode') : (lang === 'ko' ? '다크 모드로 전환' : 'Switch to dark mode')}
-          >
-            {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
-            <span className="text-[9px] leading-none font-medium">{lang === 'ko' ? '테마' : 'Theme'}</span>
-          </button>
+          <ThemeButton />
           <GuideButton />
         </div>
       </header>
