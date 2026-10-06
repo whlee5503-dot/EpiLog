@@ -25,11 +25,14 @@ function attackRate(record: FieldRecord): string {
     return `${ar.toFixed(1)}%`;
 }
 
-function formatTimestamp(iso: string): string {
+function formatTimestamp(iso: string, lang: 'ko' | 'en'): string {
     const d = new Date(iso);
-    return d.toLocaleString('ko-KR', {
-        year: 'numeric', month: '2-digit', day: '2-digit',
-        hour: '2-digit', minute: '2-digit',
+    return d.toLocaleString(lang === 'ko' ? 'ko-KR' : 'en-US', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
     });
 }
 
@@ -203,7 +206,7 @@ export default function RecordDetail() {
                     </div>
                     <div className="flex items-center gap-1.5 text-xs text-gray-400">
                         <MapPin size={12} className="shrink-0" />
-                        <span>{formatTimestamp(record.timestamp)}</span>
+                        <span>{formatTimestamp(record.timestamp, lang)}</span>
                     </div>
                     {record.gps && (
                         <div className="flex items-center gap-1.5 text-xs text-gray-400 mt-1">

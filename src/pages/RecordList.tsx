@@ -30,9 +30,9 @@ function attackRate(record: FieldRecord): string {
   return `${ar.toFixed(1)}%`;
 }
 
-function formatTimestamp(iso: string): string {
+function formatTimestamp(iso: string, lang: 'ko' | 'en'): string {
   const d = new Date(iso);
-  return d.toLocaleString('ko-KR', {
+  return d.toLocaleString(lang === 'ko' ? 'ko-KR' : 'en-US', {
     year: 'numeric',
     month: '2-digit',
     day: '2-digit',
@@ -88,7 +88,7 @@ function RecordCard({
           </div>
           <div className="flex items-center gap-1.5 mt-1">
             <MapPin size={12} className="text-gray-400 shrink-0" />
-            <span className="text-xs text-gray-400">{formatTimestamp(record.timestamp)}</span>
+            <span className="text-xs text-gray-400">{formatTimestamp(record.timestamp, lang)}</span>
           </div>
         </div>
         <ChevronRight size={20} className="text-gray-300 dark:text-gray-600 shrink-0 mt-0.5" />
