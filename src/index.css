@@ -115,6 +115,13 @@ body {
   header h1,
   header h2 {
     color: inherit;
+    margin: 0;
+    letter-spacing: normal;
+  }
+
+  header h1 {
+    font-size: 1.25rem;
+    line-height: 1.75rem;
   }
 }
 

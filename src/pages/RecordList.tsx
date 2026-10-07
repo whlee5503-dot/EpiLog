@@ -189,14 +189,14 @@ export default function RecordList() {
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white flex flex-col">
       {/* Header */}
       <header className="bg-teal-600 text-white px-4 py-4 sticky top-0 z-10 shadow-sm">
-        <div className="flex items-center justify-between">
-          <div>
+        <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2">
+          <div className="min-w-0">
             <h1 className="text-xl font-bold">{t.rl_title}</h1>
             <p className="text-sm text-teal-200 mt-0.5">
               {loading || error ? t.rl_subtitle : recordCountLabel}
             </p>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 ml-auto">
             <LangToggle />
             <ThemeButton />
             <GuideButton />
@@ -253,16 +253,18 @@ export default function RecordList() {
           ))}
       </main>
 
-      {/* FAB */}
-      <button
-        type="button"
-        onClick={() => navigate('/new')}
-        className="fixed bottom-6 right-5 flex items-center gap-2 pl-4 pr-5 h-14 bg-teal-600 text-white rounded-full shadow-xl active:bg-teal-700 touch-manipulation z-20"
-        aria-label={lang === 'ko' ? '새 현장기록 추가' : 'Add new field record'}
-      >
-        <Plus size={22} />
-        <span className="text-sm font-semibold whitespace-nowrap">{lang === 'ko' ? '새 기록' : 'New Record'}</span>
-      </button>
+      {/* FAB (hidden while the empty state already offers an add button) */}
+      {!loading && !error && records.length > 0 && (
+        <button
+          type="button"
+          onClick={() => navigate('/new')}
+          className="fixed bottom-6 right-5 flex items-center gap-2 pl-4 pr-5 h-14 bg-teal-600 text-white rounded-full shadow-xl active:bg-teal-700 touch-manipulation z-20"
+          aria-label={lang === 'ko' ? '새 현장기록 추가' : 'Add new field record'}
+        >
+          <Plus size={22} />
+          <span className="text-sm font-semibold whitespace-nowrap">{lang === 'ko' ? '새 기록' : 'New Record'}</span>
+        </button>
+      )}
     </div>
   );
 }

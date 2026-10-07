@@ -345,7 +345,7 @@ export default function Dashboard() {
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col">
       {/* Header */}
       <header className="bg-teal-600 text-white px-4 py-4 sticky top-0 z-10 shadow-sm">
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
           <Link
             to="/"
             className="flex flex-col items-center gap-0.5 px-1.5 py-1 -ml-1 rounded-xl bg-white/20 active:bg-white/30 touch-manipulation"
@@ -354,21 +354,23 @@ export default function Dashboard() {
             <ArrowLeft size={16} />
             <span className="text-[9px] leading-none font-medium whitespace-nowrap">{lang === 'ko' ? '목록' : 'List'}</span>
           </Link>
-          <div className="flex-1">
+          <div className="flex-1 min-w-[10rem]">
             <h1 className="text-lg font-bold leading-tight">{t.db_title}</h1>
             <p className="text-xs text-teal-200">{t.db_subtitle}</p>
           </div>
-          <LangToggle />
-          <ThemeButton />
-          <GuideButton />
-          <Link
-            to="/settings"
-            className="flex flex-col items-center gap-0.5 px-1.5 py-1 rounded-xl bg-white/20 active:bg-white/30 touch-manipulation"
-            aria-label={t.st_title}
-          >
-            <ShieldCheck size={18} />
-            <span className="text-[9px] leading-none font-medium whitespace-nowrap">{lang === 'ko' ? '개인정보' : 'Privacy'}</span>
-          </Link>
+          <div className="flex items-center gap-2 ml-auto">
+            <LangToggle />
+            <ThemeButton />
+            <GuideButton />
+            <Link
+              to="/settings"
+              className="flex flex-col items-center gap-0.5 px-1.5 py-1 rounded-xl bg-white/20 active:bg-white/30 touch-manipulation"
+              aria-label={t.st_title}
+            >
+              <ShieldCheck size={18} />
+              <span className="text-[9px] leading-none font-medium whitespace-nowrap">{lang === 'ko' ? '개인정보' : 'Privacy'}</span>
+            </Link>
+          </div>
         </div>
       </header>
 
