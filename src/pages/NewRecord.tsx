@@ -621,7 +621,7 @@ export default function NewRecord() {
             aria-label={lang === 'ko' ? '목록으로' : 'Back to list'}
           >
             <ChevronLeft size={18} />
-            <span className="text-[9px] leading-none font-medium">{lang === 'ko' ? '목록' : 'List'}</span>
+            <span className="text-[9px] leading-none font-medium whitespace-nowrap">{lang === 'ko' ? '목록' : 'List'}</span>
           </button>
           <h1 className="text-lg font-semibold flex-1">{t.nr_title}</h1>
           <LangToggle />

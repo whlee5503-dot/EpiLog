@@ -19,7 +19,7 @@ export function GuideButton() {
             aria-label={lang === 'ko' ? '가이드' : 'Guide'}
         >
             <BookOpen size={18} />
-            <span className="text-[9px] leading-none font-medium">{lang === 'ko' ? '가이드' : 'Guide'}</span>
+            <span className="text-[9px] leading-none font-medium whitespace-nowrap">{lang === 'ko' ? '가이드' : 'Guide'}</span>
         </button>
     );
 }

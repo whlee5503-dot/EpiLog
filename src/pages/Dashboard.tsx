@@ -352,7 +352,7 @@ export default function Dashboard() {
             aria-label="뒤로가기"
           >
             <ArrowLeft size={16} />
-            <span className="text-[9px] leading-none font-medium">{lang === 'ko' ? '목록' : 'List'}</span>
+            <span className="text-[9px] leading-none font-medium whitespace-nowrap">{lang === 'ko' ? '목록' : 'List'}</span>
           </Link>
           <div className="flex-1">
             <h1 className="text-lg font-bold leading-tight">{t.db_title}</h1>
@@ -367,7 +367,7 @@ export default function Dashboard() {
             aria-label={t.st_title}
           >
             <ShieldCheck size={18} />
-            <span className="text-[9px] leading-none font-medium">{lang === 'ko' ? '개인정보' : 'Privacy'}</span>
+            <span className="text-[9px] leading-none font-medium whitespace-nowrap">{lang === 'ko' ? '개인정보' : 'Privacy'}</span>
           </Link>
         </div>
       </header>

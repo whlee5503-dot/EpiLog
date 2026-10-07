@@ -150,7 +150,7 @@ export default function Settings() {
             aria-label={lang === 'ko' ? '뒤로가기' : 'Back'}
           >
             <ChevronLeft size={18} />
-            <span className="text-[9px] leading-none font-medium">{lang === 'ko' ? '뒤로' : 'Back'}</span>
+            <span className="text-[9px] leading-none font-medium whitespace-nowrap">{lang === 'ko' ? '뒤로' : 'Back'}</span>
           </button>
           <h1 className="text-xl font-bold flex-1">{t.st_title}</h1>
           <LangToggle />

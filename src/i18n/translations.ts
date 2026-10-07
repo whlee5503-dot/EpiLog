@@ -14,6 +14,10 @@ export interface Translations {
   rl_empty_desc1: string;
   rl_empty_desc2: string;
   rl_empty_btn: string;
+  rl_flow1: string;
+  rl_flow2: string;
+  rl_flow3: string;
+  rl_guide_btn: string;
   rl_no_location: string;
   rl_load_error: string;
   // ── NewRecord ──────────────────────────────────────────────────────────
@@ -250,6 +254,10 @@ export const T: Record<Lang, Translations> = {
     rl_empty_desc1: '현장 역학조사 결과를 기록하면',
     rl_empty_desc2: '이곳에 목록으로 표시됩니다.',
     rl_empty_btn: '첫 기록 추가하기',
+    rl_flow1: '현장에서 기록 — 장소, 환자, 접촉자, 전파경로를 입력합니다.',
+    rl_flow2: '대시보드에서 확인 — 발병곡선, 지도, 공격률, 치명률을 봅니다.',
+    rl_flow3: '내보내기·분석 — CSV/JSON으로 저장하거나 EpiCalc로 보냅니다.',
+    rl_guide_btn: '사용법 보기',
     rl_no_location: '(장소 미입력)',
     rl_load_error: '데이터를 불러오지 못했습니다.',
 
@@ -485,6 +493,10 @@ export const T: Record<Lang, Translations> = {
     rl_empty_desc1: 'Field investigation results',
     rl_empty_desc2: 'will appear here.',
     rl_empty_btn: 'Add First Record',
+    rl_flow1: 'Record in the field — place, cases, contacts, transmission route.',
+    rl_flow2: 'Review on the dashboard — epidemic curve, map, attack rate, CFR.',
+    rl_flow3: 'Export or analyze — save as CSV/JSON, or send to EpiCalc.',
+    rl_guide_btn: 'Read the guide',
     rl_no_location: '(No location)',
     rl_load_error: 'Failed to load data.',
 

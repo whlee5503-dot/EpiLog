@@ -27,7 +27,7 @@ export function ThemeButton() {
             aria-label={ariaLabel}
         >
             {isDark ? <Sun size={18} /> : <Moon size={18} />}
-            <span className="text-[9px] leading-none font-medium">{label}</span>
+            <span className="text-[9px] leading-none font-medium whitespace-nowrap">{label}</span>
         </button>
     );
 }

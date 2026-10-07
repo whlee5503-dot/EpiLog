@@ -115,17 +115,33 @@ function RecordCard({
   );
 }
 
-function EmptyState({ onAdd }: { onAdd: () => void }) {
+function EmptyState({ onAdd, onGuide }: { onAdd: () => void; onGuide: () => void }) {
   const { t } = useLanguage();
+  const steps = [t.rl_flow1, t.rl_flow2, t.rl_flow3];
   return (
-    <div className="flex flex-col items-center justify-center py-20 px-6 text-center">
+    <div className="flex flex-col items-center justify-center pt-10 pb-28 px-6 text-center">
       <div className="w-20 h-20 rounded-full bg-teal-50 dark:bg-teal-900/30 flex items-center justify-center mb-4">
         <FileText size={36} className="text-teal-300" />
       </div>
       <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-200 mb-1">{t.rl_empty_title}</h3>
-      <p className="text-sm text-gray-400 mb-6 leading-relaxed">
+      <p className="text-sm text-gray-400 mb-5 leading-relaxed">
         {t.rl_empty_desc1}<br />{t.rl_empty_desc2}
       </p>
+
+      <ol className="w-full max-w-sm space-y-2 mt-5 mb-6 text-left">
+        {steps.map((text, i) => (
+          <li
+            key={i}
+            className="flex items-start gap-3 rounded-xl bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 px-3 py-2.5"
+          >
+            <span className="flex-shrink-0 w-6 h-6 rounded-full bg-teal-600 text-white text-xs font-bold flex items-center justify-center">
+              {i + 1}
+            </span>
+            <span className="text-sm text-gray-600 dark:text-gray-300 leading-snug break-keep">{text}</span>
+          </li>
+        ))}
+      </ol>
+
       <button
         type="button"
         onClick={onAdd}
@@ -133,6 +149,13 @@ function EmptyState({ onAdd }: { onAdd: () => void }) {
       >
         <Plus size={18} />
         {t.rl_empty_btn}
+      </button>
+      <button
+        type="button"
+        onClick={onGuide}
+        className="mt-3 px-4 py-2 text-sm text-teal-700 dark:text-teal-300 underline underline-offset-2 touch-manipulation"
+      >
+        {t.rl_guide_btn}
       </button>
     </div>
   );
@@ -184,7 +207,7 @@ export default function RecordList() {
               aria-label="Dashboard"
             >
               <LayoutDashboard size={18} />
-              <span className="text-[9px] leading-none font-medium">{lang === 'ko' ? '대시보드' : 'Dashboard'}</span>
+              <span className="text-[9px] leading-none font-medium whitespace-nowrap">{lang === 'ko' ? '대시보드' : 'Dashboard'}</span>
             </button>
             <button
               type="button"
@@ -193,7 +216,7 @@ export default function RecordList() {
               aria-label={t.st_title}
             >
               <ShieldCheck size={18} />
-              <span className="text-[9px] leading-none font-medium">{lang === 'ko' ? '개인정보' : 'Privacy'}</span>
+              <span className="text-[9px] leading-none font-medium whitespace-nowrap">{lang === 'ko' ? '개인정보' : 'Privacy'}</span>
             </button>
           </div>
         </div>
@@ -216,7 +239,7 @@ export default function RecordList() {
         )}
 
         {!loading && !error && records.length === 0 && (
-          <EmptyState onAdd={() => navigate('/new')} />
+          <EmptyState onAdd={() => navigate('/new')} onGuide={() => navigate('/guide')} />
         )}
 
         {!loading &&
