@@ -287,10 +287,13 @@ export default function Dashboard() {
   }, [records]);
 
   const sarValue = useMemo(() => {
-    const secondaryCases = Math.max(0, summary.totalCases - records.length);
-    const householdContacts = records.reduce((s, r) => s + r.contacts.household, 0);
-    return secondaryAttackRate(secondaryCases, householdContacts);
-  }, [records, summary]);
+    // New cases exclude index patients (they are entered separately in step 2),
+    // so they are the secondary cases. Denominator: all contacts.
+    const rate = secondaryAttackRate(summary.totalCases, summary.totalContacts);
+    // A rate above 100% means the inputs do not match this definition.
+    if (rate === null || rate > 100) return null;
+    return rate;
+  }, [summary]);
 
   const gpsRecordsCount = useMemo(() => records.filter(r => r.gps != null).length, [records]);
 
