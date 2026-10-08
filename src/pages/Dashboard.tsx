@@ -31,7 +31,7 @@ import {
 } from 'lucide-react';
 import { db } from '../db/database';
 import type { FieldRecord } from '../types/index';
-import { attackRate, secondaryAttackRate, formatRate, summarizeRecords } from '../utils/epiCalc';
+import { attackRate, aggregateSecondaryAttackRate, formatRate, summarizeRecords } from '../utils/epiCalc';
 import {
   getIndexCases,
   exportToCSV,
@@ -287,18 +287,10 @@ export default function Dashboard() {
       });
   }, [records]);
 
-  const sarValue = useMemo(() => {
-    // New cases include index patients (see the hint in the new-record form),
-    // so secondary cases = new cases minus index patients, floored at 0 per record.
-    const secondaryCases = records.reduce(
-      (s, r) => s + Math.max(0, r.dailyCases.newCases - getIndexCases(r).length),
-      0,
-    );
-    const rate = secondaryAttackRate(secondaryCases, summary.totalContacts);
-    // A rate above 100% means the inputs do not match this definition.
-    if (rate === null || rate > 100) return null;
-    return rate;
-  }, [records, summary]);
+  const sarValue = useMemo(
+    () => aggregateSecondaryAttackRate(records, (r) => getIndexCases(r).length),
+    [records],
+  );
 
   const gpsRecordsCount = useMemo(() => records.filter(r => r.gps != null).length, [records]);
 

@@ -184,3 +184,36 @@ export function summarizeRecords(records: FieldRecord[]): EpiSummary {
     overallCFR: caseFatalityRate(totalDeaths, totalCases),
   };
 }
+
+/**
+ * 집계 2차 발병률 (Secondary Attack Rate, 전체 기록 합산).
+ *
+ * 신규 확진에는 지표환자가 포함되므로(신규 기록 화면 안내 기준),
+ * 기록별 2차 환자 = max(0, 신규 확진 − 지표환자 수) 로 계산해 합산한다.
+ * 분모는 전체 접촉자 합계. 결과가 100%를 넘으면 입력이 정의와 맞지 않으므로 null.
+ *
+ * @param records      현장 기록 배열
+ * @param indexCountOf 기록 하나의 지표환자 수를 돌려주는 함수
+ *                     (예: `(r) => getIndexCases(r).length`)
+ * @returns 백분율(%) 또는 null
+ */
+export function aggregateSecondaryAttackRate(
+  records: FieldRecord[],
+  indexCountOf: (r: FieldRecord) => number,
+): number | null {
+  let secondaryCases = 0;
+  let contacts = 0;
+  for (const r of records) {
+    secondaryCases += Math.max(
+      0,
+      clampPositive(r.dailyCases.newCases) - clampPositive(indexCountOf(r)),
+    );
+    contacts +=
+      clampPositive(r.contacts.household) +
+      clampPositive(r.contacts.colleague) +
+      clampPositive(r.contacts.community);
+  }
+  const rate = secondaryAttackRate(secondaryCases, contacts);
+  if (rate === null || rate > 100) return null;
+  return rate;
+}
