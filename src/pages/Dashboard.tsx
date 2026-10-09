@@ -181,13 +181,9 @@ function SectionCard({
 function EpiMetricRow({
   label,
   value,
-  interpretation,
-  interpretColor,
 }: {
   label: string;
   value: string;
-  interpretation: string;
-  interpretColor: string;
 }) {
   return (
     <div className="flex items-center justify-between py-3 border-b border-gray-100 dark:border-gray-700 last:border-b-0">
@@ -198,7 +194,6 @@ function EpiMetricRow({
         <span className="text-sm font-bold text-gray-900 dark:text-white">
           {value}
         </span>
-        <span className={`text-xs font-medium ${interpretColor}`}>{interpretation}</span>
       </div>
     </div>
   );
@@ -319,16 +314,6 @@ export default function Dashboard() {
     value: count,
   }));
 
-  function interpretRate(rate: number | null, low: number, mid: number): { label: string; color: string } {
-    if (rate === null) return { label: t.db_interp_none, color: 'text-gray-400 dark:text-gray-500' };
-    if (rate < low) return { label: t.db_interp_low, color: 'text-green-600 dark:text-green-400' };
-    if (rate < mid) return { label: t.db_interp_mid, color: 'text-yellow-600 dark:text-yellow-400' };
-    return { label: t.db_interp_high, color: 'text-red-600 dark:text-red-400' };
-  }
-
-  const arInterp = interpretRate(summary.overallAR, 5, 20);
-  const cfrInterp = interpretRate(summary.overallCFR, 1, 5);
-  const sarInterp = interpretRate(sarValue, 10, 25);
 
   const tooltipStyle = {
     fontSize: 12,
@@ -470,9 +455,9 @@ export default function Dashboard() {
 
           {/* 4. Epi metrics */}
           <SectionCard id={SECTIONS.metrics} title={t.db_metrics_title} isDark={isDark}>
-            <EpiMetricRow label={t.db_ar_label} value={formatRate(summary.overallAR)} interpretation={arInterp.label} interpretColor={arInterp.color} />
-            <EpiMetricRow label={t.db_cfr_label} value={formatRate(summary.overallCFR)} interpretation={cfrInterp.label} interpretColor={cfrInterp.color} />
-            <EpiMetricRow label={t.db_sar_label} value={formatRate(sarValue)} interpretation={sarInterp.label} interpretColor={sarInterp.color} />
+            <EpiMetricRow label={t.db_ar_label} value={formatRate(summary.overallAR)} />
+            <EpiMetricRow label={t.db_cfr_label} value={formatRate(summary.overallCFR)} />
+            <EpiMetricRow label={t.db_sar_label} value={formatRate(sarValue)} />
           </SectionCard>
 
           {/* 5. Transmission routes */}
