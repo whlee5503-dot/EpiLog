@@ -185,6 +185,8 @@ export default function NewRecord() {
   useEffect(() => {
     if (!isEdit || editId === null) return;
     let cancelled = false;
+    setLoading(true);
+    setLoadError(false);
     (async () => {
       try {
         const rec = await db.getRecordById(editId, cryptoKey ?? undefined);
