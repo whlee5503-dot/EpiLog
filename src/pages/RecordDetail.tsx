@@ -7,6 +7,7 @@ import {
     AlertCircle,
     BarChart2,
     Trash2,
+    Pencil,
     User,
 } from 'lucide-react';
 import { db } from '../db/database';
@@ -327,6 +328,15 @@ export default function RecordDetail() {
                     className="flex items-center justify-center gap-2 px-4 h-11 rounded-xl border border-red-200 dark:border-red-900 text-red-500 font-semibold text-sm active:bg-red-50 dark:active:bg-red-900/20 disabled:opacity-50 touch-manipulation"
                 >
                     {deleting ? <Loader2 size={18} className="animate-spin" /> : <Trash2 size={18} />}
+                </button>
+                <button
+                    type="button"
+                    onClick={() => navigate(`/records/${record.id}/edit`)}
+                    disabled={deleting}
+                    className="flex items-center justify-center gap-2 px-4 h-11 rounded-xl border border-teal-600 text-teal-700 dark:text-teal-400 font-semibold text-sm active:bg-teal-50 dark:active:bg-teal-900/20 disabled:opacity-50 touch-manipulation"
+                >
+                    <Pencil size={18} />
+                    {t.rd_edit}
                 </button>
                 <button
                     type="button"
