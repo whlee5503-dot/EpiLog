@@ -56,6 +56,11 @@ export interface Translations {
   nr_gps_collecting: string;
   nr_gps_collect: string;
   nr_gps_recollect: string;
+  nr_gps_err_unsupported: string;
+  nr_gps_err_denied: string;
+  nr_gps_err_unavailable: string;
+  nr_gps_err_timeout: string;
+  nr_gps_err_unknown: string;
   nr_placeholder_location: string;
   nr_placeholder_name: string;
   nr_placeholder_notes: string;
@@ -296,6 +301,11 @@ export const T: Record<Lang, Translations> = {
     nr_gps_collecting: '위치 수집 중…',
     nr_gps_collect: 'GPS 수집',
     nr_gps_recollect: '재수집',
+    nr_gps_err_unsupported: '이 기기에서는 위치 정보를 지원하지 않습니다.',
+    nr_gps_err_denied: '위치 권한이 거부되었습니다. 브라우저 설정에서 위치 접근을 허용해 주세요.',
+    nr_gps_err_unavailable: '위치를 확인할 수 없습니다. GPS 또는 위치 서비스가 켜져 있는지 확인해 주세요.',
+    nr_gps_err_timeout: '위치 확인 시간이 초과되었습니다. 하늘이 트인 곳으로 이동한 뒤 다시 시도해 주세요.',
+    nr_gps_err_unknown: '위치를 수집하지 못했습니다. 다시 시도해 주세요.',
     nr_placeholder_location: '예: ○○초등학교, △△요양원',
     nr_placeholder_name: '이름 또는 익명 코드 (예: P-001)',
     nr_placeholder_notes: '조사관 메모, 특이사항을 자유롭게 입력하세요',
@@ -535,6 +545,11 @@ export const T: Record<Lang, Translations> = {
     nr_gps_collecting: 'Collecting location…',
     nr_gps_collect: 'Collect GPS',
     nr_gps_recollect: 'Recollect',
+    nr_gps_err_unsupported: 'Location is not supported on this device.',
+    nr_gps_err_denied: 'Location permission denied. Allow location access in your browser settings.',
+    nr_gps_err_unavailable: 'Location unavailable. Check that GPS or location services are on.',
+    nr_gps_err_timeout: 'Location request timed out. Move to an open area and try again.',
+    nr_gps_err_unknown: 'Could not collect location. Please try again.',
     nr_placeholder_location: 'e.g. Springfield Elementary School',
     nr_placeholder_name: 'Name or anonymous code (e.g. P-001)',
     nr_placeholder_notes: 'Enter investigator notes or special findings',
