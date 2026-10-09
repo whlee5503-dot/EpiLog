@@ -151,7 +151,7 @@ export default function NewRecord() {
 
   const collectGps = useCallback(() => {
     if (!navigator.geolocation) {
-      setGpsError('이 기기에서 위치 정보를 지원하지 않습니다.');
+      setGpsError(t.nr_gps_err_unsupported);
       return;
     }
     setGpsLoading(true);
@@ -169,12 +169,20 @@ export default function NewRecord() {
         setGpsLoading(false);
       },
       (err) => {
-        setGpsError(`위치 수집 실패: ${err.message}`);
+        const msg =
+          err.code === 1
+            ? t.nr_gps_err_denied
+            : err.code === 2
+              ? t.nr_gps_err_unavailable
+              : err.code === 3
+                ? t.nr_gps_err_timeout
+                : t.nr_gps_err_unknown;
+        setGpsError(msg);
         setGpsLoading(false);
       },
-      { enableHighAccuracy: true, timeout: 10000 },
+      { enableHighAccuracy: true, timeout: 20000 },
     );
-  }, []);
+  }, [t]);
 
   const updatePatient = (idx: number, patch: Partial<IndexCase>) => {
     setForm((prev) => ({
