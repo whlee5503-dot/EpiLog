@@ -1,5 +1,5 @@
-import { useState, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useCallback, useEffect } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import {
   ChevronLeft,
   ChevronRight,
@@ -13,7 +13,7 @@ import {
 } from 'lucide-react';
 import { db } from '../db/database';
 import type { FieldRecord, IndexCase, TransmissionRoute, VaccinationStatus } from '../types/index';
-import { buildEpiCalcURL } from '../utils/exportData';
+import { buildEpiCalcURL, getIndexCases } from '../utils/exportData';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useCrypto } from '../contexts/CryptoContext';
 import { LangToggle } from '../components/LangToggle';
@@ -111,6 +111,11 @@ export default function NewRecord() {
   const [manualLat, setManualLat] = useState('');
   const [manualLng, setManualLng] = useState('');
   const [manualInvalid, setManualInvalid] = useState(false);
+  const { id: idParam } = useParams();
+  const editId = idParam ? Number(idParam) : null;
+  const isEdit = editId !== null && Number.isFinite(editId);
+  const [loading, setLoading] = useState(isEdit);
+  const [loadError, setLoadError] = useState(false);
   const [saving, setSaving] = useState(false);
 
   const TOTAL_STEPS = 4;
@@ -177,6 +182,34 @@ export default function NewRecord() {
     setManualLat('');
     setManualLng('');
   };
+  useEffect(() => {
+    if (!isEdit || editId === null) return;
+    let cancelled = false;
+    (async () => {
+      try {
+        const rec = await db.getRecordById(editId, cryptoKey ?? undefined);
+        if (cancelled) return;
+        if (!rec) {
+          setLoadError(true);
+        } else {
+          const { id: _id, ...rest } = rec;
+          void _id;
+          const patients = getIndexCases(rec);
+          setForm({
+            ...rest,
+            indexCases: patients.length > 0 ? patients : initForm().indexCases,
+          });
+        }
+      } catch {
+        if (!cancelled) setLoadError(true);
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [isEdit, editId, cryptoKey]);
   const collectGps = useCallback(() => {
     if (!navigator.geolocation) {
       setGpsError('unsupported');
@@ -250,8 +283,13 @@ export default function NewRecord() {
   const handleSave = async () => {
     setSaving(true);
     try {
-      await db.addRecord(form, cryptoKey ?? undefined);
-      navigate('/');
+      if (isEdit && editId !== null) {
+        await db.updateRecord(editId, form, cryptoKey ?? undefined);
+        navigate(`/records/${editId}`);
+      } else {
+        await db.addRecord(form, cryptoKey ?? undefined);
+        navigate('/');
+      }
     } catch (e) {
       console.error('저장 실패:', e);
       setSaving(false);
@@ -261,10 +299,16 @@ export default function NewRecord() {
   const handleSaveAndAnalyze = async () => {
     setSaving(true);
     try {
-      const id = await db.addRecord(form);
+      let id: number;
+      if (isEdit && editId !== null) {
+        await db.updateRecord(editId, form, cryptoKey ?? undefined);
+        id = editId;
+      } else {
+        id = await db.addRecord(form, cryptoKey ?? undefined);
+      }
       const url = buildEpiCalcURL({ ...form, id });
       window.open(url, '_blank', 'noopener,noreferrer');
-      navigate('/');
+      navigate(isEdit ? `/records/${id}` : '/');
     } catch (e) {
       console.error('저장 실패:', e);
       setSaving(false);
@@ -677,7 +721,7 @@ export default function NewRecord() {
                 className="flex-1 flex items-center justify-center gap-2 py-4 bg-teal-600 text-white rounded-2xl font-semibold text-base active:bg-teal-700 disabled:opacity-50 touch-manipulation"
               >
                 {saving ? <Loader2 size={20} className="animate-spin" /> : <Save size={20} />}
-                {t.nr_save}
+                {isEdit ? t.nr_update : t.nr_save}
               </button>
               <button
                 type="button"
@@ -698,7 +742,12 @@ export default function NewRecord() {
   };
 
   // ─── Render ────────────────────────────────────────────────────────────────
-
+  if (isEdit && loading) {
+    return <div className="p-6 text-sm text-gray-500">…</div>;
+  }
+  if (isEdit && loadError) {
+    return <div className="p-6 text-sm text-red-500">{t.nr_load_failed}</div>;
+  }
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-white flex flex-col">
       {/* Header */}
@@ -713,7 +762,7 @@ export default function NewRecord() {
             <ChevronLeft size={18} />
             <span className="text-[9px] leading-none font-medium whitespace-nowrap">{lang === 'ko' ? '목록' : 'List'}</span>
           </button>
-          <h1 className="text-lg font-semibold flex-1">{t.nr_title}</h1>
+          <h1 className="text-lg font-semibold flex-1">{isEdit ? t.nr_edit_title : t.nr_title}</h1>
           <LangToggle />
           <ThemeButton />
           <GuideButton />
