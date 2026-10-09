@@ -5,6 +5,7 @@ import {
     caseFatalityRate,
     secondaryAttackRate,
     summarizeRecords,
+    aggregateSecondaryAttackRate,
 } from './epiCalc';
 
 function makeRecord(
@@ -83,5 +84,46 @@ describe('summarizeRecords', () => {
         const e = summarizeRecords([]);
         expect(e.overallAR).toBeNull();
         expect(e.overallCFR).toBeNull();
+    });
+});
+
+describe('aggregateSecondaryAttackRate', () => {
+    const records = [
+        makeRecord(7, 0, [4, 20, 0], 400), // 2 index patients
+        makeRecord(9, 1, [8, 6, 10], 60), // 1 index patient
+        makeRecord(5, 0, [5, 12, 3], 120), // 1 index patient
+    ];
+    const indexCounts = [2, 1, 1];
+    const byPosition = (r: FieldRecord) => indexCounts[records.indexOf(r)];
+
+    it('subtracts index patients per record: (5+8+4)/68 = 25%', () => {
+        expect(aggregateSecondaryAttackRate(records, byPosition)).toBe(25);
+    });
+
+    it('floors secondary cases at 0 per record (no cancelling across records)', () => {
+        const rs = [
+            makeRecord(1, 0, [5, 0, 0], 50), // 1 new, 3 index -> 0, not -2
+            makeRecord(10, 0, [10, 0, 0], 50), // 10 new, 0 index -> 10
+        ];
+        const counts = [3, 0];
+        // secondary = 0 + 10 = 10, contacts = 15 -> 66.67%
+        expect(
+            aggregateSecondaryAttackRate(rs, (r) => counts[rs.indexOf(r)]),
+        ).toBeCloseTo(66.6667, 3);
+    });
+
+    it('returns null when there are no contacts', () => {
+        const rs = [makeRecord(5, 0, [0, 0, 0], 100)];
+        expect(aggregateSecondaryAttackRate(rs, () => 1)).toBeNull();
+    });
+
+    it('returns null when the rate would exceed 100%', () => {
+        // 20 new, 1 index -> 19 secondary over 10 contacts = 190%
+        const rs = [makeRecord(20, 0, [10, 0, 0], 100)];
+        expect(aggregateSecondaryAttackRate(rs, () => 1)).toBeNull();
+    });
+
+    it('returns null for an empty list', () => {
+        expect(aggregateSecondaryAttackRate([], () => 1)).toBeNull();
     });
 });
