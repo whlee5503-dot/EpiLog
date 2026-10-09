@@ -105,6 +105,10 @@ export default function NewRecord() {
   const [form, setForm] = useState<FormData>(initForm);
   const [gpsLoading, setGpsLoading] = useState(false);
   const [gpsError, setGpsError] = useState<string | null>(null);
+  const [showManual, setShowManual] = useState(false);
+  const [manualLat, setManualLat] = useState('');
+  const [manualLng, setManualLng] = useState('');
+  const [manualInvalid, setManualInvalid] = useState(false);
   const [saving, setSaving] = useState(false);
 
   const TOTAL_STEPS = 4;
@@ -148,7 +152,29 @@ export default function NewRecord() {
   };
 
   // ─── Handlers ──────────────────────────────────────────────────────────────
-
+  const applyManualCoords = () => {
+    const parse = (s: string): number | null => {
+      const v = s.trim().replace(',', '.');
+      if (v === '') return null;
+      const n = Number(v);
+      return Number.isFinite(n) ? n : null;
+    };
+    const lat = parse(manualLat);
+    const lng = parse(manualLng);
+    if (
+      lat === null || lng === null ||
+      lat < -90 || lat > 90 ||
+      lng < -180 || lng > 180
+    ) {
+      setManualInvalid(true);
+      return;
+    }
+    setManualInvalid(false);
+    setForm((prev) => ({ ...prev, gps: { lat, lng } }));
+    setShowManual(false);
+    setManualLat('');
+    setManualLng('');
+  };
   const collectGps = useCallback(() => {
     if (!navigator.geolocation) {
       setGpsError(t.nr_gps_err_unsupported);
@@ -346,6 +372,52 @@ export default function NewRecord() {
                 </button>
               )}
               {gpsError && <p className="mt-1 text-xs text-red-500">{gpsError}</p>}
+              {!form.gps && (
+                <div className="mt-2">
+                  {!showManual ? (
+                    <button
+                      type="button"
+                      onClick={() => setShowManual(true)}
+                      className="text-xs text-gray-500 dark:text-gray-400 underline touch-manipulation"
+                    >
+                      {t.nr_gps_manual}
+                    </button>
+                  ) : (
+                    <div className="space-y-2">
+                      <div className="grid grid-cols-2 gap-2">
+                        <input
+                          type="text"
+                          inputMode="decimal"
+                          placeholder={t.nr_gps_lat}
+                          aria-label={t.nr_gps_lat}
+                          value={manualLat}
+                          onChange={(e) => setManualLat(e.target.value)}
+                          className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
+                        />
+                        <input
+                          type="text"
+                          inputMode="decimal"
+                          placeholder={t.nr_gps_lng}
+                          aria-label={t.nr_gps_lng}
+                          value={manualLng}
+                          onChange={(e) => setManualLng(e.target.value)}
+                          className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
+                        />
+                      </div>
+                      <button
+                        type="button"
+                        onClick={applyManualCoords}
+                        className="w-full py-2 rounded-xl bg-teal-600 text-white text-sm font-medium touch-manipulation"
+                      >
+                        {t.nr_gps_apply}
+                      </button>
+                      {manualInvalid && (
+                        <p className="text-xs text-red-500">{t.nr_gps_err_invalid}</p>
+                      )}
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           </div>
         );
