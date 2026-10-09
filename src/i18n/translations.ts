@@ -66,6 +66,10 @@ export interface Translations {
   nr_gps_lng: string;
   nr_gps_apply: string;
   nr_gps_err_invalid: string;
+  rd_edit: string;
+  nr_edit_title: string;
+  nr_update: string;
+  nr_load_failed: string;
   nr_placeholder_location: string;
   nr_placeholder_name: string;
   nr_placeholder_notes: string;
@@ -316,6 +320,10 @@ export const T: Record<Lang, Translations> = {
     nr_gps_lng: '경도',
     nr_gps_apply: '적용',
     nr_gps_err_invalid: '위도(-90~90)와 경도(-180~180)를 숫자로 입력해 주세요.',
+    rd_edit: '수정',
+    nr_edit_title: '기록 수정',
+    nr_update: '수정 저장',
+    nr_load_failed: '기록을 불러오지 못했습니다.',
     nr_placeholder_location: '예: ○○초등학교, △△요양원',
     nr_placeholder_name: '이름 또는 익명 코드 (예: P-001)',
     nr_placeholder_notes: '조사관 메모, 특이사항을 자유롭게 입력하세요',
@@ -565,6 +573,10 @@ export const T: Record<Lang, Translations> = {
     nr_gps_lng: 'Longitude',
     nr_gps_apply: 'Apply',
     nr_gps_err_invalid: 'Enter latitude (-90 to 90) and longitude (-180 to 180) as numbers.',
+    rd_edit: 'Edit',
+    nr_edit_title: 'Edit Record',
+    nr_update: 'Save changes',
+    nr_load_failed: 'Could not load the record.',
     nr_placeholder_location: 'e.g. Springfield Elementary School',
     nr_placeholder_name: 'Name or anonymous code (e.g. P-001)',
     nr_placeholder_notes: 'Enter investigator notes or special findings',
