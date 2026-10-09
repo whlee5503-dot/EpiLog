@@ -104,7 +104,9 @@ export default function NewRecord() {
   const [step, setStep] = useState(1);
   const [form, setForm] = useState<FormData>(initForm);
   const [gpsLoading, setGpsLoading] = useState(false);
-  const [gpsError, setGpsError] = useState<string | null>(null);
+  const [gpsError, setGpsError] = useState<
+    'unsupported' | 'denied' | 'unavailable' | 'timeout' | 'unknown' | null
+  >(null);
   const [showManual, setShowManual] = useState(false);
   const [manualLat, setManualLat] = useState('');
   const [manualLng, setManualLng] = useState('');
@@ -177,7 +179,7 @@ export default function NewRecord() {
   };
   const collectGps = useCallback(() => {
     if (!navigator.geolocation) {
-      setGpsError(t.nr_gps_err_unsupported);
+      setGpsError('unsupported');
       return;
     }
     setGpsLoading(true);
@@ -195,15 +197,15 @@ export default function NewRecord() {
         setGpsLoading(false);
       },
       (err) => {
-        const msg =
+        setGpsError(
           err.code === 1
-            ? t.nr_gps_err_denied
+            ? 'denied'
             : err.code === 2
-              ? t.nr_gps_err_unavailable
+              ? 'unavailable'
               : err.code === 3
-                ? t.nr_gps_err_timeout
-                : t.nr_gps_err_unknown;
-        setGpsError(msg);
+                ? 'timeout'
+                : 'unknown',
+        );
         setGpsLoading(false);
       },
       { enableHighAccuracy: true, timeout: 20000 },
@@ -371,7 +373,15 @@ export default function NewRecord() {
                   )}
                 </button>
               )}
-              {gpsError && <p className="mt-1 text-xs text-red-500">{gpsError}</p>}
+              {gpsError && (
+                <p className="mt-1 text-xs text-red-500">
+                  {gpsError === 'unsupported' && t.nr_gps_err_unsupported}
+                  {gpsError === 'denied' && t.nr_gps_err_denied}
+                  {gpsError === 'unavailable' && t.nr_gps_err_unavailable}
+                  {gpsError === 'timeout' && t.nr_gps_err_timeout}
+                  {gpsError === 'unknown' && t.nr_gps_err_unknown}
+                </p>
+              )}
               {!form.gps && (
                 <div className="mt-2">
                   {!showManual ? (
