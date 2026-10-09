@@ -61,6 +61,11 @@ export interface Translations {
   nr_gps_err_unavailable: string;
   nr_gps_err_timeout: string;
   nr_gps_err_unknown: string;
+  nr_gps_manual: string;
+  nr_gps_lat: string;
+  nr_gps_lng: string;
+  nr_gps_apply: string;
+  nr_gps_err_invalid: string;
   nr_placeholder_location: string;
   nr_placeholder_name: string;
   nr_placeholder_notes: string;
@@ -306,6 +311,11 @@ export const T: Record<Lang, Translations> = {
     nr_gps_err_unavailable: '위치를 확인할 수 없습니다. GPS 또는 위치 서비스가 켜져 있는지 확인해 주세요.',
     nr_gps_err_timeout: '위치 확인 시간이 초과되었습니다. 하늘이 트인 곳으로 이동한 뒤 다시 시도해 주세요.',
     nr_gps_err_unknown: '위치를 수집하지 못했습니다. 다시 시도해 주세요.',
+    nr_gps_manual: '좌표 직접 입력',
+    nr_gps_lat: '위도',
+    nr_gps_lng: '경도',
+    nr_gps_apply: '적용',
+    nr_gps_err_invalid: '위도(-90~90)와 경도(-180~180)를 숫자로 입력해 주세요.',
     nr_placeholder_location: '예: ○○초등학교, △△요양원',
     nr_placeholder_name: '이름 또는 익명 코드 (예: P-001)',
     nr_placeholder_notes: '조사관 메모, 특이사항을 자유롭게 입력하세요',
@@ -550,6 +560,11 @@ export const T: Record<Lang, Translations> = {
     nr_gps_err_unavailable: 'Location unavailable. Check that GPS or location services are on.',
     nr_gps_err_timeout: 'Location request timed out. Move to an open area and try again.',
     nr_gps_err_unknown: 'Could not collect location. Please try again.',
+    nr_gps_manual: 'Enter coordinates manually',
+    nr_gps_lat: 'Latitude',
+    nr_gps_lng: 'Longitude',
+    nr_gps_apply: 'Apply',
+    nr_gps_err_invalid: 'Enter latitude (-90 to 90) and longitude (-180 to 180) as numbers.',
     nr_placeholder_location: 'e.g. Springfield Elementary School',
     nr_placeholder_name: 'Name or anonymous code (e.g. P-001)',
     nr_placeholder_notes: 'Enter investigator notes or special findings',
