@@ -74,6 +74,7 @@ function AppRoutes() {
             <Route path="/new" element={<NewRecord />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/records/:id" element={<RecordDetail />} />
+            <Route path="/records/:id/edit" element={<NewRecord />} />
             <Route path="/settings" element={<Settings />} />
             <Route path="/guide" element={<Guide />} />
             <Route path="*" element={<NotFound />} />
