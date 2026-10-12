@@ -1,258 +1,208 @@
-# EpiLog — Offline Field Epidemiology Digital Diary
+# EpiLog — Offline Field Epidemiology Diary
 
-> **EpiCalc Suite — Module 2**
-> *Part of the EpiCalc Suite | MIT License | Open Source*
+> Part of the **PHT Lab** suite of free, open-source public health tools | MIT License
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
-[![PWA](https://img.shields.io/badge/PWA-Offline%20Ready-teal.svg)](https://epilog-d72.pages.dev)
-[![Live Demo](https://img.shields.io/badge/Live-Demo-blue.svg)](https://epilog-d72.pages.dev)
+[![PWA](https://img.shields.io/badge/PWA-Offline%20Ready-teal.svg)](https://epilog.phtlab.org)
+[![Live App](https://img.shields.io/badge/Live-App-blue.svg)](https://epilog.phtlab.org)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.20318922.svg)](https://doi.org/10.5281/zenodo.20318922)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.20349994.svg)](https://doi.org/10.5281/zenodo.20349994)
 
 ---
 
-## 🌍 Overview
+## Overview
 
-**EpiLog** is a free, open-source, offline-capable digital field diary designed specifically for epidemiologists and public health workers in **low-resource settings**.
+**EpiLog** is a free, open-source, offline-capable field diary for epidemiologists and public health workers, especially in low-resource settings.
 
-In under-resourced environments across Africa and other developing regions, field epidemiologists still rely on paper notebooks to record outbreak data — leading to data loss, transcription errors, and delays of days or weeks before analysis can begin. EpiLog bridges this critical gap.
+Where field teams still record outbreak data on paper, transcription errors and delays of days or weeks before analysis are common. EpiLog is meant for the first days of an investigation: record what you find, see it on a map and a dashboard, and pass the numbers to EpiCalc for further analysis, all on one phone.
 
-> *"From Field Logging to Instant Analytics — Anywhere, Offline."*
+EpiLog is **not** a replacement for Go.Data, KoBoToolbox or DHIS2. It is designed for the early phase of an investigation before those systems are in place, for small teams, and for training.
 
-EpiLog seamlessly integrates with **EpiCalc** (Module 1 of the EpiCalc Suite), enabling field workers to collect data and perform real-time epidemiological analysis — all within a single smartphone browser, without internet connectivity.
+**Live app:** https://epilog.phtlab.org (open in a browser, then install to your phone or PC)
 
 ---
 
-## ✨ Key Features
+## Key Features
 
 | Feature | Description |
 |---|---|
-| 📋 **4-Step Field Diary** | Structured data entry: Basic Info → Index Case → Contacts → Epi Characteristics |
-| 📊 **Auto Calculations** | Attack Rate, Case Fatality Rate, Secondary Attack Rate — computed instantly |
-| 📈 **Outbreak Dashboard** | Epidemic curve, cumulative trend, transmission route distribution |
-| 📤 **Data Export** | CSV & JSON download, WhatsApp & email sharing |
-| 🔗 **EpiCalc Integration** | One-tap transfer to EpiCalc for SIR/SEIR simulation |
-| 🌐 **Bilingual** | Korean / English language toggle |
-| 🌙 **Dark / Light Mode** | Automatic theme switching |
-| 📱 **PWA — Offline Ready** | Installable on any smartphone, works without internet |
-| 🔒 **Privacy First** | All data stored locally on device — never leaves the phone |
-| 🆓 **Completely Free** | No login, no registration, no fees |
+| 4-step field record | Basic info → Index patient(s) → Contacts → Epidemiological characteristics |
+| Multiple index patients | Add or remove index patients within one record |
+| Edit saved records | Correct or update a record after saving |
+| GPS or manual coordinates | Collect GPS, or enter latitude/longitude by hand when GPS is unavailable |
+| Map | Records coloured by transmission route, marker size by new cases, date filter, clustering |
+| Dashboard | Epidemic curve, cumulative cases, transmission routes, AR / CFR / SAR |
+| EpiCalc integration | "Analyze with EpiCalc" fills the SIR/SEIR simulator with population and case counts |
+| Export | CSV and JSON download; share via WhatsApp or email |
+| Optional encryption | Password protection (AES-256-GCM) with a recovery code |
+| Languages | Korean and English. French is planned, and translation contributions for other languages are welcome |
+| Dark / light theme | Switch from the header |
+| Installable PWA | Works offline after installation |
+| Free | No login, no registration, no fees |
 
 ---
 
-## 🎯 Target Users
+## Target Users
 
-- Field epidemiologists in low-resource settings (Africa, Southeast Asia, etc.)
-- Public health workers conducting outbreak investigations
-- FETP (Field Epidemiology Training Program) trainees
-- NGO health workers in remote areas
-
----
-
-## 🚀 Live Demo
-
-**Try EpiLog now:** [https://epilog-d72.pages.dev](https://epilog-d72.pages.dev)
-
-No installation required — open in any mobile browser and tap "Add to Home Screen" to install as a PWA.
+- Field epidemiologists and public health workers conducting outbreak investigations
+- FETP (Field Epidemiology Training Program) trainees and trainers
+- Small teams and NGOs in the first days of an investigation
 
 ---
 
-## 📱 Screenshots
+## Screens
 
-### Field Records List
-- Summary statistics (Total Records, Cumulative Cases, Deaths)
-- Per-record cards with Attack Rate auto-calculated
-- Dark mode support
-
-### 4-Step Data Entry
-- **Step 1:** Survey date/time (auto), location, facility type, at-risk population, GPS
-- **Step 2:** Index case — gender, age, onset date, symptom checklist (9 symptoms)
-- **Step 3:** Contact classification (Household / Colleague / Community) + daily cases counter
-- **Step 4:** Transmission route, vaccination status, notes, Save & EpiCalc buttons
-
-### Outbreak Dashboard
-- Epidemic Curve (bar chart)
-- Cumulative Cases trend (line chart)
-- Epi Metrics: AR / CFR / SAR with interpretation (Low / Moderate / High)
-- Transmission Routes (donut chart)
-- Export: CSV, JSON, WhatsApp, Email
+- **Records list:** one card per record with attack rate and a transmission-route colour dot
+- **New / edit record (4 steps):**
+  - Step 1: date and time, location, facility type, at-risk population, GPS or manual coordinates
+  - Step 2: index patients (one card each: sex, age, onset date, symptoms)
+  - Step 3: contacts by type (household / colleague / community) and new cases
+  - Step 4: transmission route, vaccination status, notes, save or save and analyze
+- **Record detail:** full record, with delete, edit and "Analyze with EpiCalc"
+- **Dashboard:** summary metrics, charts, section navigation, export
+- **Map:** records on OpenStreetMap, filtered by date
+- **Privacy & Security:** encryption, recovery code, privacy notice, guide
 
 ---
 
-## 🏗️ Tech Stack
+## Epidemiological Metrics
+
+| Metric | Formula |
+|---|---|
+| Attack Rate (AR) | (New cases ÷ at-risk population) × 100 |
+| Case Fatality Rate (CFR) | (Deaths ÷ cases) × 100 |
+| Secondary Attack Rate (SAR) | ((New cases − index patients) ÷ total contacts) × 100, summed over records |
+
+Notes:
+
+- **New cases include the index patients** of the same record. SAR therefore subtracts them from the numerator.
+- If a SAR result would exceed 100%, it is not shown, because the inputs do not match this definition.
+- The dashboard shows SAR combined over all records. Combining unrelated outbreaks is hard to interpret; read it per event.
+- The app shows the numbers only. It does not label them as low, moderate or high.
+- The formulas are covered by unit tests (`npm test`).
+
+---
+
+## Privacy & Security
+
+- Records are stored on your device (IndexedDB). They are not sent to any server, and there is no login.
+- Optional password encryption (AES-256-GCM) with a recovery code. Encrypted records stay encrypted when edited.
+- If both the password and the recovery code are lost, the app offers a confirmed reset, which deletes the stored data.
+- When you tap "Analyze with EpiCalc", only aggregate numbers (population, cases, deaths) are passed to EpiCalc.
+- Data export (CSV/JSON, WhatsApp, email) leaves the app only when you choose it.
+
+---
+
+## Offline Use
+
+| Phase | Network needed |
+|---|---|
+| First load and install | Yes (once) |
+| Data entry, editing, dashboard | No |
+| GPS recording | No (device GPS only) |
+| Map background tiles | Once, while online, for each area you want to see |
+| Analyze with EpiCalc | No, once EpiCalc has also been opened or installed on the same device |
+| Export | No (local download); sharing apps may need a connection |
+
+All screens are precached at install. Install size is about 1.3 MB.
+
+> **Recommended for field use:** install EpiLog (and EpiCalc) on Wi-Fi or a mobile connection before going to the field.
+
+---
+
+## Tech Stack
 
 | Component | Technology |
 |---|---|
 | Framework | React + Vite + TypeScript |
-| Styling | Tailwind CSS v4 |
-| Local Database | Dexie.js (IndexedDB) |
+| Styling | Tailwind CSS |
+| Local database | Dexie.js (IndexedDB) |
 | Charts | Recharts |
-| Icons | lucide-react (ISC License) |
+| Maps | Leaflet + OpenStreetMap, leaflet.markercluster |
+| Icons | lucide-react (ISC) |
 | PWA | vite-plugin-pwa + Workbox |
-| Routing | React Router v6 |
-| Date handling | date-fns |
-| CSV export | papaparse |
+| Routing | React Router |
+| Tests | Vitest |
 | Hosting | Cloudflare Pages |
 
 ---
 
-## 📶 2G/3G Network Optimization
+## Installation & Development
 
-EpiLog is optimized for use in areas with extremely limited 
-connectivity — including 2G (EDGE) networks common in 
-Sub-Saharan Africa and rural Asia.
-
-### Performance at a Glance
-
-| Phase | Network Required | Details |
-|---|---|---|
-| First load | 2G~3G | One-time only (~4 sec on 3G) |
-| After install | **Zero** | Fully offline via PWA |
-| Data entry | **Zero** | All local (IndexedDB) |
-| GPS recording | **Zero** | Device GPS only |
-| EpiCalc sync | **Zero** | URL params (local) |
-| Data export | Optional | CSV/JSON local download |
-
-### Key Optimizations (v1.1+)
-
-- **Code splitting**: Dashboard (Recharts) loads only on first visit
-  — reduces initial bundle by ~67% (300KB → ~98KB gzip)
-- **PWA precache reduced by 96%**: 1,177KB → 51KB on install
-  — JS chunks cached on-demand via runtime caching
-- **Map graceful degradation**: GPS coordinates always saved
-  as numbers even when map tiles unavailable offline
-- **Lazy loading**: All page components load on demand
-
-> **Recommended for field use:**
-> Install EpiLog once on Wi-Fi or 3G before heading to the field.
-> All features work completely offline thereafter.
-
----
-
-## 🔧 Installation & Development
-
-### Prerequisites
-- Node.js 20+
-- npm 9+
-
-### Quick Start
+Prerequisites: Node.js 20+, npm 9+
 
 ```bash
-# Clone the repository
 git clone https://github.com/whlee5503-dot/EpiLog.git
 cd EpiLog
-
-# Install dependencies
 npm install
-
-# Start development server
-npm run dev
-
-# Build for production
-npm run build
+npm run dev      # development server
+npm test         # unit tests (Vitest)
+npm run build    # production build
 ```
 
-### Deploy
-The project is configured for automatic deployment via **Cloudflare Pages**.
-Any push to the `main` branch triggers an automatic build and deployment.
+Any push to `main` is built and deployed automatically by Cloudflare Pages.
 
 ---
 
-## 📊 Epidemiological Metrics
+## PHT Lab Suite
 
-EpiLog automatically calculates the following metrics from entered data:
+EpiLog is one of six free, open-source tools by PHT Lab:
 
-| Metric | Formula | Interpretation |
+| App | Purpose |
+|---|---|
+| [EpiCalc](https://epi.chem-health-calc.com) | Epidemic simulation (SIR/SEIR/SEIRD), epi metrics, screening tests, biostatistics |
+| [EpiStat](https://epistat.phtlab.org) | Epidemiology statistics (e.g. Mantel-Haenszel, sample size and power) |
+| [EpiPlus](https://epiplus.phtlab.org) | Additional epidemiology and biostatistics calculators |
+| [EpiLog](https://epilog.phtlab.org) | Offline field record keeping (this app) |
+| [VaxGuard](https://vaxguard.phtlab.org) | Decision support for vaccines after a cold chain break |
+| [EpiAid](https://epiaid.phtlab.org) | Dose calculator based on WHO guidance |
+
+**Data flow with EpiCalc:** record in EpiLog → tap "Analyze with EpiCalc" → population and case counts fill the SIR/SEIR inputs.
+
+---
+
+## Compared with Other Tools
+
+| Tool | Main limitation for early field use | EpiLog |
 |---|---|---|
-| Attack Rate (AR) | (Cases / At-risk Population) × 100 | <5% Low / 5–20% Moderate / >20% High |
-| Case Fatality Rate (CFR) | (Deaths / Cases) × 100 | <1% Low / 1–5% Moderate / >5% High |
-| Secondary Attack Rate (SAR) | (Secondary Cases / Contacts) × 100 | <10% Low / 10–25% Moderate / >25% High |
+| KoBoToolbox / ODK | Built around server setup and sync | Single device, no server |
+| DHIS2 | National system, needs institutional setup | Individual use, no setup |
+| Epi Info (CDC) | CDC discontinued development and support in 2025; mobile apps were removed from app stores in Dec 2024 | Browser-based, installable, mobile-first |
+| Paper notebooks | Transcription errors, delayed analysis | Digital, instant metrics, CSV export |
 
 ---
 
-## 🔗 EpiCalc Integration
+## Sustainable Development Goals
 
-EpiLog is **Module 2** of the **EpiCalc Suite**:
-
-| Module | Role | Status |
-|---|---|---|
-| **EpiCalc** (Module 1) | Brain — SIR/SEIR simulation, epi metrics, screening tests, biostatistics | ✅ Live |
-| **EpiLog** (Module 2) | Hands & Feet — field data collection, offline diary, secure local storage | ✅ Live |
-
-**Data flow:**
-1. Field worker records outbreak data in EpiLog
-2. Taps "Analyze with EpiCalc" button
-3. Data auto-populates EpiCalc's SIR model inputs
-4. Instant epidemic simulation — all on one smartphone, offline
-
-**EpiCalc:** [https://epi.chem-health-calc.com](https://epi.chem-health-calc.com)
+**SDG 3 — Good Health and Well-Being.** EpiLog aims to shorten the time between field data collection and first analysis.
 
 ---
 
-## 🛡️ Privacy & Security
+## Project Status
 
-- **Zero server transmission** — all patient data stays on the device
-- **IRB-friendly** — no cloud sync, no external data exposure
-- **GDPR-compatible** — no personal data leaves the user's phone
-- **Local IndexedDB storage** — survives app restarts, no 5MB localStorage limit
-
----
-
-## 🌱 Sustainable Development Goals
-
-EpiLog directly contributes to:
-
-- **SDG 3** — Good Health and Well-Being
-  - Strengthens health emergency response in low-resource settings
-  - Reduces time-to-analysis from days/weeks to **zero** (field-instant)
-  - Empowers frontline health workers with real-time decision support
+- Open source (MIT)
+- DPGA (Digital Public Goods Alliance) application: **GID0093669**, under review
+- Collaborators and endorsements: University of Utah (faculty endorsement of EpiCalc); AFENET outreach is planned
 
 ---
 
-## 📋 Existing Solutions Comparison
+## License
 
-| Tool | Key Limitation | EpiLog Advantage |
-|---|---|---|
-| KoboToolbox | Server sync required, no instant analytics | 100% offline, instant EpiCalc integration |
-| ODK | Server setup required, limited iOS support | PWA — no install, all platforms |
-| DHIS2 | National system integration required | Individual use, no server needed |
-| Epi Info (CDC) | PC-first UI, poor mobile UX | Mobile-first design |
-| Paper notebooks | Data loss, transcription errors, days of delay | Digital, instant analysis, instant sharing |
+MIT License. See [LICENSE](LICENSE).
 
 ---
 
-## 🤝 Strategic Partnerships
+## Acknowledgments
 
-- **University of Utah** — Division of Public Health (faculty endorsement of EpiCalc)
-- **AFENET** — African Field Epidemiology Network (prospective collaboration)
-- **DPGA** — Digital Public Goods Alliance (EpiCalc: Application ID GID0093635)
-
----
-
-## 📜 License
-
-MIT License — see [LICENSE](LICENSE) for details.
-
-This software is free to use, modify, and distribute for any purpose, including commercial use.
+- OpenStreetMap contributors (ODbL)
+- WHO ICD symptom classification (public domain)
+- CDC Field Epidemiology Manual
+- Open-source libraries listed in [LICENSES.md](LICENSES.md)
 
 ---
 
-## 🙏 Acknowledgments
+## Contact
 
-- WHO ICD-10/11 symptom classification (Public Domain)
-- CDC Field Epidemiology Manual guidelines
-- OpenStreetMap contributors (ODbL License)
-- All open-source libraries listed in [LICENSES.md](LICENSES.md)
-
----
-
-## 📬 Contact
-
-**Developer:** Won Ho Lee, PhD, MPH, MDiv  
-**Project:** EpiCalc Suite  
-**GitHub:** [https://github.com/whlee5503-dot/EpiLog](https://github.com/whlee5503-dot/EpiLog)  
-**EpiCalc:** [https://epi.chem-health-calc.com](https://epi.chem-health-calc.com)
-
----
-
-*EpiCalc Suite — Log with EpiLog, Analyze with EpiCalc, Instantly.*
+**Developer:** Won Ho Lee, PhD, MPH, MDiv
+**GitHub:** https://github.com/whlee5503-dot/EpiLog
+**Suite:** PHT Lab (phtlab.org)
