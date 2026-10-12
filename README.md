@@ -104,7 +104,7 @@ Notes:
 | Analyze with EpiCalc | No, once EpiCalc has also been opened or installed on the same device |
 | Export | No (local download); sharing apps may need a connection |
 
-All screens are precached at install. Install size is about 1.3 MB.
+All screens are precached at install. Install size is about 1.4 MB.
 
 > **Recommended for field use:** install EpiLog (and EpiCalc) on Wi-Fi or a mobile connection before going to the field.
 
