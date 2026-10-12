@@ -443,7 +443,7 @@ export default function NewRecord() {
                       <div className="grid grid-cols-2 gap-2">
                         <input
                           type="text"
-                          inputMode="decimal"
+                          inputMode="text"
                           placeholder={t.nr_gps_lat}
                           aria-label={t.nr_gps_lat}
                           value={manualLat}
@@ -452,7 +452,7 @@ export default function NewRecord() {
                         />
                         <input
                           type="text"
-                          inputMode="decimal"
+                          inputMode="text"
                           placeholder={t.nr_gps_lng}
                           aria-label={t.nr_gps_lng}
                           value={manualLng}
