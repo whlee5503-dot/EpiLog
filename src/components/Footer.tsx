@@ -57,6 +57,27 @@ export function Footer() {
         <span>&copy; {year} Won Ho Lee &middot; PHT Lab</span>
       </div>
 
+      <div className="flex flex-wrap items-center gap-2 text-[13px] text-gray-400 dark:text-gray-500">
+        <span aria-hidden="true">&hearts;</span>
+        <a
+          href="https://github.com/sponsors/whlee5503-dot"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="hover:text-teal-600 dark:hover:text-teal-400 hover:underline"
+        >
+          GitHub Sponsors
+        </a>
+        <span className="text-gray-300 dark:text-gray-700">&middot;</span>
+        <a
+          href="https://ko-fi.com/phtlab"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="hover:text-teal-600 dark:hover:text-teal-400 hover:underline"
+        >
+          Ko-fi
+        </a>
+      </div>
+
       <p className="text-[11px] italic leading-relaxed text-gray-400 dark:text-gray-500">
         {t.ftr_disclaimer}
       </p>
