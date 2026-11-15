@@ -8,10 +8,10 @@ authors:
     orcid: "https://orcid.org/0009-0005-1866-8257"
     affiliation: "PublicHealth Tech Lab"
 repository-code: "https://github.com/whlee5503-dot/EpiLog"
-url: "https://epilog-d72.pages.dev"
+url: "https://epilog.phtlab.org"
 license: MIT
-version: 1.1.1
-date-released: "2026-05-23"
+version: 1.2.0
+date-released: "2026-11-15"
 keywords:
   - epidemiology
   - field epidemiology
@@ -23,7 +23,8 @@ keywords:
 abstract: >-
   EpiLog is a free, open-source, offline-capable digital field diary for
   epidemiologists and public health workers in low-resource settings.
-  Module 2 of the EpiCalc Suite, it provides a structured 4-step field
+  Part of the PHT Lab family of public health apps, it provides a
+  structured 4-step field
   diary (basic info, index case, contacts, epidemiological
   characteristics) with automatic calculation of attack rate, case
   fatality rate, and secondary attack rate; an outbreak dashboard with
